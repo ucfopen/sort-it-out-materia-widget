@@ -1,0 +1,32 @@
+---
+general:
+  name: Sort It Out!
+  group: Materia
+  height: 548 # please update me
+  width: 750 # please update me
+  in_catalog: Yes
+  is_editable: Yes
+  is_playable: Yes
+  is_qset_encrypted: Yes
+  is_answer_encrypted: Yes
+  is_storage_enabled: No
+  api_version: 2
+files:
+  creator: creator.html
+  player: player.html
+  flash_version: 0
+score:
+  is_scorable: Yes
+  score_module: SortItOut
+meta_data:
+  features:
+    - Customizable
+    - Scorable
+  supported_data:
+    - Multiple Choice # please update me
+  about: >
+    Sequencer, but with buckets
+
+  # The text displayed on the widget catalog page.
+  excerpt: >
+    Please update me
