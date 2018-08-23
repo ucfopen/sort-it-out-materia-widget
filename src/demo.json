@@ -1,11 +1,185 @@
 {
-  "name": "Sort It Out! Demo",
-  "qset": {
-    "version": 1,
-    "data": {
-      "items": [
-      ],
-      "options": {}
-    }
-  }
+	"name": "Sort-It-Out Demo",
+	"qset": {
+		"version": 1,
+		"data": {
+			"name": "Sort-It-Out Demo",
+			"items": [
+				{
+					"materiaType": "question",
+					"id": 1,
+					"type": "QA",
+					"questions": [
+						{
+							"text": "This item is in bucket 1 (first one)"
+						}
+					],
+					"answers": [
+						{
+							"value": 100,
+							"text": 1
+						}
+					],
+					"options": {
+						"description": "American colonists rejected the legitimacy of the Parliament of Great Britain to govern them without representation.\n"
+					}
+				},
+				{
+					"materiaType": "question",
+					"id": 2,
+					"type": "QA",
+					"questions": [
+						{
+							"text": "This item is in the bucket numbered 1"
+						}
+					],
+					"answers": [
+						{
+							"value": 100,
+							"text": 1
+						}
+					],
+					"options": {
+						"description": "Americans declared war in 1812 for a number of reasons, including a desire for expansion into the Northwest Territory, trade restrictions  because of Britain's ongoing war with France,  impressment of American merchant sailors  into the Royal Navy, British support of  American Indian tribes against American  expansion, and the humiliation of American honour.\n"
+					}
+				},
+				{
+					"materiaType": "question",
+					"id": 3,
+					"type": "QA",
+					"questions": [
+						{
+							"text": "This item is in bucket 3"
+						}
+					],
+					"answers": [
+						{
+							"value": 100,
+							"text": 3
+						}
+					],
+					"options": {
+						"description": "An armed conflict between the United States and Mexico in the wake of the U.S. annexation of Texas.\n"
+					}
+				},
+				{
+					"materiaType": "question",
+					"id": 4,
+					"type": "QA",
+					"questions": [
+						{
+							"text": "Put me in bucket 1!"
+						}
+					],
+					"answers": [
+						{
+							"value": 100,
+							"text": 1
+						}
+					],
+					"options": {
+						"description": "11 Southern slave states declared their secession from the United States and formed the Confederate States of America.\n"
+					}
+				},
+				{
+					"materiaType": "question",
+					"id": 5,
+					"type": "QA",
+					"questions": [
+						{
+							"text": "hi, i go in bucket 1 pls"
+						}
+					],
+					"answers": [
+						{
+							"value": 100,
+							"text": 1
+						}
+					],
+					"options": {
+						"description": "Includes the Charge of the Rough Riders, at San Juan Hill.\n"
+					}
+				},
+				{
+					"materiaType": "question",
+					"id": 6,
+					"type": "QA",
+					"questions": [
+						{
+							"text": "bucket 3 is for me"
+						}
+					],
+					"answers": [
+						{
+							"value": 100,
+							"text": 3
+						}
+					],
+					"options": {
+						"description": "More than 9 million combatants were killed in this conflict.\n"
+					}
+				},
+				{
+					"materiaType": "question",
+					"id": 7,
+					"type": "QA",
+					"questions": [
+						{
+							"text": "bucket 2 is where i go"
+						}
+					],
+					"answers": [
+						{
+							"value": 100,
+							"text": 2
+						}
+					],
+					"options": {
+						"description": "Included two opposing military alliances, the Allies and the Axis.\n"
+					}
+				},
+				{
+					"materiaType": "question",
+					"id": 8,
+					"type": "QA",
+					"questions": [
+						{
+							"text": "hello. i belong in bucket 1. please place me in that bucket with all of my other 'bucket 1' friends. i want to be with them"
+						}
+					],
+					"answers": [
+						{
+							"value": 100,
+							"text": 1
+						}
+					],
+					"options": {
+						"description": "This war was the result of the physical division of Korea.\n"
+					}
+				},
+				{
+					"materiaType": "question",
+					"id": 9,
+					"type": "QA",
+					"questions": [
+						{
+							"text": "this is the last one. i go in bucket 3"
+						}
+					],
+					"answers": [
+						{
+							"value": 100,
+							"text": 3
+						}
+					],
+					"options": {
+						"description": "This war followed the First Indochina War and was fought between North Vietnam, supported by its communist allies, and the government of South Vietnam, supported by the U.S. and other anti-communist nations.\n"
+					}
+				}
+			],
+			"options": {
+				"penalty": 10
+			}
+		}
+	}
 }
