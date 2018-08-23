@@ -2,9 +2,9 @@
 general:
   name: Sort It Out!
   group: Materia
-  height: 548 # please update me
-  width: 750 # please update me
-  in_catalog: Yes
+  height: 600
+  width: 800
+  in_catalog: No
   is_editable: Yes
   is_playable: Yes
   is_qset_encrypted: Yes
@@ -29,4 +29,4 @@ meta_data:
 
   # The text displayed on the widget catalog page.
   excerpt: >
-    Please update me
+    Students must sort items into groups.
