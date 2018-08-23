@@ -23,7 +23,7 @@ var Server = require('karma').Server;
 
 var configs = require('../../backend/config.json');
 
-var widget = sanitize("privilege-walk-widget");
+var widget = sanitize("sort-it-out");
 // When compiling this may be entered as an argument.
 var minify = argv.minify;
 var mangle = argv.mangle;
