@@ -14,11 +14,11 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 
-		<<!-- ANGULAR DEPENDENCIES -->
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-aria.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-messages.min.js"></script>
+		<!-- ANGULAR DEPENDENCIES -->
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-animate.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-aria.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-messages.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.10/angular-material.min.js"></script>
 
 		<!-- MAIN CREATOR SCRIPT -->
@@ -26,11 +26,11 @@
 	</head>
 	<body>
 
-	<body ng-app='sortCreatorApp' ng-controller='sortCreatorController'>
+	<body ng-app="SortItOutCreator">
 
-		<md-content id="container" ng-controller="PrivilegeWalkController">
+		<md-content id="container" ng-controller="SortItOutController">
 
-			<md-toolbar md-theme="toolbar-dark" id="creator_header">
+			<md-toolbar md-theme="toolbar-dark" id="creator-header">
 				<div class="md-toolbar-tools">
 					<md-input-container class="md-block widget-title" flex>
 						<label id="widget-title-label">Widget Name</label>
@@ -38,6 +38,35 @@
 					</md-input-container>
 				</div>
 			</md-toolbar>
+
+			<div layout="column" id="content">
+				<div id="card-container">
+					<md-card class="md-whiteframe-3dp bucket" ng-repeat="(bucketIndex, bucket) in buckets" layout="row">
+						<div class="bucket-name">
+							{{bucket.name}}
+						</div>
+						<div class="bucket-items" layout="column">
+							<form name="bucketItemsForm" autocomplete="off" ng-repeat="item in bucket.items">
+								<md-input-container class="md-block">
+									<label>Item {{$index + 1}}</label>
+									<input type="text" ng-model="item.text" name="item" required spellcheck="true" autocomplete="off">
+									<div ng-messages="bucketItemsForm.item.$error">
+										<div ng-message="required">Item name is required.</div>
+									</div>
+								</md-input-container>
+							</form>
+							<md-button class="md-accent md-raised toggle-option" ng-click="addItem(bucketIndex)" ng-disabled="!validBucket(bucketIndex)">
+								Add Item
+							</md-button>
+						</div>
+					</md-card>
+					<div layout layout-align="center center">
+						<md-button id="add-bucket" class="md-accent md-raised toggle-option" ng-click="addBucket()" ng-disabled="!canAddBucket()">
+							Add Bucket
+						</md-button>
+					</div>
+				</div>
+			</div>
 
 		</md-content>
 	</body>
