@@ -5,7 +5,7 @@ SortItOut.config( ($mdThemingProvider) =>
 	$mdThemingProvider.theme('toolbar-dark', 'default').primaryPalette('indigo').dark()
 );
 
-SortItOut.controller("SortItOutController", ($scope) => {
+SortItOut.controller("SortItOutController", ($scope, $mdDialog) => {
 
 	$scope.MAX_ITEM_LENGTH = 30;
 	$scope.MAX_NUM_BUCKETS = 4;
@@ -38,6 +38,7 @@ SortItOut.controller("SortItOutController", ($scope) => {
 			]
 		}
 	];
+	$scope.editBucketIndex = 0;
 
 	$scope.initNewWidget = (widget) => {
 		console.log("initNewWidget");
@@ -49,40 +50,41 @@ SortItOut.controller("SortItOutController", ($scope) => {
 		console.log("initExistingWidget");
 		$scope.title = title;
 		$scope.qset = qset;
+		$scope.$apply();
 	};
 
 	$scope.addItem = (bucketIndex) => {
 		$scope.buckets[bucketIndex].items.push( { text: "" } );
-	}
+	};
 
 	$scope.addBucket = () => {
 		$scope.buckets.push({
 			name: "",
 			items: [
-				{ text: "" },
+				{ text: "" }
 			]
 		});
-	}
+	};
 
 	$scope.canAddBucket = () => {
 		return $scope.buckets.length < $scope.MAX_NUM_BUCKETS;
-	}
+	};
 
 	$scope.validBucket = (bucketIndex) => {
 		for (let item of $scope.buckets[bucketIndex].items) {
 			const validLength = (
 				item.text &&
 				item.text.length &&
-				item.text.length > $scope.MAX_ITEM_LENGTH
+				item.text.length < $scope.MAX_ITEM_LENGTH
 			);
 			if (!validLength) {
 				return false;
 			}
 		}
 		return true;
-	}
+	};
 
-	$scope.allUnique = () => {
+	const allUnique = () => {
 		let uniqueItems = {};
 		let uniqueBucketNames = {};
 
@@ -100,24 +102,57 @@ SortItOut.controller("SortItOutController", ($scope) => {
 			}
 		}
 		return true;
-	}
+	};
 
-	$scope.getSaveError = () => {
-		if (!$scope.allUnique()) {
-			return "All bucket names and items must be unique";
+	const getSaveError = () => {
+		if (!allUnique()) {
+			return "all bucket names and items must be unique";
 		}
+
 		for (let i = 0; i < $scope.buckets.length; i++) {
-			if (!validBucket(i)) {
+			if (!$scope.validBucket(i)) {
 				const bucketName = $scope.buckets[i].name;
-				return `Bucket ${bucketName} contains an invalid item`;
+				return `bucket "${bucketName}" contains an invalid item`;
 			}
 		}
 		return false;
+	};
+
+	$scope.showEditDialog = (ev, bucketIndex) => {
+		$scope.editBucketIndex = bucketIndex;
+		$mdDialog.show({
+			contentElement: "#edit-dialog-container",
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose: true,
+			openFrom: ev.currentTarget,
+			closeTo: ev.currentTarget
+		});
+	};
+
+	$scope.showConfirmDelete = (ev) => {
+		const confirm = $mdDialog.confirm()
+			.title("Are you sure you want to delete this bucket?")
+			.textContent("This will delete all items in this bucket as well.")
+			.ariaLabel("Bucket Delete Confirm")
+			.targetEvent(ev)
+			.ok("Delete")
+			.cancel("Cancel");
+		$mdDialog.show(confirm).then(
+			() => deleteBucket(),
+			() => null
+		);
+	}
+
+	const deleteBucket = () => {
+		console.log("deleting bucket ", $scope.editBucketIndex);
+		$scope.buckets.splice($scope.editBucketIndex, 1);
 	}
 
 	$scope.onSaveClicked = () => {
 		console.log("onSaveClicked");
 		const saveError = getSaveError();
+		console.log("save error: ", saveError);
 		if (saveError) {
 			Materia.CreatorCore.cancelSave(saveError);
 		}

@@ -41,10 +41,16 @@
 
 			<div layout="column" id="content">
 				<div id="card-container">
-					<md-card class="md-whiteframe-3dp bucket" ng-repeat="(bucketIndex, bucket) in buckets" layout="row">
-						<div class="bucket-name">
-							{{bucket.name}}
-						</div>
+					<md-card class="md-whiteframe-3dp bucket" ng-repeat="(bucketIndex, bucket) in buckets">
+						<md-toolbar class="bucket-header">
+							<div class="md-toolbar-tools">
+								<h3>{{bucket.name}}</h3>
+								<span flex></span>
+								<md-button class="bucket-edit" ng-click="showEditDialog($event, bucketIndex)">
+									Edit
+								</button>
+							</div>
+						</md-toolbar>
 						<div class="bucket-items" layout="column">
 							<form name="bucketItemsForm" autocomplete="off" ng-repeat="item in bucket.items">
 								<md-input-container class="md-block">
@@ -65,6 +71,34 @@
 							Add Bucket
 						</md-button>
 					</div>
+				</div>
+			</div>
+
+			<div style="visibility: hidden">
+				<div class="md-dialog-container" id="edit-dialog-container">
+					<md-dialog id="edit-dialog">
+						<md-dialog-content>
+							<div class="md-dialog-content">
+								<form name="bucketNameForm" autocomplete="off">
+									<md-input-container class="md-block">
+										<label>Bucket Name</label>
+										<input type="text" ng-model="item.text" name="item" required spellcheck="true" autocomplete="off">
+										<div ng-messages="bucketItemsForm.item.$error">
+											<div ng-message="required">Name is required.</div>
+										</div>
+									</md-input-container>
+
+									<md-button id="edit-bucket-save" class="md-accent md-raised toggle-option">
+										Save
+									</md-button>
+
+									<md-button id="edit-bucket-delete" class="md-raised toggle-option" ng-click="showConfirmDelete($event)">
+										Delete Bucket
+									</md-button>
+								</form>
+							</div>
+						</md-dialog-content>
+					</md-dialog>
 				</div>
 			</div>
 

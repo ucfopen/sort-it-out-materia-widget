@@ -25,25 +25,31 @@
 		overflow-y: auto;
 
 		#card-container {
-			margin-bottom: 64px;
+			margin: 0 auto 64px;
+			width: 700px;
 
 			.bucket {
-				padding: 20px;
+				margin-bottom: 25px;
 
-				.bucket-name {
-					background: blue;
-					color: white;
-					height: 120px;
-					width: 150px;
-					font-size: 26px;
-					margin: 25px;
-					padding: 10px;
+				.bucket-header {
+					border-top-left-radius: 2px;
+					border-top-right-radius: 2px;
+				}
+
+				.bucket-items {
+					padding: 20px;
 				}
 			}
 		}
 
 		#add-bucket {
-			margin: 20px;
+			margin-bottom: 25px;
+			padding: 0 30px;
 		}
 	}
+}
+
+#edit-bucket-delete {
+	color: white;
+	background-color: #FF3333;
 }
