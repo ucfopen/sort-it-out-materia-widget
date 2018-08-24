@@ -38,6 +38,15 @@
 
 				.bucket-items {
 					padding: 20px;
+
+					button.md-button.option-controls {
+						min-width: 30px;
+						margin-top: -20px;
+						opacity: 0.5;
+						i {
+							line-height: 45px;
+						}
+					}
 				}
 			}
 		}
