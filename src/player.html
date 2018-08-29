@@ -14,7 +14,9 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script src="materia.enginecore.js"></script>
 
-		<!-- ANGULAR DEPENDENCIES -->
+		<!-- WIDGET DEPENDENCIES -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+		<script src="jquery.ui.touch-punch.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-animate.min.js"></script>
 
@@ -25,34 +27,31 @@
 		<div id="content">
 			<div id="menu-bar">
 				<h1 id="title">{{ instance.name }}</h1>
-				<button>Submit</button>
+				<button ng-click="logEverything()">Submit</button>
 			</div>
 
 			<div id="desktop">
-				desktop.
+				<div data-drag="true" class="desktop-item" ng-repeat="item in desktopItems">
+					{{item}}
+				</div>
 			</div>
 
 			<div id="dock">
-				<div class="folder">
+				<div class="folder" ng-repeat="folder in folders">
 					<div class="folder-icon">
-						<div class="folder-name">Folder 1</div>
-						<div class="peek1">peek 1</div>
-						<div class="peek2">peek 2</div>
-						<div class="peek3">...</div>
+						<div class="folder-name"><span>{{ folder.text }}<span></div>
+						<div class="peek-items">
+							<div>peek 1</div>
+							<div>peek 2</div>
+							<div>...</div>
+						</div>
 					</div>
 					<span class="folder-status">empty</span>
-				</div>
-				<div class="folder">
-					<span class="folder-name">Folder 2</span>
-				</div>
-				<div class="folder">
-					<span class="folder-name">Folder 3</span>
-				</div>
-				<div class="folder">
-					<span class="folder-name">WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW</span>
-				</div>
-				<div class="folder">
-					<span class="folder-name">This folder name has 30 chars!</span>
+					<div class="folder-items-container" data-drop="true" ng-model="folder.items">
+						<div class="folder-item" ng-repeat="item in folder.items">
+							{{item}}
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

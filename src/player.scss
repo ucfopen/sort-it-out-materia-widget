@@ -1,5 +1,10 @@
 body {
 	margin: 0;
+	background-image: url(assets/desktop.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center center;
+	height: 100vh;
 }
 
 #menu-bar {
@@ -7,7 +12,7 @@ body {
 	height: 36px;
 	left: 0;
 	right: 0;
-	background-color: green;
+	background-color: rgba(230, 230, 230, 0.8);
 	display: flex;
 	justify-content: space-between;
 
@@ -23,10 +28,19 @@ body {
 	bottom: 125px;
 	left: 0;
 	right: 0;
-	background-color: red;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
+
+	.desktop-item {
+		font-size: 20px;
+		background: white;
+		border-radius: 3px;
+		padding: 5px 10px;
+		display: inline-block;
+		margin: 10px;
+		cursor: grab;
+		cursor: -webkit-grab;
+		cursor: -moz-grab;
+		user-select: none;
+	}
 }
 
 #dock {
@@ -35,29 +49,36 @@ body {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background-color: blue;
 	display: flex;
 	justify-content: space-around;
 
 	.folder {
-		background-color: orange;
 		height: 100%;
 		width: 150px;
+		position: relative;
+
+		&:hover {
+			.folder-name {
+				transform: rotateX(-40deg) translate3d(0, -9px, 30px);
+			}
+		}
 
 		// folder-icon is the back panel
 		.folder-icon {
-			background-color: darken(beige, 15%);
+			background-color: darken(#efefac, 15%);
 			height: 80%;
 			width: 130px;
 			margin: 10px auto;
-			border-radius: 3px;
+			border-top-right-radius: 3px;
+			border-bottom-right-radius: 3px;
+			border-bottom-left-radius: 3px;
 			position: relative;
 			perspective: 300px; // for 3D
 
 			// :before is the top tab
 			&:before {
 				content: " ";
-				background-color: darken(beige, 15%);
+				background-color: darken(#efefac, 15%);
 				position: absolute;
 				height: 10px;
 				width: 60px;
@@ -65,19 +86,23 @@ body {
 				border-top-left-radius: 3px;
 				border-top-right-radius: 3px;
 			}
-			// :after is the front panel
-			&:after {
+
+			.folder-name {
 				content: " ";
-				background-color: rgba(beige, 0.7);
+				background-color: #efefac;
 				position: absolute;
 				height: 100%;
 				width: 130px;
 				top: 0;
 				border-radius: 3px;
 				transition: all 300ms ease;
-			}
-			&:hover:after {
-				transform: rotateX(-40deg) translate3d(0, -9px, 30px);
+				display: flex;
+				text-align: center;
+
+				span {
+					min-width: 5%;
+					margin: auto;
+				}
 			}
 
 			.folder-name {
@@ -85,5 +110,12 @@ body {
 			}
 		}
 
+		.folder-items-container {
+			background-color: rgba(white, 0.4);
+			height: 100%;
+			width: 100%;
+			position: absolute;
+			top: 0;
+		}
 	}
 }
