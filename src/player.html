@@ -36,26 +36,29 @@
 				</div>
 			</div>
 
-			<div id="dock">
-				<div class="folder" ng-repeat="folder in folders" ng-click="selectFolder($index)">
+			<div id="preview-background" ng-show="showFolderPreview" ng-click="showFolderPreview = false">
+			</div>
+
+			<div id="dock" ng-click="showFolderPreview = false">
+				<div class="folder" ng-repeat="folder in folders" ng-click="selectFolder($event, $index)">
 					<div class="folder-icon">
-						<div class="folder-name"><span>{{ folder.text }}<span></div>
+						<div class="folder-name"><span>{{folder.text}}<span></div>
 						<div class="peek-items">
-							<div>peek 1</div>
-							<div>peek 2</div>
-							<div>...</div>
+							<div ng-if="folder.items.length > 0">{{folder.items[0]}}</div>
 						</div>
 					</div>
 					<span class="folder-status">empty</span>
-					<div class="folder-items-container" ng-model="folder.items">
-						<div class="folder-item" ng-repeat="item in folder.items">
-							{{item}}
-						</div>
-					</div>
 				</div>
 			</div>
-		</div>
 
+			<div id="folder-preview" ng-show="showFolderPreview">
+				<h1>{{folders[folderPreviewIndex].text}}</h1>
+				<div class="preview-item" ng-repeat="item in folders[folderPreviewIndex].items">
+					{{item}}
+				</div>
+			</div>
+
+		</div>
 	</body>
 </html>
 

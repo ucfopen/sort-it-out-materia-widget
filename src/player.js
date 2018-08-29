@@ -2,6 +2,7 @@ const SortItOut = angular.module("SortItOutEngine", []);
 
 SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 
+	$scope.showFolderPreview = false;
 	let selectedText;
 
 	$scope.start = (instance, qset, version) => {
@@ -53,7 +54,8 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		}
 	}
 
-	$scope.selectFolder = index => {
+	$scope.selectFolder = (e, index) => {
+		e.stopPropagation();
 		if (selectedText) {
 			$scope.folders[index].items.push(selectedText);
 			$scope.desktopItems = $scope.desktopItems.filter(
@@ -62,6 +64,8 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			$(".desktop-item.selected").removeClass("selected");
 			selectedText = null;
 		} else {
+			$scope.showFolderPreview = true;
+			$scope.folderPreviewIndex = index;
 			console.log("this would open the folder");
 		}
 	}

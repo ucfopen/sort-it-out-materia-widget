@@ -123,3 +123,37 @@ body {
 		}
 	}
 }
+
+#preview-background {
+	position: fixed;
+	top: 36px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(gray, 0.7);
+}
+
+#folder-preview {
+	position: fixed;
+	background-color: rgba(black, 0.8);
+	width: 80%;
+	left: 10%;
+	bottom: 150px;
+	height: 300px;
+
+	h1 {
+		margin: 10px 20px;
+		color: white;
+	}
+
+	.preview-item {
+		font-size: 20px;
+		background: white;
+		border-radius: 3px;
+		padding: 5px 10px;
+		display: inline-block;
+		margin: 10px;
+		user-select: none;
+	}
+
+}
