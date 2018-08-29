@@ -31,13 +31,13 @@
 			</div>
 
 			<div id="desktop">
-				<div data-drag="true" class="desktop-item" ng-repeat="item in desktopItems">
+				<div class="desktop-item" ng-repeat="item in desktopItems" ng-click="selectItem($event, item)">
 					{{item}}
 				</div>
 			</div>
 
 			<div id="dock">
-				<div class="folder" ng-repeat="folder in folders">
+				<div class="folder" ng-repeat="folder in folders" ng-click="selectFolder($index)">
 					<div class="folder-icon">
 						<div class="folder-name"><span>{{ folder.text }}<span></div>
 						<div class="peek-items">
@@ -47,7 +47,7 @@
 						</div>
 					</div>
 					<span class="folder-status">empty</span>
-					<div class="folder-items-container" data-drop="true" ng-model="folder.items">
+					<div class="folder-items-container" ng-model="folder.items">
 						<div class="folder-item" ng-repeat="item in folder.items">
 							{{item}}
 						</div>

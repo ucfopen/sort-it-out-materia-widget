@@ -40,6 +40,10 @@ body {
 		cursor: -webkit-grab;
 		cursor: -moz-grab;
 		user-select: none;
+
+		&.selected {
+			background-color: yellow;
+		}
 	}
 }
 
