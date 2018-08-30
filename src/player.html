@@ -15,8 +15,6 @@
 		<script src="materia.enginecore.js"></script>
 
 		<!-- WIDGET DEPENDENCIES -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
-		<script src="jquery.ui.touch-punch.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-animate.min.js"></script>
 
@@ -24,23 +22,20 @@
 		<script src="player.js"></script>
 	</head>
 	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak>
-		<div id="content">
+		<div id="content" ng-mousemove="mouseMove($event)" ng-mouseup="mouseUp()">
 			<div id="menu-bar">
 				<h1 id="title">{{ instance.name }}</h1>
 				<button ng-click="logEverything()">Submit</button>
 			</div>
 
 			<div id="desktop">
-				<div class="desktop-item" ng-repeat="item in desktopItems" ng-click="selectItem($event, item)">
+				<div class="desktop-item" ng-class="{selected: item == selectedText}" ng-repeat="item in desktopItems" ng-click="selectItem($event, item)" ng-mousedown="itemMouseDown($event, item)" ng-mouseup="itemMouseUp($event, item)">
 					{{item}}
 				</div>
 			</div>
 
-			<div id="preview-background" ng-show="showFolderPreview" ng-click="showFolderPreview = false">
-			</div>
-
 			<div id="dock" ng-click="showFolderPreview = false">
-				<div class="folder" ng-repeat="folder in folders" ng-click="selectFolder($event, $index)">
+				<div class="folder" ng-repeat="folder in folders" ng-click="selectFolder($event, $index)" ng-mouseenter="peekFolder($index)" ng-mouseup="selectFolder($event, $index)">
 					<div class="folder-icon">
 						<div class="folder-name"><span>{{folder.text}}<span></div>
 						<div class="peek-items">
@@ -56,6 +51,9 @@
 				<div class="preview-item" ng-repeat="item in folders[folderPreviewIndex].items">
 					{{item}}
 				</div>
+			</div>
+
+			<div id="preview-background" ng-show="showFolderPreview" ng-click="showFolderPreview = false">
 			</div>
 
 		</div>

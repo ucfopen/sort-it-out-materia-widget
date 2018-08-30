@@ -9,12 +9,15 @@ body {
 
 #menu-bar {
 	top: 0;
-	height: 36px;
+	height: 30px;
+	padding: 5px;
 	left: 0;
 	right: 0;
-	background-color: rgba(230, 230, 230, 0.8);
+	background-color: #eeeeee;
 	display: flex;
 	justify-content: space-between;
+	z-index: 5;
+	position: relative;
 
 	h1 {
 		margin: 0 12px;
@@ -24,10 +27,12 @@ body {
 
 #desktop {
 	position: fixed;
-	top: 36px;
+	top: 0;
 	bottom: 125px;
 	left: 0;
 	right: 0;
+	padding-top: 40px;
+	z-index: 1;
 
 	.desktop-item {
 		font-size: 20px;
@@ -55,6 +60,7 @@ body {
 	right: 0;
 	display: flex;
 	justify-content: space-around;
+	z-index: 4;
 
 	.folder {
 		height: 100%;
@@ -126,11 +132,12 @@ body {
 
 #preview-background {
 	position: fixed;
-	top: 36px;
+	top: 40px;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	background-color: rgba(gray, 0.7);
+	z-index: 2;
 }
 
 #folder-preview {
@@ -140,6 +147,7 @@ body {
 	left: 10%;
 	bottom: 150px;
 	height: 300px;
+	z-index: 3;
 
 	h1 {
 		margin: 10px 20px;

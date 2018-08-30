@@ -3,7 +3,12 @@ const SortItOut = angular.module("SortItOutEngine", []);
 SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 
 	$scope.showFolderPreview = false;
-	let selectedText;
+	$scope.selectedText = false;
+	let itemSelected;
+	const minBoundsX = 15;
+	const maxBoundsX = 785;
+	const minBoundsY = 60;
+	const maxBoundsY = 550;
 
 	$scope.start = (instance, qset, version) => {
 		console.log("qset: ", qset);
@@ -41,35 +46,57 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		console.log("folders: ", $scope.folders);
 	}
 
-	$scope.selectItem = (e, text) => {
-		const target = $(e.currentTarget);
-		const alreadySelected = target.hasClass("selected");
+	$scope.itemMouseDown = (e, text) => {
+		console.log(e);
+		if (itemSelected) {
+			console.log("there's already something selected??");
+		}
+		itemSelected = e.currentTarget;
 
-		$(".desktop-item.selected").removeClass("selected");
-		if (alreadySelected) {
-			selectedText = null;
-		} else {
-			target.addClass("selected");
-			selectedText = text;
+		$(itemSelected).css({
+			position: "absolute",
+			top: e.clientY - 30,
+			left: e.clientX - 50
+		});
+		$scope.selectedText = text;
+	}
+
+	$scope.mouseUp = () => {
+		itemSelected = false;
+		$scope.selectedText = false;
+	}
+
+	$scope.mouseMove = e => {
+		if (itemSelected) {
+			const outOfBoundsY = e.clientY < minBoundsY || e.clientY > maxBoundsY;
+			const outOfBoundsX = e.clientX < minBoundsX || e.clientX > maxBoundsX;
+			if (outOfBoundsY || outOfBoundsX) {
+				console.log("outOfBounds!");
+				return $scope.mouseUp(e);
+			}
+			console.log(e);
+			$(itemSelected).css({
+				position: "absolute",
+				top: e.clientY - 30,
+				left: e.clientX - 50
+			});
 		}
 	}
 
 	$scope.selectFolder = (e, index) => {
 		e.stopPropagation();
-		if (selectedText) {
-			$scope.folders[index].items.push(selectedText);
+		if ($scope.selectedText) {
+			$scope.folders[index].items.push($scope.selectedText);
 			$scope.desktopItems = $scope.desktopItems.filter(
-				text => text != selectedText
+				text => text != $scope.selectedText
 			);
 			$(".desktop-item.selected").removeClass("selected");
-			selectedText = null;
+			$scope.selectedText = false;
 		} else {
 			$scope.showFolderPreview = true;
 			$scope.folderPreviewIndex = index;
-			console.log("this would open the folder");
 		}
 	}
 
 	Materia.Engine.start($scope);
 });
-
