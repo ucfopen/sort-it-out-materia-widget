@@ -1,3 +1,5 @@
+$folder-color: #efefac;
+
 body {
 	margin: 0;
 	background-image: url(assets/desktop.jpg);
@@ -68,7 +70,7 @@ body {
 		position: relative;
 		user-select: none;
 
-		&:hover {
+		&:hover, &.peeked {
 			.folder-name {
 				transform: rotateX(-40deg) translate3d(0, -9px, 30px);
 			}
@@ -76,7 +78,7 @@ body {
 
 		// folder-icon is the back panel
 		.folder-icon {
-			background-color: darken(#efefac, 15%);
+			background-color: darken($folder-color, 15%);
 			height: 80%;
 			width: 130px;
 			margin: 10px auto;
@@ -89,7 +91,7 @@ body {
 			// :before is the top tab
 			&:before {
 				content: " ";
-				background-color: darken(#efefac, 15%);
+				background-color: darken($folder-color, 15%);
 				position: absolute;
 				height: 10px;
 				width: 60px;
@@ -100,7 +102,7 @@ body {
 
 			.folder-name {
 				content: " ";
-				background-color: #efefac;
+				background-color: $folder-color;
 				position: absolute;
 				height: 100%;
 				width: 130px;
@@ -121,12 +123,15 @@ body {
 			}
 		}
 
-		.folder-items-container {
-			background-color: rgba(white, 0.4);
-			height: 100%;
-			width: 100%;
+		.folder-arrow {
 			position: absolute;
-			top: 0;
+			top: -18px;
+			left: 68px;
+			border-left: 12px solid transparent;
+			border-right: 12px solid transparent;
+			border-bottom: 15px solid $folder-color;
+			height: 0;
+			width: 0;
 		}
 	}
 }
@@ -165,5 +170,4 @@ body {
 		margin: 10px;
 		user-select: none;
 	}
-
 }

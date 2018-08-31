@@ -66,13 +66,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		return { x, y };
 	}
 
-	const scatterItems = () => {
-		console.log("scatterItems");
-		$(".desktop-item").each(function() {
-			console.log(this);
-		});
-	}
-
 	$scope.logEverything = () => {
 		console.log("\n\n\n\n");
 		console.log("desktopItems: ", $scope.desktopItems);
@@ -80,7 +73,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	}
 
 	$scope.itemMouseDown = (e, text) => {
-		console.log(e);
 		if (itemSelected) {
 			console.log("there's already something selected??");
 		}
@@ -89,7 +81,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 
 		const top = e.clientY - 30;
 		const left = e.clientX - 50;
-		console.log(top, left);
 		$(itemSelected).css({ top, left });
 		prevPosition = { top, left };
 	}
@@ -114,6 +105,16 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	}
 
 	$scope.mouseMove = e => {
+		if (e.center) { // if it's a hammer event
+			const underElem = $(document.elementFromPoint(e.clientX, e.clientY));
+			const folderElem = underElem.closest(".folder");
+			if (folderElem.length) {
+				folderElem.addClass("peeked");
+			} else {
+				$(".peeked").removeClass("peeked");
+			}
+		}
+
 		if (itemSelected) {
 			if (isOutOfBounds(e)) {
 				console.log("outOfBounds!");
@@ -126,6 +127,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	}
 
 	$scope.mouseUp = e => {
+		$(".peeked").removeClass("peeked");
 		if (!itemSelected) {
 			return;
 		}
@@ -144,9 +146,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			const underElem = $(document.elementFromPoint(e.clientX, e.clientY));
 			const folderElem = underElem.closest(".folder");
 			if (folderElem.length) {
-				$scope.selectFolder(false, folderElem.data("index"));
-			} else {
-				console.log("not on a folder; x, y: ", e.clientX, e.clientY)
+				$scope.selectFolder(e, folderElem.data("index"));
 			}
 		}
 
@@ -170,6 +170,15 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			$scope.showFolderPreview = true;
 			$scope.folderPreviewIndex = index;
 		}
+	}
+
+	$scope.hideFolderPreview = () => {
+		$scope.showFolderPreview = false;
+		$scope.folderPreviewIndex = -1;
+	}
+
+	$scope.peekFolder = index => {
+		$scope.folders[index].peeked = true;
 	}
 
 	Materia.Engine.start($scope);

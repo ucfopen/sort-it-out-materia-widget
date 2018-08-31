@@ -43,20 +43,19 @@
 				</div>
 			</div>
 
-			<div id="dock" ng-click="showFolderPreview = false">
-				<div class="folder"
+			<div id="dock" ng-click="hideFolderPreview()">
+				<div class="folder" ng-class="{ peeked: folder.peeked }"
 					ng-repeat="folder in folders"
 					ng-click="selectFolder($event, $index)"
-					ng-mouseenter="peekFolder($index)"
-					ng-mouseup="selectFolder($event, $index)"
-					hm-panend="standardizeEvent($event, $index, selectFolder)" data-index="{{$index}}">
+					data-index="{{$index}}">
 					<div class="folder-icon">
 						<div class="folder-name"><span>{{folder.text}}<span></div>
 						<div class="peek-items">
 							<div ng-if="folder.items.length > 0">{{folder.items[0]}}</div>
 						</div>
 					</div>
-					<span class="folder-status">empty</span>
+					<div class="folder-arrow" ng-show="folderPreviewIndex == $index">
+					</div>
 				</div>
 			</div>
 
@@ -67,7 +66,7 @@
 				</div>
 			</div>
 
-			<div id="preview-background" ng-show="showFolderPreview" ng-click="showFolderPreview = false">
+			<div id="preview-background" ng-show="showFolderPreview" ng-click="hideFolderPreview()">
 			</div>
 
 		</div>
