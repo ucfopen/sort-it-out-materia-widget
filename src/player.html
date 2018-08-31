@@ -17,25 +17,39 @@
 		<!-- WIDGET DEPENDENCIES -->
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-animate.min.js"></script>
+		<script src="hammer.min.js"></script>
+		<script src="angular-hammer.js"></script>
 
 		<!-- MAIN WIDGET SCRIPT -->
 		<script src="player.js"></script>
 	</head>
 	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak>
-		<div id="content" ng-mousemove="mouseMove($event)" ng-mouseup="mouseUp()">
+		<div id="content" ng-mousemove="mouseMove($event)" ng-mouseup="mouseUp($event)" hm-panmove="standardizeEvent($event, false, mouseMove)">
 			<div id="menu-bar">
-				<h1 id="title">{{ instance.name }}</h1>
+				<h1 id="title">{{instance.name}}</h1>
 				<button ng-click="logEverything()">Submit</button>
 			</div>
 
 			<div id="desktop">
-				<div class="desktop-item" ng-class="{selected: item == selectedText}" ng-repeat="item in desktopItems" ng-click="selectItem($event, item)" ng-mousedown="itemMouseDown($event, item)" ng-mouseup="itemMouseUp($event, item)">
-					{{item}}
+				<div
+					class="desktop-item" ng-class="{selected: item.text == selectedText}"
+					ng-style="{ 'top': item.position.y, 'left': item.position.x }"
+					ng-repeat="item in desktopItems"
+					ng-mousedown="itemMouseDown($event, item.text)"
+					ng-mouseup="itemMouseUp($event, item.text)"
+					hm-panstart="standardizeEvent($event, item.text, itemMouseDown)"
+					hm-panend="standardizeEvent($event, item.text, mouseUp)">
+					{{item.text}}
 				</div>
 			</div>
 
 			<div id="dock" ng-click="showFolderPreview = false">
-				<div class="folder" ng-repeat="folder in folders" ng-click="selectFolder($event, $index)" ng-mouseenter="peekFolder($index)" ng-mouseup="selectFolder($event, $index)">
+				<div class="folder"
+					ng-repeat="folder in folders"
+					ng-click="selectFolder($event, $index)"
+					ng-mouseenter="peekFolder($index)"
+					ng-mouseup="selectFolder($event, $index)"
+					hm-panend="standardizeEvent($event, $index, selectFolder)" data-index="{{$index}}">
 					<div class="folder-icon">
 						<div class="folder-name"><span>{{folder.text}}<span></div>
 						<div class="peek-items">
@@ -59,4 +73,3 @@
 		</div>
 	</body>
 </html>
-

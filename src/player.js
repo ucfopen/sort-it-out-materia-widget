@@ -1,21 +1,36 @@
-const SortItOut = angular.module("SortItOutEngine", []);
+const SortItOut = angular.module("SortItOutEngine", ["hmTouchEvents"]);
+//const SortItOut = angular.module("SortItOutEngine", []);
+
+//hammerDefaultOptsProvider.set({recognizers: [[Hammer.Tap, {time: 250}]] });
 
 SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 
 	$scope.showFolderPreview = false;
 	$scope.selectedText = false;
 	let itemSelected;
-	const minBoundsX = 15;
-	const maxBoundsX = 785;
-	const minBoundsY = 60;
-	const maxBoundsY = 550;
+	let prevPosition;
+	let bounds;
 
 	$scope.start = (instance, qset, version) => {
-		console.log("qset: ", qset);
+		bounds = generateBounds();
 		$scope.instance = instance;
 		$scope.folders = buildFolders(qset);
 		$scope.desktopItems = buildItems(qset);
 		$scope.$apply();
+	}
+
+	const generateBounds = () => {
+		const width = $("#desktop").width();
+		const height = $("#desktop").height();
+		const x = {
+			min: 15,
+			max: width - 15
+		};
+		const y = {
+			min: 15,
+			max: height - 15
+		};
+		return { x, y };
 	}
 
 	const buildFolders = qset => {
@@ -35,9 +50,27 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	}
 
 	const buildItems = qset => {
-		return qset.items.map( item =>
-			item.questions[0].text
-		);
+		return qset.items.map( item => {
+			return {
+				text: item.questions[0].text,
+				position: generateRandomPosition()
+			};
+		});
+	}
+
+	const generateRandomPosition = () => {
+		const yRange = bounds.y.max - bounds.y.min - 125;
+		const y = ~~(Math.random() * (yRange) ) + bounds.y.min;
+		const xRange = bounds.x.max - bounds.x.min;
+		const x = ~~(Math.random() * (xRange) ) + bounds.x.min;
+		return { x, y };
+	}
+
+	const scatterItems = () => {
+		console.log("scatterItems");
+		$(".desktop-item").each(function() {
+			console.log(this);
+		});
 	}
 
 	$scope.logEverything = () => {
@@ -52,46 +85,87 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			console.log("there's already something selected??");
 		}
 		itemSelected = e.currentTarget;
-
-		$(itemSelected).css({
-			position: "absolute",
-			top: e.clientY - 30,
-			left: e.clientX - 50
-		});
 		$scope.selectedText = text;
+
+		const top = e.clientY - 30;
+		const left = e.clientX - 50;
+		console.log(top, left);
+		$(itemSelected).css({ top, left });
+		prevPosition = { top, left };
 	}
 
-	$scope.mouseUp = () => {
-		itemSelected = false;
-		$scope.selectedText = false;
+	const isOutOfBounds = e => {
+		const outOfBoundsX = e.clientX < bounds.x.min || e.clientX > bounds.x.max;
+		const outOfBoundsY = e.clientY < bounds.y.min || e.clientY > bounds.y.max;
+		return outOfBoundsX || outOfBoundsY;
+	}
+
+	// hammer event properties are different from native, this changes the event
+	// and will call the regular function after
+	$scope.standardizeEvent = (hammerEvent, param2, cb)=> {
+		hammerEvent.clientX = hammerEvent.center.x;
+		hammerEvent.clientY = hammerEvent.center.y;
+		hammerEvent.currentTarget = hammerEvent.target;
+		if (param2) {
+			cb(hammerEvent, param2);
+		} else {
+			cb(hammerEvent);
+		}
 	}
 
 	$scope.mouseMove = e => {
 		if (itemSelected) {
-			const outOfBoundsY = e.clientY < minBoundsY || e.clientY > maxBoundsY;
-			const outOfBoundsX = e.clientX < minBoundsX || e.clientX > maxBoundsX;
-			if (outOfBoundsY || outOfBoundsX) {
+			if (isOutOfBounds(e)) {
 				console.log("outOfBounds!");
 				return $scope.mouseUp(e);
 			}
-			console.log(e);
-			$(itemSelected).css({
-				position: "absolute",
-				top: e.clientY - 30,
-				left: e.clientX - 50
-			});
+			const top = e.clientY - 30;
+			const left = e.clientX - 50;
+			$(itemSelected).css({ top, left });
 		}
 	}
 
+	$scope.mouseUp = e => {
+		if (!itemSelected) {
+			return;
+		}
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		}
+
+		if (isOutOfBounds(e)) {
+			// put it back if it's out of bounds
+			$(itemSelected).css({
+				top: prevPosition.top,
+				left: prevPosition.left
+			});
+		} else {
+			// if dragged on a folder, put it in
+			const underElem = $(document.elementFromPoint(e.clientX, e.clientY));
+			const folderElem = underElem.closest(".folder");
+			if (folderElem.length) {
+				$scope.selectFolder(false, folderElem.data("index"));
+			} else {
+				console.log("not on a folder; x, y: ", e.clientX, e.clientY)
+			}
+		}
+
+		itemSelected = false;
+		$scope.selectedText = false;
+	}
+
 	$scope.selectFolder = (e, index) => {
-		e.stopPropagation();
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		}
 		if ($scope.selectedText) {
 			$scope.folders[index].items.push($scope.selectedText);
 			$scope.desktopItems = $scope.desktopItems.filter(
-				text => text != $scope.selectedText
+				item => item.text != $scope.selectedText
 			);
 			$(".desktop-item.selected").removeClass("selected");
 			$scope.selectedText = false;
+			itemSelected = false;
 		} else {
 			$scope.showFolderPreview = true;
 			$scope.folderPreviewIndex = index;
