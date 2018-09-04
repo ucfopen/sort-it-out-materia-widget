@@ -125,11 +125,11 @@ body {
 
 		.folder-arrow {
 			position: absolute;
-			top: -18px;
+			top: -25px;
 			left: 68px;
 			border-left: 12px solid transparent;
 			border-right: 12px solid transparent;
-			border-bottom: 15px solid $folder-color;
+			border-top: 15px solid rgba(black, 0.8);
 			height: 0;
 			width: 0;
 		}

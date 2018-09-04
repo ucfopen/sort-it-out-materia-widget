@@ -9,11 +9,12 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	$scope.selectedText = false;
 	let itemSelected;
 	let prevPosition;
-	let bounds;
+	let placementBounds; // bounds for random placement
+	let dragBounds;      // bounds for dragging
 
 	$scope.start = (instance, qset, version) => {
-		bounds = generateBounds();
-		$scope.instance = instance;
+		generateBounds();
+		$scope.title = instance.name;
 		$scope.folders = buildFolders(qset);
 		$scope.desktopItems = buildItems(qset);
 		$scope.$apply();
@@ -22,15 +23,28 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	const generateBounds = () => {
 		const width = $("#desktop").width();
 		const height = $("#desktop").height();
-		const x = {
-			min: 15,
-			max: width - 15
+
+		placementBounds = {
+			x: {
+				min: 15,
+				max: width - 150
+			},
+			y: {
+				min: 15,
+				max: height - 15
+			}
 		};
-		const y = {
-			min: 15,
-			max: height - 15
+
+		dragBounds = {
+			x: {
+				min: 15,
+				max: width - 15
+			},
+			y: {
+				min: 45,
+				max: height + 15
+			}
 		};
-		return { x, y };
 	}
 
 	const buildFolders = qset => {
@@ -59,10 +73,11 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	}
 
 	const generateRandomPosition = () => {
-		const yRange = bounds.y.max - bounds.y.min - 125;
-		const y = ~~(Math.random() * (yRange) ) + bounds.y.min;
-		const xRange = bounds.x.max - bounds.x.min;
-		const x = ~~(Math.random() * (xRange) ) + bounds.x.min;
+		const pb = placementBounds;
+		const yRange = pb.y.max - pb.y.min - 125;
+		const y = ~~(Math.random() * (yRange) ) + pb.y.min;
+		const xRange = pb.x.max - pb.x.min;
+		const x = ~~(Math.random() * (xRange) ) + pb.x.min;
 		return { x, y };
 	}
 
@@ -86,8 +101,9 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	}
 
 	const isOutOfBounds = e => {
-		const outOfBoundsX = e.clientX < bounds.x.min || e.clientX > bounds.x.max;
-		const outOfBoundsY = e.clientY < bounds.y.min || e.clientY > bounds.y.max;
+		const db = dragBounds;
+		const outOfBoundsX = e.clientX < db.x.min || e.clientX > db.x.max;
+		const outOfBoundsY = e.clientY < db.y.min || e.clientY > db.y.max;
 		return outOfBoundsX || outOfBoundsY;
 	}
 
@@ -147,6 +163,14 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			const folderElem = underElem.closest(".folder");
 			if (folderElem.length) {
 				$scope.selectFolder(e, folderElem.data("index"));
+			}
+
+			// if dragged onto dock but not in folder, put it back
+			if (underElem.attr("id") == "dock") {
+				$(itemSelected).css({
+					top: prevPosition.top,
+					left: prevPosition.left
+				})
 			}
 		}
 

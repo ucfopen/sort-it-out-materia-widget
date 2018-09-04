@@ -26,7 +26,7 @@
 	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak>
 		<div id="content" ng-mousemove="mouseMove($event)" ng-mouseup="mouseUp($event)" hm-panmove="standardizeEvent($event, false, mouseMove)">
 			<div id="menu-bar">
-				<h1 id="title">{{instance.name}}</h1>
+				<h1 id="title">{{title}}</h1>
 				<button ng-click="logEverything()">Submit</button>
 			</div>
 
@@ -51,7 +51,7 @@
 					<div class="folder-icon">
 						<div class="folder-name"><span>{{folder.text}}<span></div>
 						<div class="peek-items">
-							<div ng-if="folder.items.length > 0">{{folder.items[0]}}</div>
+							<div ng-if="folder.items.length > 0">{{folder.items[folder.items.length - 1]}}</div>
 						</div>
 					</div>
 					<div class="folder-arrow" ng-show="folderPreviewIndex == $index">
