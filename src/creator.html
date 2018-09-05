@@ -54,11 +54,13 @@
 						</md-toolbar>
 						<div class="bucket-items" layout="column">
 							<form name="bucketItemsForm" autocomplete="off" ng-repeat="item in bucket.items">
-								<md-input-container class="md-inline-block">
+								<md-input-container class="md-inline-block bucket-input-container">
 									<label>Item {{$index + 1}}</label>
-									<input type="text" ng-model="item.text" name="item" required spellcheck="true" autocomplete="off">
+									<input type="text" ng-model="item.text" name="item" required spellcheck="true" autocomplete="off" md-maxlength="MAX_ITEM_LENGTH" pattern='[^"&]*'>
 									<div ng-messages="bucketItemsForm.item.$error">
 										<div ng-message="required">Item name is required.</div>
+										<div ng-message="md-maxlength">Item name too long</div>
+										<div ng-message="pattern">Item name cannot contain " or &</div>
 									</div>
 								</md-input-container>
 

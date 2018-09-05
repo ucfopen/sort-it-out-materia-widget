@@ -97,7 +97,7 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 			const validLength = (
 				item.text &&
 				item.text.length &&
-				item.text.length < $scope.MAX_ITEM_LENGTH
+				item.text.length <= $scope.MAX_ITEM_LENGTH
 			);
 			if (!validLength) {
 				return false;
