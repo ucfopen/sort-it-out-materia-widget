@@ -24,10 +24,10 @@
 		<script src="player.js"></script>
 	</head>
 	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak>
-		<div id="content" ng-mousemove="mouseMove($event)" ng-mouseup="mouseUp($event)" hm-panmove="standardizeEvent($event, false, mouseMove)">
+		<div id="content" ng-mousemove="mouseMove($event)" ng-mouseup="mouseUp($event)" hm-panmove="standardizeEvent($event, false, mouseMove)" hm-panend="standardizeEvent($event, false, mouseUp)">
 			<div id="menu-bar">
 				<h1 id="title">{{title}}</h1>
-				<button ng-click="logEverything()">Submit</button>
+				<button ng-click="submitClick()" ng-disabled="!readyToSubmit()">Submit</button>
 			</div>
 
 			<div id="desktop">
@@ -36,20 +36,18 @@
 					ng-style="{ 'top': item.position.y, 'left': item.position.x }"
 					ng-repeat="item in desktopItems"
 					ng-mousedown="itemMouseDown($event, item.text)"
-					ng-mouseup="itemMouseUp($event, item.text)"
-					hm-panstart="standardizeEvent($event, item.text, itemMouseDown)"
-					hm-panend="standardizeEvent($event, item.text, mouseUp)">
+					hm-panstart="standardizeEvent($event, item.text, itemMouseDown)">
 					{{item.text}}
 				</div>
 			</div>
 
 			<div id="dock" ng-click="hideFolderPreview()">
-				<div class="folder" ng-class="{ peeked: folder.peeked }"
+				<div class="folder"
 					ng-repeat="folder in folders"
 					ng-click="selectFolder($event, $index)"
 					data-index="{{$index}}">
 					<div class="folder-icon">
-						<div class="folder-name"><span>{{folder.text}}<span></div>
+						<div class="folder-name"><span>{{folder.text}}</span></div>
 						<div class="peek-items">
 							<div ng-if="folder.items.length > 0">{{folder.items[folder.items.length - 1]}}</div>
 						</div>
@@ -59,14 +57,22 @@
 				</div>
 			</div>
 
-			<div id="folder-preview" ng-show="showFolderPreview">
+			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
 				<h1>{{folders[folderPreviewIndex].text}}</h1>
-				<div class="preview-item" ng-repeat="item in folders[folderPreviewIndex].items">
-					{{item}}
+				<div
+					class="preview-item" ng-class="{selected: item.text == selectedText}"
+					ng-repeat="item in folders[folderPreviewIndex].items"
+					ng-mousedown="previewMouseDown($event, item.text)"
+					hm-panstart="standardizeEvent($event, item.text, previewMouseDown)">
+					{{item.text}}
 				</div>
 			</div>
 
-			<div id="preview-background" ng-show="showFolderPreview" ng-click="hideFolderPreview()">
+			<div id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
+			</div>
+
+			<div id="back-to-desktop" ng-show="showFolderPreview && selectedText">
+				Put Back on Desktop
 			</div>
 
 		</div>

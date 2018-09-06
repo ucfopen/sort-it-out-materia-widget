@@ -1,4 +1,4 @@
-const SortItOut = angular.module("SortItOutEngine", ["hmTouchEvents"]);
+const SortItOut = angular.module("SortItOutEngine", ["ngAnimate", "hmTouchEvents"]);
 //const SortItOut = angular.module("SortItOutEngine", []);
 
 //hammerDefaultOptsProvider.set({recognizers: [[Hammer.Tap, {time: 250}]] });
@@ -7,13 +7,19 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 
 	$scope.showFolderPreview = false;
 	$scope.selectedText = false;
+	$scope.desktopItems = [];
+	$scope.folders = [];
 	let itemSelected;
 	let prevPosition;
-	let placementBounds; // bounds for random placement
-	let dragBounds;      // bounds for dragging
+	let placementBounds;    // bounds for random placement
+	let dragBounds;         // bounds for dragging
+	let itemSource;         // to track where the dragged item came from
+	const SRC_DESKTOP = -1; // otherwise itemSource is folderIndex
+	let questionToId;       // used for scoring
 
 	$scope.start = (instance, qset, version) => {
 		generateBounds();
+		generateQuestionToId(qset);
 		$scope.title = instance.name;
 		$scope.folders = buildFolders(qset);
 		$scope.desktopItems = buildItems(qset);
@@ -30,7 +36,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 				max: width - 150
 			},
 			y: {
-				min: 15,
+				min: 45,
 				max: height - 15
 			}
 		};
@@ -81,12 +87,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		return { x, y };
 	}
 
-	$scope.logEverything = () => {
-		console.log("\n\n\n\n");
-		console.log("desktopItems: ", $scope.desktopItems);
-		console.log("folders: ", $scope.folders);
-	}
-
 	$scope.itemMouseDown = (e, text) => {
 		if (itemSelected) {
 			console.log("there's already something selected??");
@@ -98,6 +98,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		const left = e.clientX - 50;
 		$(itemSelected).css({ top, left });
 		prevPosition = { top, left };
+		itemSource = SRC_DESKTOP;
 	}
 
 	const isOutOfBounds = e => {
@@ -151,45 +152,69 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			e.stopPropagation();
 		}
 
-		if (isOutOfBounds(e)) {
-			// put it back if it's out of bounds
+		const underElem = $(document.elementFromPoint(e.clientX, e.clientY));
+		if (isOutOfBounds(e) || underElem.attr("id") == "dock") {
+			// put it back if it's out of bounds or over the dock but not a folder
 			$(itemSelected).css({
 				top: prevPosition.top,
 				left: prevPosition.left
 			});
 		} else {
 			// if dragged on a folder, put it in
-			const underElem = $(document.elementFromPoint(e.clientX, e.clientY));
 			const folderElem = underElem.closest(".folder");
 			if (folderElem.length) {
 				$scope.selectFolder(e, folderElem.data("index"));
 			}
+		}
 
-			// if dragged onto dock but not in folder, put it back
-			if (underElem.attr("id") == "dock") {
-				$(itemSelected).css({
-					top: prevPosition.top,
-					left: prevPosition.left
+		// source is a folder
+		if (itemSource != SRC_DESKTOP) {
+			if (underElem.attr("id") == "back-to-desktop") {
+				// if dragged on to the gray background, put it back on the desktop
+				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
+					item => item != $scope.selectedText
+				);
+				$scope.desktopItems.push({
+					text: $scope.selectedText,
+					position: {
+						x: e.clientX - 35,
+						y: e.clientY - 30
+					}
 				})
 			}
+			$(itemSelected).css({ position: "static" });
 		}
 
 		itemSelected = false;
 		$scope.selectedText = false;
+		itemSource = SRC_DESKTOP;
 	}
 
 	$scope.selectFolder = (e, index) => {
 		if (e.stopPropagation) {
 			e.stopPropagation();
 		}
+		if (index == itemSource) {
+			return;
+		}
+
 		if ($scope.selectedText) {
 			$scope.folders[index].items.push($scope.selectedText);
-			$scope.desktopItems = $scope.desktopItems.filter(
-				item => item.text != $scope.selectedText
-			);
+
+			if (itemSource == SRC_DESKTOP) {
+				$scope.desktopItems = $scope.desktopItems.filter(
+					item => item.text != $scope.selectedText
+				);
+			} else {
+				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
+					item => item != $scope.selectedText
+				);
+			}
+
 			$(".desktop-item.selected").removeClass("selected");
-			$scope.selectedText = false;
 			itemSelected = false;
+			$scope.selectedText = false;
+			itemSource = SRC_DESKTOP;
 		} else {
 			$scope.showFolderPreview = true;
 			$scope.folderPreviewIndex = index;
@@ -201,8 +226,46 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		$scope.folderPreviewIndex = -1;
 	}
 
-	$scope.peekFolder = index => {
-		$scope.folders[index].peeked = true;
+	$scope.readyToSubmit = () => $scope.desktopItems.length == 0;
+
+	$scope.previewMouseDown = (e, text) => {
+		if (itemSelected) {
+			console.log("there's already something selected??");
+		}
+		itemSelected = e.currentTarget;
+		$scope.selectedText = text;
+
+		const top = e.clientY - 30;
+		const left = e.clientX - 50;
+		$(itemSelected).css({ position: "fixed", top, left });
+		prevPosition = { top, left };
+		itemSource = $scope.folderPreviewIndex;
+	}
+
+	const generateQuestionToId = qset => {
+		questionToId = {};
+		for (let item of qset.items) {
+			questionToId[item.questions[0].text] = item.id;
+		}
+	}
+
+	$scope.submitClick = () => {
+		console.log("\n\n\n\n");
+		console.log("desktopItems: ", $scope.desktopItems);
+		console.log("folders: ", $scope.folders);
+
+		if (!$scope.readyToSubmit()) {
+			return;
+		}
+
+		$scope.folders.forEach( ({text, items}) => {
+			items.forEach( item => {
+				const id = questionToId[item];
+				Materia.Score.submitQuestionForScoring(id, text)
+
+			});
+		});
+		Materia.Engine.end();
 	}
 
 	Materia.Engine.start($scope);
