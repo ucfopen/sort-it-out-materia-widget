@@ -1,0 +1,31 @@
+.folder {
+	background: white;
+	padding: 20px;
+	margin: 10px;
+	border-radius: 5px;
+
+	.item {
+		padding: 15px;
+		margin: 10px;
+		width: 100%;
+		box-sizing: border-box;
+		background: #efc4c9;
+		font-size: 20px;
+		border-radius: 5px;
+
+		&.correct {
+			background: #d7e3d6;
+		}
+
+		span {
+			max-width: 50%;
+		}
+
+		.correct-folder {
+			float: right;
+			font-style: italic;
+			font-size: 16px;
+			line-height: 24px;
+		}
+	}
+}
