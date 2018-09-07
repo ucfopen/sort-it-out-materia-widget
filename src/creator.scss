@@ -20,7 +20,7 @@
 	}
 
 	#content {
-		height: 100%;
+		height: calc(100% - 64px);
 		margin-top: 64px;
 		overflow-y: auto;
 

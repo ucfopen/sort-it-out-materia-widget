@@ -7,7 +7,7 @@ SortItOut.config( ($mdThemingProvider) =>
 SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 
 	$scope.MAX_ITEM_LENGTH = 30;
-	$scope.MAX_NUM_BUCKETS = 4;
+	$scope.MAX_NUM_BUCKETS = 5;
 
 	$scope.buckets = [
 		{
