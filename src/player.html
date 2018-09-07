@@ -4,7 +4,7 @@
 <!--[if IE 9 ]>    <html class="IE9"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <html class=""> <!--<![endif]-->
 	<head>
-		<title>Hello Widget</title>
+		<title>Sort-it-Out! Player</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 		<!-- STYLESHEETS -->
@@ -24,7 +24,7 @@
 		<script src="player.js"></script>
 	</head>
 	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak>
-		<div id="content" ng-mousemove="mouseMove($event)" ng-mouseup="mouseUp($event)" hm-panmove="standardizeEvent($event, false, mouseMove)" hm-panend="standardizeEvent($event, false, mouseUp)">
+		<div id="content" ng-mousemove="mouseMove($event)" hm-panmove="standardizeEvent($event, false, mouseMove)" hm-panend="standardizeEvent($event, false, mouseUp)" ng-mouseup="mouseUp($event)">
 			<div id="menu-bar">
 				<h1 id="title">{{title}}</h1>
 				<button ng-click="submitClick()" ng-disabled="!readyToSubmit()">Submit</button>
@@ -60,11 +60,11 @@
 			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
 				<h1>{{folders[folderPreviewIndex].text}}</h1>
 				<div
-					class="preview-item" ng-class="{selected: item.text == selectedText}"
+					class="preview-item" ng-class="{selected: item == selectedText}"
 					ng-repeat="item in folders[folderPreviewIndex].items"
-					ng-mousedown="previewMouseDown($event, item.text)"
-					hm-panstart="standardizeEvent($event, item.text, previewMouseDown)">
-					{{item.text}}
+					ng-mousedown="previewMouseDown($event, item)"
+					hm-panstart="standardizeEvent($event, item, previewMouseDown)">
+					{{item}}
 				</div>
 			</div>
 

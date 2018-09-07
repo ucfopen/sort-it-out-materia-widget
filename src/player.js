@@ -1,7 +1,4 @@
 const SortItOut = angular.module("SortItOutEngine", ["ngAnimate", "hmTouchEvents"]);
-//const SortItOut = angular.module("SortItOutEngine", []);
-
-//hammerDefaultOptsProvider.set({recognizers: [[Hammer.Tap, {time: 250}]] });
 
 SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 
@@ -88,9 +85,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	}
 
 	$scope.itemMouseDown = (e, text) => {
-		if (itemSelected) {
-			console.log("there's already something selected??");
-		}
 		itemSelected = e.currentTarget;
 		$scope.selectedText = text;
 
