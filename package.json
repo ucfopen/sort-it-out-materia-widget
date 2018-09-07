@@ -22,7 +22,7 @@
     "gulp-sass": "^2.2.0",
     "gulp-uglify": "^2.1.2",
     "gulp-zip": "^3.2.0",
-    "materia-widget-development-kit": "git+ssh://git@clu.cdl.ucf.edu:materia/materia-widget-development-kit.git#v1.2.0",
+    "materia-widget-development-kit": "^1.2.2",
     "run-sequence": "^1.1.5",
     "yargs": "^4.5.0"
   },
@@ -33,15 +33,5 @@
     "pretest": "npm run build-dev",
     "test": "karma start ./karma.conf.js --no-auto-watch --single-run"
   },
-  "author": "University of Central Florida, Center for Distributed Learning",
-  "devDependencies": {
-    "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-coverage": "^0.5.5",
-    "karma-eslint": "^2.1.0",
-    "karma-jasmine": "^0.3.8",
-    "karma-json-fixtures-preprocessor": "0.0.6",
-    "karma-mocha-reporter": "^2.1.0",
-    "karma-phantomjs-launcher": "^1.0.2"
-  }
+  "author": "University of Central Florida, Center for Distributed Learning"
 }

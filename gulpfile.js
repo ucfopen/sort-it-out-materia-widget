@@ -19,8 +19,6 @@ var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 
-var Server = require('karma').Server;
-
 var configs = require('../../backend/config.json');
 
 var widget = sanitize("sort-it-out");
@@ -453,20 +451,6 @@ gulp.task('sass-assets', function()
 				.pipe( print() )
 				.pipe(gulp.dest(sourceString + buildLocation + 'assets/'));
 });
-// Runs the karma tests
-gulp.task('test', function(done) {
-	if (testFull) {
-		new Server({
-			configFile: __dirname + 'karma-full.conf.js',
-			singleRun: true
-		}, done).start();
-	} else {
-		new Server({
-			configFile: __dirname + 'karma.conf.js',
-			singleRun: true
-		}, done).start();
-	}
-});
 // Mangles code before end-user receives, to protect proprietary content.
 gulp.task('uglify', function()
 {
@@ -593,7 +577,6 @@ exports["buildReadable"] = function(widget, full, callback) {
 		'replace:build',
 		'compress',
 		'rename:ext',
-		'test',
 		'clean:package',
 		'callback'
 	);
