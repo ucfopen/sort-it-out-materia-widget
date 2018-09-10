@@ -5,7 +5,7 @@ SortItOut.controller("SortItOutScoreCtrl", ($scope) => {
 		$scope.folders = buildFolders(qset, scoreTable)
 		$scope.$apply()
 
-		Materia.ScoreCore.setHeight()
+		Materia.ScoreCore.setHeight( document.documentElement.scrollHeight )
 	}
 
 	const buildFolders = (qset, scoreTable) => {
