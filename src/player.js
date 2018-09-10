@@ -90,7 +90,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 
 		const top = e.clientY - 30;
 		const left = e.clientX - 50;
-		$(itemSelected).css({ top, left });
+		$(itemSelected).css({ top, left, "z-index": 5 });
 		prevPosition = { top, left };
 		itemSource = SRC_DESKTOP;
 	}
@@ -145,6 +145,8 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		if (e.stopPropagation) {
 			e.stopPropagation();
 		}
+
+		$(itemSelected).css({ "z-index": 1 })
 
 		const underElem = $(document.elementFromPoint(e.clientX, e.clientY));
 		if (isOutOfBounds(e) || underElem.attr("id") == "dock") {
@@ -223,9 +225,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	$scope.readyToSubmit = () => $scope.desktopItems.length == 0;
 
 	$scope.previewMouseDown = (e, text) => {
-		if (itemSelected) {
-			console.log("there's already something selected??");
-		}
 		itemSelected = e.currentTarget;
 		$scope.selectedText = text;
 
