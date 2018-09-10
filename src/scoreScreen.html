@@ -23,6 +23,7 @@
 	<body ng-app="SortItOutScore" ng-controller="SortItOutScoreCtrl" ng-cloak>
 		<div class="folder" ng-repeat="folder in folders">
 			<h1>{{folder.name}}</h1>
+			<div class="empty-text" ng-if="folder.items.length == 0">No items were placed in this folder.</div>
 			<div class="item" ng-class="{correct: item.correct}" ng-repeat="item in folder.items">
 				<span>{{item.text}}<span>
 				<span ng-if="!item.correct" class="correct-folder">

@@ -1,14 +1,21 @@
 .folder {
 	background: white;
 	padding: 20px;
-	margin: 10px;
+	margin: 20px 10px;
 	border-radius: 5px;
+
+	h1 {
+		margin: 0;
+	}
+
+	.empty-text {
+		text-align: center;
+		font-style: italic;
+	}
 
 	.item {
 		padding: 15px;
 		margin: 10px;
-		width: 100%;
-		box-sizing: border-box;
 		background: #efc4c9;
 		font-size: 20px;
 		border-radius: 5px;
