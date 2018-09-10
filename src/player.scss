@@ -168,6 +168,16 @@ body {
 		display: inline-block;
 		margin: 10px;
 		user-select: none;
+		cursor: grab;
+		cursor: -webkit-grab;
+		cursor: -moz-grab;
+
+		&.selected {
+			background-color: yellow;
+			cursor: grabbing;
+			cursor: -webkit-grabbing;
+			cursor: -moz-grabbing;
+		}
 	}
 }
 

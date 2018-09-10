@@ -88,8 +88,12 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		itemSelected = e.currentTarget;
 		$scope.selectedText = text;
 
-		const top = e.clientY - 30;
-		const left = e.clientX - 50;
+		const left = parseInt($(itemSelected).css("left"), 10);
+		const top = parseInt($(itemSelected).css("top"), 10);
+
+		$scope.offsetLeft = left - e.clientX;
+		$scope.offsetTop = top - e.clientY;
+
 		$(itemSelected).css({ top, left, "z-index": 5 });
 		prevPosition = { top, left };
 		itemSource = SRC_DESKTOP;
@@ -131,8 +135,8 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 				console.log("outOfBounds!");
 				return $scope.mouseUp(e);
 			}
-			const top = e.clientY - 30;
-			const left = e.clientX - 50;
+			const left = e.clientX + $scope.offsetLeft;
+			const top = e.clientY + $scope.offsetTop;
 			$(itemSelected).css({ top, left });
 		}
 	}
@@ -152,8 +156,8 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		if (isOutOfBounds(e) || underElem.attr("id") == "dock") {
 			// put it back if it's out of bounds or over the dock but not a folder
 			$(itemSelected).css({
-				top: prevPosition.top,
-				left: prevPosition.left
+				left: prevPosition.left,
+				top: prevPosition.top
 			});
 		} else {
 			// if dragged on a folder, put it in
@@ -173,12 +177,16 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 				$scope.desktopItems.push({
 					text: $scope.selectedText,
 					position: {
-						x: e.clientX - 35,
-						y: e.clientY - 30
+						x: e.clientX + $scope.offsetLeft,
+						y: e.clientY + $scope.offsetTop
 					}
 				})
 			}
-			$(itemSelected).css({ position: "static" });
+			$(itemSelected).css({
+				left: '',
+				top: '',
+				position: "static"
+			});
 		}
 
 		itemSelected = false;
@@ -228,10 +236,17 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		itemSelected = e.currentTarget;
 		$scope.selectedText = text;
 
-		const top = e.clientY - 30;
-		const left = e.clientX - 50;
-		$(itemSelected).css({ position: "fixed", top, left });
-		prevPosition = { top, left };
+		// setting it to `position: fixed` first will automatically set the
+		// top and left attributes to match where it was with `position: static`
+		$(itemSelected).css({ position: "fixed" });
+
+		const left = parseInt($(itemSelected).css("left"), 10);
+		const top = parseInt($(itemSelected).css("top"), 10);
+
+		$scope.offsetLeft = left - e.clientX;
+		$scope.offsetTop = top - e.clientY;
+
+		$(itemSelected).css({ top, left });
 		itemSource = $scope.folderPreviewIndex;
 	}
 
@@ -243,10 +258,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	}
 
 	$scope.submitClick = () => {
-		console.log("\n\n\n\n");
-		console.log("desktopItems: ", $scope.desktopItems);
-		console.log("folders: ", $scope.folders);
-
 		if (!$scope.readyToSubmit()) {
 			return;
 		}
