@@ -19,6 +19,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	let itemSelected
 	let prevPosition
 	let placementBounds    // bounds for random placement
+	let pickupCount = 0    // every new item picked up will go to the top (z-index)
 	let dragBounds         // bounds for dragging
 	let itemSource         // to track where the dragged item came from
 	const SRC_DESKTOP = -1 // otherwise itemSource is folderIndex
@@ -105,7 +106,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		$scope.offsetLeft = left - e.clientX
 		$scope.offsetTop = top - e.clientY
 
-		$(itemSelected).css({ top, left, "z-index": 5 })
+		$(itemSelected).css({ top, left, "z-index": pickupCount++ })
 		prevPosition = { top, left }
 		itemSource = SRC_DESKTOP
 	}
@@ -143,7 +144,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 
 		if (itemSelected) {
 			if (isOutOfBounds(e)) {
-				console.log("outOfBounds!")
 				return $scope.mouseUp(e)
 			}
 			const left = e.clientX + $scope.offsetLeft
@@ -160,8 +160,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		if (e.stopPropagation) {
 			e.stopPropagation()
 		}
-
-		$(itemSelected).css({ "z-index": 1 })
 
 		const underElem = $(document.elementFromPoint(e.clientX, e.clientY))
 		if (isOutOfBounds(e) || underElem.attr("id") == "dock") {

@@ -161,6 +161,12 @@ body {
 		color: white;
 	}
 
+	#empty-preview {
+		text-align: center;
+		color: white;
+		font-style: italic;
+	}
+
 	#preview-scroll-container {
  		overflow-y: auto;
  		position: absolute;
@@ -254,4 +260,8 @@ body {
 	text-align: center;
 	text-shadow: 0 0 30px white;
 	font-weight: bold;
+
+	&:hover {
+		font-size: 32px;
+	}
 }

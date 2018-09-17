@@ -61,6 +61,7 @@
 
 			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
 				<h1>{{folders[folderPreviewIndex].text}}</h1>
+				<p id="empty-preview" ng-if="folders[folderPreviewIndex].items.length == 0">This folder is empty</p>
 				<div id="preview-scroll-container" scroll>
 					<div
 						class="preview-item" ng-class="{selected: item == selectedText}"
