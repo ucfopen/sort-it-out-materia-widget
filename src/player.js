@@ -1,11 +1,21 @@
 const SortItOut = angular.module("SortItOutEngine", ["ngAnimate", "hmTouchEvents"]);
 
-SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
+// force scope to update when scrolling
+SortItOut.directive("scroll", () => {
+	return {
+		link: (scope, element) => {
+			element.bind("wheel", () => scope.$apply())
+			element.bind("touchmove", () => scope.$apply())
+		}
+	}
+})
 
+SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	$scope.showFolderPreview = false;
 	$scope.selectedText = false;
 	$scope.desktopItems = [];
 	$scope.folders = [];
+
 	let itemSelected;
 	let prevPosition;
 	let placementBounds;    // bounds for random placement
@@ -13,6 +23,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	let itemSource;         // to track where the dragged item came from
 	const SRC_DESKTOP = -1; // otherwise itemSource is folderIndex
 	let questionToId;       // used for scoring
+	const MARGIN_SIZE = 20; // #preview-scroll-container margin size
 
 	$scope.start = (instance, qset, version) => {
 		generateBounds();
@@ -182,11 +193,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 					}
 				})
 			}
-			$(itemSelected).css({
-				left: '',
-				top: '',
-				position: "static"
-			});
 		}
 
 		itemSelected = false;
@@ -230,18 +236,11 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		$scope.folderPreviewIndex = -1;
 	}
 
-	$scope.readyToSubmit = () => $scope.desktopItems.length == 0;
-
 	$scope.previewMouseDown = (e, text) => {
-		itemSelected = e.currentTarget;
+		itemSelected = $("#preview-selected-item")[0];
 		$scope.selectedText = text;
 
-		// setting it to `position: fixed` first will automatically set the
-		// top and left attributes to match where it was with `position: static`
-		$(itemSelected).css({ position: "fixed" });
-
-		const left = parseInt($(itemSelected).css("left"), 10);
-		const top = parseInt($(itemSelected).css("top"), 10);
+		const { left, top } = $(e.currentTarget).offset();
 
 		$scope.offsetLeft = left - e.clientX;
 		$scope.offsetTop = top - e.clientY;
@@ -250,12 +249,47 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		itemSource = $scope.folderPreviewIndex;
 	}
 
+	$scope.peekFolder = index => {
+		$(`.folder[data-index=${index}]`).addClass("peeked");
+	}
+
+	$scope.hidePeek = () => {
+		$(".peeked").removeClass("peeked");
+	}
+
 	const generateQuestionToId = qset => {
 		questionToId = {};
 		for (let item of qset.items) {
 			questionToId[item.questions[0].text] = item.id;
 		}
 	}
+
+	$scope.canScrollUp = () => $("#preview-scroll-container").scrollTop() > 0;
+
+	$scope.canScrollDown = () => {
+		const e = $("#preview-scroll-container")
+		const scrollBottom = e.scrollTop() + e.height();
+		const containerBottom = e[0].scrollHeight - MARGIN_SIZE
+		return scrollBottom < containerBottom
+	}
+
+	$scope.scrollUp = () => {
+		const currTop = $("#preview-scroll-container").scrollTop()
+		$("#preview-scroll-container").animate({
+			scrollTop: currTop - 100
+		}, 300)
+		setTimeout( () => $scope.$apply(), 300);
+	}
+
+	$scope.scrollDown = () => {
+		const currTop = $("#preview-scroll-container").scrollTop()
+		$("#preview-scroll-container").animate({
+			scrollTop: currTop + 100
+		}, 300)
+		setTimeout( () => $scope.$apply(), 300);
+	}
+
+	$scope.readyToSubmit = () => $scope.desktopItems.length == 0;
 
 	$scope.submitClick = () => {
 		if (!$scope.readyToSubmit()) {

@@ -45,6 +45,8 @@
 				<div class="folder"
 					ng-repeat="folder in folders"
 					ng-click="selectFolder($event, $index)"
+					ng-mouseenter="peekFolder($index)"
+					ng-mouseleave="hidePeek()"
 					data-index="{{$index}}">
 					<div class="folder-icon">
 						<div class="folder-name"><span>{{folder.text}}</span></div>
@@ -59,12 +61,19 @@
 
 			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
 				<h1>{{folders[folderPreviewIndex].text}}</h1>
-				<div
-					class="preview-item" ng-class="{selected: item == selectedText}"
-					ng-repeat="item in folders[folderPreviewIndex].items"
-					ng-mousedown="previewMouseDown($event, item)"
-					hm-panstart="standardizeEvent($event, item, previewMouseDown)">
-					{{item}}
+				<div id="preview-scroll-container" scroll>
+					<div
+						class="preview-item" ng-class="{selected: item == selectedText}"
+						ng-repeat="item in folders[folderPreviewIndex].items"
+						ng-mousedown="previewMouseDown($event, item)"
+						hm-panstart="standardizeEvent($event, item, previewMouseDown)">
+						{{item}}
+					</div>
+				</div>
+				<button id="preview-scroll-up" ng-if="showFolderPreview" ng-show="canScrollUp()" ng-click="scrollUp()">&uarr;</button>
+				<button id="preview-scroll-down" ng-if="showFolderPreview" ng-show="canScrollDown()" ng-click="scrollDown()">&darr;</button>
+				<div id="preview-selected-item" ng-show="showFolderPreview && selectedText">
+					{{selectedText}}
 				</div>
 			</div>
 
