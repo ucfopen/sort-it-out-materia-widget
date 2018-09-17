@@ -1,4 +1,4 @@
-const SortItOut = angular.module("SortItOutEngine", ["ngAnimate", "hmTouchEvents"]);
+const SortItOut = angular.module("SortItOutEngine", ["ngAnimate", "hmTouchEvents"])
 
 // force scope to update when scrolling
 SortItOut.directive("scroll", () => {
@@ -11,32 +11,32 @@ SortItOut.directive("scroll", () => {
 })
 
 SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
-	$scope.showFolderPreview = false;
-	$scope.selectedText = false;
-	$scope.desktopItems = [];
-	$scope.folders = [];
+	$scope.showFolderPreview = false
+	$scope.selectedText = false
+	$scope.desktopItems = []
+	$scope.folders = []
 
-	let itemSelected;
-	let prevPosition;
-	let placementBounds;    // bounds for random placement
-	let dragBounds;         // bounds for dragging
-	let itemSource;         // to track where the dragged item came from
-	const SRC_DESKTOP = -1; // otherwise itemSource is folderIndex
-	let questionToId;       // used for scoring
-	const MARGIN_SIZE = 20; // #preview-scroll-container margin size
+	let itemSelected
+	let prevPosition
+	let placementBounds    // bounds for random placement
+	let dragBounds         // bounds for dragging
+	let itemSource         // to track where the dragged item came from
+	const SRC_DESKTOP = -1 // otherwise itemSource is folderIndex
+	let questionToId       // used for scoring
+	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
 
 	$scope.start = (instance, qset, version) => {
-		generateBounds();
-		generateQuestionToId(qset);
-		$scope.title = instance.name;
-		$scope.folders = buildFolders(qset);
-		$scope.desktopItems = buildItems(qset);
-		$scope.$apply();
+		generateBounds()
+		generateQuestionToId(qset)
+		$scope.title = instance.name
+		$scope.folders = buildFolders(qset)
+		$scope.desktopItems = buildItems(qset)
+		$scope.$apply()
 	}
 
 	const generateBounds = () => {
-		const width = $("#desktop").width();
-		const height = $("#desktop").height();
+		const width = $("#desktop").width()
+		const height = $("#desktop").height()
 
 		placementBounds = {
 			x: {
@@ -47,7 +47,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 				min: 45,
 				max: height - 15
 			}
-		};
+		}
 
 		dragBounds = {
 			x: {
@@ -58,23 +58,23 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 				min: 45,
 				max: height + 15
 			}
-		};
+		}
 	}
 
 	const buildFolders = qset => {
-		let folders = [];
-		let seenFolders = {};
+		let folders = []
+		let seenFolders = {}
 		qset.items.forEach( item => {
-			const text = item.answers[0].text;
+			const text = item.answers[0].text
 			if (!seenFolders[text]) {
-				seenFolders[text] = true;
+				seenFolders[text] = true
 				folders.push({
 					text,
 					items: []
-				});
+				})
 			}
-		});
-		return folders;
+		})
+		return folders
 	}
 
 	const buildItems = qset => {
@@ -82,99 +82,99 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			return {
 				text: item.questions[0].text,
 				position: generateRandomPosition()
-			};
-		});
+			}
+		})
 	}
 
 	const generateRandomPosition = () => {
-		const pb = placementBounds;
-		const yRange = pb.y.max - pb.y.min - 125;
-		const y = ~~(Math.random() * (yRange) ) + pb.y.min;
-		const xRange = pb.x.max - pb.x.min;
-		const x = ~~(Math.random() * (xRange) ) + pb.x.min;
-		return { x, y };
+		const pb = placementBounds
+		const yRange = pb.y.max - pb.y.min - 125
+		const y = ~~(Math.random() * (yRange) ) + pb.y.min
+		const xRange = pb.x.max - pb.x.min
+		const x = ~~(Math.random() * (xRange) ) + pb.x.min
+		return { x, y }
 	}
 
 	$scope.itemMouseDown = (e, text) => {
-		itemSelected = e.currentTarget;
-		$scope.selectedText = text;
+		itemSelected = e.currentTarget
+		$scope.selectedText = text
 
-		const left = parseInt($(itemSelected).css("left"), 10);
-		const top = parseInt($(itemSelected).css("top"), 10);
+		const left = parseInt($(itemSelected).css("left"), 10)
+		const top = parseInt($(itemSelected).css("top"), 10)
 
-		$scope.offsetLeft = left - e.clientX;
-		$scope.offsetTop = top - e.clientY;
+		$scope.offsetLeft = left - e.clientX
+		$scope.offsetTop = top - e.clientY
 
-		$(itemSelected).css({ top, left, "z-index": 5 });
-		prevPosition = { top, left };
-		itemSource = SRC_DESKTOP;
+		$(itemSelected).css({ top, left, "z-index": 5 })
+		prevPosition = { top, left }
+		itemSource = SRC_DESKTOP
 	}
 
 	const isOutOfBounds = e => {
-		const db = dragBounds;
-		const outOfBoundsX = e.clientX < db.x.min || e.clientX > db.x.max;
-		const outOfBoundsY = e.clientY < db.y.min || e.clientY > db.y.max;
-		return outOfBoundsX || outOfBoundsY;
+		const db = dragBounds
+		const outOfBoundsX = e.clientX < db.x.min || e.clientX > db.x.max
+		const outOfBoundsY = e.clientY < db.y.min || e.clientY > db.y.max
+		return outOfBoundsX || outOfBoundsY
 	}
 
 	// hammer event properties are different from native, this changes the event
 	// and will call the regular function after
 	$scope.standardizeEvent = (hammerEvent, param2, cb)=> {
-		hammerEvent.clientX = hammerEvent.center.x;
-		hammerEvent.clientY = hammerEvent.center.y;
-		hammerEvent.currentTarget = hammerEvent.target;
+		hammerEvent.clientX = hammerEvent.center.x
+		hammerEvent.clientY = hammerEvent.center.y
+		hammerEvent.currentTarget = hammerEvent.target
 		if (param2) {
-			cb(hammerEvent, param2);
+			cb(hammerEvent, param2)
 		} else {
-			cb(hammerEvent);
+			cb(hammerEvent)
 		}
 	}
 
 	$scope.mouseMove = e => {
 		if (e.center) { // if it's a hammer event
-			const underElem = $(document.elementFromPoint(e.clientX, e.clientY));
-			const folderElem = underElem.closest(".folder");
+			const underElem = $(document.elementFromPoint(e.clientX, e.clientY))
+			const folderElem = underElem.closest(".folder")
 			if (folderElem.length) {
-				folderElem.addClass("peeked");
+				folderElem.addClass("peeked")
 			} else {
-				$(".peeked").removeClass("peeked");
+				$(".peeked").removeClass("peeked")
 			}
 		}
 
 		if (itemSelected) {
 			if (isOutOfBounds(e)) {
-				console.log("outOfBounds!");
-				return $scope.mouseUp(e);
+				console.log("outOfBounds!")
+				return $scope.mouseUp(e)
 			}
-			const left = e.clientX + $scope.offsetLeft;
-			const top = e.clientY + $scope.offsetTop;
-			$(itemSelected).css({ top, left });
+			const left = e.clientX + $scope.offsetLeft
+			const top = e.clientY + $scope.offsetTop
+			$(itemSelected).css({ top, left })
 		}
 	}
 
 	$scope.mouseUp = e => {
-		$(".peeked").removeClass("peeked");
+		$(".peeked").removeClass("peeked")
 		if (!itemSelected) {
-			return;
+			return
 		}
 		if (e.stopPropagation) {
-			e.stopPropagation();
+			e.stopPropagation()
 		}
 
 		$(itemSelected).css({ "z-index": 1 })
 
-		const underElem = $(document.elementFromPoint(e.clientX, e.clientY));
+		const underElem = $(document.elementFromPoint(e.clientX, e.clientY))
 		if (isOutOfBounds(e) || underElem.attr("id") == "dock") {
 			// put it back if it's out of bounds or over the dock but not a folder
 			$(itemSelected).css({
 				left: prevPosition.left,
 				top: prevPosition.top
-			});
+			})
 		} else {
 			// if dragged on a folder, put it in
-			const folderElem = underElem.closest(".folder");
+			const folderElem = underElem.closest(".folder")
 			if (folderElem.length) {
-				$scope.selectFolder(e, folderElem.data("index"));
+				$scope.selectFolder(e, folderElem.data("index"))
 			}
 		}
 
@@ -184,7 +184,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 				// if dragged on to the gray background, put it back on the desktop
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item != $scope.selectedText
-				);
+				)
 				$scope.desktopItems.push({
 					text: $scope.selectedText,
 					position: {
@@ -195,80 +195,80 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			}
 		}
 
-		itemSelected = false;
-		$scope.selectedText = false;
-		itemSource = SRC_DESKTOP;
+		itemSelected = false
+		$scope.selectedText = false
+		itemSource = SRC_DESKTOP
 	}
 
 	$scope.selectFolder = (e, index) => {
 		if (e.stopPropagation) {
-			e.stopPropagation();
+			e.stopPropagation()
 		}
 		if (index == itemSource) {
-			return;
+			return
 		}
 
 		if ($scope.selectedText) {
-			$scope.folders[index].items.push($scope.selectedText);
+			$scope.folders[index].items.push($scope.selectedText)
 
 			if (itemSource == SRC_DESKTOP) {
 				$scope.desktopItems = $scope.desktopItems.filter(
 					item => item.text != $scope.selectedText
-				);
+				)
 			} else {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item != $scope.selectedText
-				);
+				)
 			}
 
-			$(".desktop-item.selected").removeClass("selected");
-			itemSelected = false;
-			$scope.selectedText = false;
-			itemSource = SRC_DESKTOP;
+			$(".desktop-item.selected").removeClass("selected")
+			itemSelected = false
+			$scope.selectedText = false
+			itemSource = SRC_DESKTOP
 		} else {
-			$scope.showFolderPreview = true;
-			$scope.folderPreviewIndex = index;
+			$scope.showFolderPreview = true
+			$scope.folderPreviewIndex = index
 		}
 	}
 
 	$scope.hideFolderPreview = () => {
-		$scope.showFolderPreview = false;
-		$scope.folderPreviewIndex = -1;
+		$scope.showFolderPreview = false
+		$scope.folderPreviewIndex = -1
 	}
 
 	$scope.previewMouseDown = (e, text) => {
-		itemSelected = $("#preview-selected-item")[0];
-		$scope.selectedText = text;
+		itemSelected = $("#preview-selected-item")[0]
+		$scope.selectedText = text
 
-		const { left, top } = $(e.currentTarget).offset();
+		const { left, top } = $(e.currentTarget).offset()
 
-		$scope.offsetLeft = left - e.clientX;
-		$scope.offsetTop = top - e.clientY;
+		$scope.offsetLeft = left - e.clientX
+		$scope.offsetTop = top - e.clientY
 
-		$(itemSelected).css({ top, left });
-		itemSource = $scope.folderPreviewIndex;
+		$(itemSelected).css({ top, left })
+		itemSource = $scope.folderPreviewIndex
 	}
 
 	$scope.peekFolder = index => {
-		$(`.folder[data-index=${index}]`).addClass("peeked");
+		$(`.folder[data-index=${index}]`).addClass("peeked")
 	}
 
 	$scope.hidePeek = () => {
-		$(".peeked").removeClass("peeked");
+		$(".peeked").removeClass("peeked")
 	}
 
 	const generateQuestionToId = qset => {
-		questionToId = {};
+		questionToId = {}
 		for (let item of qset.items) {
-			questionToId[item.questions[0].text] = item.id;
+			questionToId[item.questions[0].text] = item.id
 		}
 	}
 
-	$scope.canScrollUp = () => $("#preview-scroll-container").scrollTop() > 0;
+	$scope.canScrollUp = () => $("#preview-scroll-container").scrollTop() > 0
 
 	$scope.canScrollDown = () => {
 		const e = $("#preview-scroll-container")
-		const scrollBottom = e.scrollTop() + e.height();
+		const scrollBottom = e.scrollTop() + e.height()
 		const containerBottom = e[0].scrollHeight - MARGIN_SIZE
 		return scrollBottom < containerBottom
 	}
@@ -278,7 +278,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		$("#preview-scroll-container").animate({
 			scrollTop: currTop - 100
 		}, 300)
-		setTimeout( () => $scope.$apply(), 300);
+		setTimeout( () => $scope.$apply(), 300)
 	}
 
 	$scope.scrollDown = () => {
@@ -286,25 +286,25 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		$("#preview-scroll-container").animate({
 			scrollTop: currTop + 100
 		}, 300)
-		setTimeout( () => $scope.$apply(), 300);
+		setTimeout( () => $scope.$apply(), 300)
 	}
 
-	$scope.readyToSubmit = () => $scope.desktopItems.length == 0;
+	$scope.readyToSubmit = () => $scope.desktopItems.length == 0
 
 	$scope.submitClick = () => {
 		if (!$scope.readyToSubmit()) {
-			return;
+			return
 		}
 
 		$scope.folders.forEach( ({text, items}) => {
 			items.forEach( item => {
-				const id = questionToId[item];
+				const id = questionToId[item]
 				Materia.Score.submitQuestionForScoring(id, text)
 
-			});
-		});
-		Materia.Engine.end();
+			})
+		})
+		Materia.Engine.end()
 	}
 
-	Materia.Engine.start($scope);
-});
+	Materia.Engine.start($scope)
+})
