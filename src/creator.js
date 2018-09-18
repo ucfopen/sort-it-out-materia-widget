@@ -19,6 +19,8 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 	]
 	$scope.editFolderIndex = 0
 	$scope.ready = false
+	$scope.showDialog = false
+	$scope.newFolder = { name: "" }
 
 	$scope.initNewWidget = (widget) => {
 		console.log("initNewWidget")
@@ -65,7 +67,7 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 	}
 
 	$scope.showAddDialog = (ev) => {
-		$scope.createFolderName = ""
+		$scope.showDialog = true
 		$mdDialog.show({
 			contentElement: "#create-dialog-container",
 			parent: angular.element(document.body),
@@ -78,10 +80,11 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 
 	$scope.createFolder = () => {
 		$scope.folders.push({
-			name: $scope.createFolderName,
+			name: $scope.newFolder.name,
 			items: [{ text: "" }]
 		})
-		$mdDialog.hide()
+		$scope.newFolder.name = ""
+		$scope.hideDialog()
 	}
 
 	$scope.canAddFolder = () => {
@@ -170,7 +173,10 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 		$mdDialog.hide()
 	}
 
-	$scope.hideDialog = () => $mdDialog.hide()
+	$scope.hideDialog = () => {
+		$mdDialog.hide()
+		$scope.showDialog = false
+	}
 
 	$scope.showConfirmDelete = (ev) => {
 		const confirm = $mdDialog.confirm()
