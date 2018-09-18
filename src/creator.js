@@ -9,15 +9,15 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 	$scope.MAX_ITEM_LENGTH = 30
 	$scope.MAX_NUM_BUCKETS = 5
 
-	$scope.buckets = [
+	$scope.folders = [
 		{
-			name: "Sample Bucket",
+			name: "Sample Folder",
 			items: [
 				{ text: "Sample Item" },
 			]
 		}
 	]
-	$scope.editBucketIndex = 0
+	$scope.editFolderIndex = 0
 	$scope.ready = false
 
 	$scope.initNewWidget = (widget) => {
@@ -31,41 +31,41 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 		console.log("initExistingWidget")
 		$scope.title = title
 		console.log(qset)
-		$scope.buckets = generateBuckets(qset.items)
+		$scope.folders = generateFolders(qset.items)
 		$scope.ready = true
 		$scope.$apply()
 	}
 
-	const generateBuckets = (qsetItems) => {
-		let buckets = []
-		let bucketNameMatching = {}
-		let numBuckets = 0
+	const generateFolders = (qsetItems) => {
+		let folders = []
+		let folderNameMatching = {}
+		let numFolders = 0
 
 		for (let qsetItem of qsetItems) {
-			const bucketName = qsetItem.answers[0].text
+			const folderName = qsetItem.answers[0].text
 			const item = qsetItem.questions[0]
-			if (bucketNameMatching[bucketName] == undefined) {
-				buckets.push({
-					name: bucketName,
+			if (folderNameMatching[folderName] == undefined) {
+				folders.push({
+					name: folderName,
 					items: []
 				})
-				bucketNameMatching[bucketName] = numBuckets++
+				folderNameMatching[folderName] = numFolders++
 			}
-			buckets[bucketNameMatching[bucketName]].items.push(item)
+			folders[folderNameMatching[folderName]].items.push(item)
 		}
-		return buckets
+		return folders
 	}
 
-	$scope.addItem = (bucketIndex) => {
-		$scope.buckets[bucketIndex].items.push( { text: "" } )
+	$scope.addItem = (folderIndex) => {
+		$scope.folders[folderIndex].items.push( { text: "" } )
 	}
 
-	$scope.removeItem = (bucketIndex, itemIndex) => {
-		$scope.buckets[bucketIndex].items.splice(itemIndex, 1)
+	$scope.removeItem = (folderIndex, itemIndex) => {
+		$scope.folders[folderIndex].items.splice(itemIndex, 1)
 	}
 
 	$scope.showAddDialog = (ev) => {
-		$scope.createBucketName = ""
+		$scope.createFolderName = ""
 		$mdDialog.show({
 			contentElement: "#create-dialog-container",
 			parent: angular.element(document.body),
@@ -76,24 +76,24 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 		})
 	}
 
-	$scope.createBucket = () => {
-		$scope.buckets.push({
-			name: $scope.createBucketName,
+	$scope.createFolder = () => {
+		$scope.folders.push({
+			name: $scope.createFolderName,
 			items: [{ text: "" }]
 		})
 		$mdDialog.hide()
 	}
 
-	$scope.canAddBucket = () => {
-		return $scope.buckets.length < $scope.MAX_NUM_BUCKETS
+	$scope.canAddFolder = () => {
+		return $scope.folders.length < $scope.MAX_NUM_BUCKETS
 	}
 
-	$scope.canDeleteBucket = () => {
-		return $scope.buckets.length > 1
+	$scope.canDeleteFolder = () => {
+		return $scope.folders.length > 1
 	}
 
-	$scope.validBucket = (bucketIndex) => {
-		for (let item of $scope.buckets[bucketIndex].items) {
+	$scope.validFolder = (folderIndex) => {
+		for (let item of $scope.folders[folderIndex].items) {
 			const validLength = (
 				item.text &&
 				item.text.length &&
@@ -103,20 +103,20 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 				return false
 			}
 		}
-		return $scope.buckets[bucketIndex].items.length > 0 // TODO should we allow empty buckets?
+		return $scope.folders[folderIndex].items.length > 0 // TODO should we allow empty folders?
 	}
 
 	const allUnique = () => {
 		let uniqueItems = {}
-		let uniqueBucketNames = {}
+		let uniqueFolderNames = {}
 
-		for (let bucket of $scope.buckets) {
-			if (uniqueBucketNames[bucket.name]) {
+		for (let folder of $scope.folders) {
+			if (uniqueFolderNames[folder.name]) {
 				return false
 			}
-			uniqueBucketNames[bucket.name] = true
+			uniqueFolderNames[folder.name] = true
 
-			for (let item of bucket.items) {
+			for (let item of folder.items) {
 				if (uniqueItems[item.text]) {
 					return false
 				}
@@ -128,19 +128,19 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 
 	const getSaveError = () => {
 		if (!allUnique()) {
-			return "all bucket names and items must be unique"
+			return "all folder names and items must be unique"
 		}
 
-		for (let i = 0; i < $scope.buckets.length; i++) {
-			if (!$scope.validBucket(i)) {
-				const bucketName = $scope.buckets[i].name
-				return `bucket "${bucketName}" contains an invalid item`
+		for (let i = 0; i < $scope.folders.length; i++) {
+			if (!$scope.validFolder(i)) {
+				const folderName = $scope.folders[i].name
+				return `folder "${folderName}" contains an invalid item`
 			}
 		}
 
-		for (let bucket of $scope.buckets) {
-			if (!bucket.name || !bucket.name.length) {
-				return "all buckets must have names"
+		for (let folder of $scope.folders) {
+			if (!folder.name || !folder.name.length) {
+				return "all folders must have names"
 			}
 		}
 
@@ -151,9 +151,9 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 		return false
 	}
 
-	$scope.showEditDialog = (ev, bucketIndex) => {
-		$scope.editBucketIndex = bucketIndex
-		$scope.editBucketName = $scope.buckets[bucketIndex].name
+	$scope.showEditDialog = (ev, folderIndex) => {
+		$scope.editFolderIndex = folderIndex
+		$scope.editFolderName = $scope.folders[folderIndex].name
 		$mdDialog.show({
 			contentElement: "#edit-dialog-container",
 			parent: angular.element(document.body),
@@ -166,7 +166,7 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 
 	$scope.updateName = () => {
 		// TODO should it validate the name before adding it?
-		$scope.buckets[$scope.editBucketIndex].name = $scope.editBucketName
+		$scope.folders[$scope.editFolderIndex].name = $scope.editFolderName
 		$mdDialog.hide()
 	}
 
@@ -174,14 +174,14 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 
 	$scope.showConfirmDelete = (ev) => {
 		const confirm = $mdDialog.confirm()
-			.title("Are you sure you want to delete this bucket?")
-			.textContent("This will delete all items in this bucket as well.")
-			.ariaLabel("Bucket Delete Confirm")
+			.title("Are you sure you want to delete this folder?")
+			.textContent("This will delete all items in this folder as well.")
+			.ariaLabel("Folder Delete Confirm")
 			.targetEvent(ev)
 			.ok("Delete")
 			.cancel("Cancel")
 		$mdDialog.show(confirm).then(
-			() => $scope.buckets.splice($scope.editBucketIndex, 1),
+			() => $scope.folders.splice($scope.editFolderIndex, 1),
 			() => null
 		)
 	}
@@ -202,9 +202,9 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 	const generateQset = () => {
 		let qset = { items: [] }
 
-		for (let bucket of $scope.buckets) {
-			const bucketName = $sanitize(bucket.name)
-			bucket.items.forEach( (item) => {
+		for (let folder of $scope.folders) {
+			const folderName = $sanitize(folder.name)
+			folder.items.forEach( (item) => {
 				const text = $sanitize(item.text)
 				qset.items.push({
 					materiaType: "question",
@@ -212,7 +212,7 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 					type: "QA",
 					options: {}, // TODO add 'description'
 					questions: [{ text }],
-					answers: [{ value: 100, text: bucketName }]
+					answers: [{ value: 100, text: folderName }]
 				})
 			})
 		}

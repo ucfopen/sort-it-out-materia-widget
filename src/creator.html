@@ -42,67 +42,67 @@
 
 			<div layout="column" id="content" ng-show="ready">
 				<div id="card-container">
-					<md-card class="md-whiteframe-3dp bucket" ng-repeat="(bucketIndex, bucket) in buckets">
-						<md-toolbar class="bucket-header">
+					<md-card class="md-whiteframe-3dp folder" ng-repeat="(folderIndex, folder) in folders">
+						<md-toolbar class="folder-header">
 							<div class="md-toolbar-tools">
-								<h3>{{bucket.name}}</h3>
+								<h3>{{folder.name}}</h3>
 								<span flex></span>
-								<md-button class="bucket-edit" ng-click="showEditDialog($event, bucketIndex)">
+								<md-button class="folder-edit" ng-click="showEditDialog($event, folderIndex)">
 									Edit
 								</button>
 							</div>
 						</md-toolbar>
-						<div class="bucket-items" layout="column">
-							<form name="bucketItemsForm" autocomplete="off" ng-repeat="item in bucket.items">
-								<md-input-container class="md-inline-block bucket-input-container">
+						<div class="folder-items" layout="column">
+							<form name="folderItemsForm" autocomplete="off" ng-repeat="item in folder.items">
+								<md-input-container class="md-inline-block folder-input-container">
 									<label>Item {{$index + 1}}</label>
 									<input type="text" ng-model="item.text" name="item" required spellcheck="true" autocomplete="off" md-maxlength="MAX_ITEM_LENGTH" pattern='[^"&]*'>
-									<div ng-messages="bucketItemsForm.item.$error">
+									<div ng-messages="folderItemsForm.item.$error">
 										<div ng-message="required">Item name is required.</div>
 										<div ng-message="md-maxlength">Item name too long</div>
 										<div ng-message="pattern">Item name cannot contain " or &</div>
 									</div>
 								</md-input-container>
 
-								<md-button class="option-controls" ng-click="removeItem(bucketIndex, $index)" tabindex="-1" ng-show="bucket.items.length > 1">
+								<md-button class="option-controls" ng-click="removeItem(folderIndex, $index)" tabindex="-1" ng-show="folder.items.length > 1">
 									<md-tooltip md-direction="below">Remove Option</md-tooltip>
 									<i class="material-icons">&#xE15D;</i>
 								</md-button>
 							</form>
-							<md-button class="md-accent md-raised toggle-option" ng-click="addItem(bucketIndex)" ng-disabled="!validBucket(bucketIndex)">
+							<md-button class="md-accent md-raised toggle-option" ng-click="addItem(folderIndex)" ng-disabled="!validFolder(folderIndex)">
 								Add Item
 							</md-button>
 						</div>
 					</md-card>
 					<div layout layout-align="center center">
-						<md-button id="add-bucket" class="md-accent md-raised toggle-option" ng-click="showAddDialog($event)" ng-disabled="!canAddBucket()">
-							Add Bucket
+						<md-button id="add-folder" class="md-accent md-raised toggle-option" ng-click="showAddDialog($event)" ng-disabled="!canAddFolder()">
+							Add Folder
 						</md-button>
 					</div>
 				</div>
 			</div>
 
-			<!-- Bucket Edit Dialog -->
+			<!-- Folder Edit Dialog -->
 			<div style="visibility: hidden">
 				<div class="md-dialog-container" id="edit-dialog-container">
 					<md-dialog id="edit-dialog">
 						<md-dialog-content>
 							<div class="md-dialog-content">
-								<form name="bucketNameForm" autocomplete="off">
+								<form name="folderNameForm" autocomplete="off">
 									<md-input-container class="md-block">
-										<label>Bucket Name</label>
-										<input type="text" ng-model="editBucketName" name="editBucketName" required spellcheck="true" autocomplete="off">
-										<div ng-messages="bucketItemsForm.editBucketName.$error">
+										<label>Folder Name</label>
+										<input type="text" ng-model="editFolderName" name="editFolderName" required spellcheck="true" autocomplete="off">
+										<div ng-messages="folderItemsForm.editFolderName.$error">
 											<div ng-message="required">Name is required.</div>
 										</div>
 									</md-input-container>
 
-									<md-button id="edit-bucket-save" class="md-accent md-raised toggle-option" ng-click="updateName()" ng-disabled="!editBucketName.length">
+									<md-button id="edit-folder-save" class="md-accent md-raised toggle-option" ng-click="updateName()" ng-disabled="!editFolderName.length">
 										Save
 									</md-button>
 
-									<md-button id="edit-bucket-delete" class="md-raised toggle-option" ng-click="showConfirmDelete($event)" ng-if="canDeleteBucket()">
-										Delete Bucket
+									<md-button id="edit-folder-delete" class="md-raised toggle-option" ng-click="showConfirmDelete($event)" ng-if="canDeleteFolder()">
+										Delete Folder
 									</md-button>
 								</form>
 							</div>
@@ -111,26 +111,26 @@
 				</div>
 			</div>
 
-			<!-- Create Bucket Dialog -->
+			<!-- Create Folder Dialog -->
 			<div style="visibility: hidden">
 				<div class="md-dialog-container" id="create-dialog-container">
 					<md-dialog id="create-dialog">
 						<md-dialog-content>
 							<div class="md-dialog-content">
-								<form name="bucketNameForm" autocomplete="off">
+								<form name="folderNameForm" autocomplete="off">
 									<md-input-container class="md-block">
-										<label>Bucket Name</label>
-										<input type="text" ng-model="createBucketName" name="createBucketName" required spellcheck="true" autocomplete="off">
-										<div ng-messages="bucketItemsForm.createBucketName.$error">
+										<label>Folder Name</label>
+										<input type="text" ng-model="createFolderName" name="createFolderName" required spellcheck="true" autocomplete="off">
+										<div ng-messages="folderItemsForm.createFolderName.$error">
 											<div ng-message="required">Name is required.</div>
 										</div>
 									</md-input-container>
 
-									<md-button id="create-bucket-save" class="md-accent md-raised toggle-option" ng-click="createBucket()" ng-disabled="!createBucketName.length">
+									<md-button id="create-folder-save" class="md-accent md-raised toggle-option" ng-click="createFolder()" ng-disabled="!createFolderName.length">
 										Create
 									</md-button>
 
-									<md-button id="create-bucket-cancel" class="md-raised toggle-option" ng-click="hideDialog()">
+									<md-button id="create-folder-cancel" class="md-raised toggle-option" ng-click="hideDialog()">
 										Cancel
 									</md-button>
 								</form>

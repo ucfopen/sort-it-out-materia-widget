@@ -28,21 +28,21 @@
 			margin: 0 auto 64px;
 			width: 700px;
 
-			.bucket {
+			.folder {
 				margin-bottom: 25px;
 
-				.bucket-header {
+				.folder-header {
 					border-top-left-radius: 2px;
 					border-top-right-radius: 2px;
 				}
 
-				.bucket-items {
+				.folder-items {
 					padding: 20px;
 
 					form {
 						margin: auto;
 
-						.bucket-input-container {
+						.folder-input-container {
 							width: 300px;
 						}
 
@@ -61,14 +61,14 @@
 			}
 		}
 
-		#add-bucket {
+		#add-folder {
 			margin-bottom: 25px;
 			padding: 0 30px;
 		}
 	}
 }
 
-#edit-bucket-delete {
+#edit-folder-delete {
 	color: white;
 	background-color: #FF3333;
 }
