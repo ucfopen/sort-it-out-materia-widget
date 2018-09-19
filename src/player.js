@@ -287,7 +287,9 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		setTimeout( () => $scope.$apply(), 300)
 	}
 
-	$scope.readyToSubmit = () => $scope.desktopItems.length == 0
+	$scope.readyToSubmit = () => {
+		return $scope.folders.length > 0 && $scope.desktopItems.length == 0
+	}
 
 	$scope.submitClick = () => {
 		if (!$scope.readyToSubmit()) {

@@ -24,10 +24,17 @@
 		<script src="player.js"></script>
 	</head>
 	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak>
-		<div id="content" ng-mousemove="mouseMove($event)" hm-panmove="standardizeEvent($event, false, mouseMove)" hm-panend="standardizeEvent($event, false, mouseUp)" ng-mouseup="mouseUp($event)">
+		<div id="content"
+			ng-mousemove="mouseMove($event)"
+			hm-panmove="standardizeEvent($event, false, mouseMove)"
+			hm-panend="standardizeEvent($event, false, mouseUp)"
+			ng-mouseup="mouseUp($event)">
 			<div id="menu-bar">
 				<h1 id="title">{{title}}</h1>
-				<button ng-click="submitClick()" ng-disabled="!readyToSubmit()">Submit</button>
+				<div id="donearrow" ng-show="readyToSubmit()">Click to finish</div>
+				<button ng-click="submitClick()" ng-disabled="!readyToSubmit()">
+					Submit Answers
+				</button>
 			</div>
 
 			<div id="desktop">
