@@ -97,6 +97,9 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	}
 
 	$scope.itemMouseDown = (e, text) => {
+		if ($scope.selectedText) {
+			return // prevent duplicated calls
+		}
 		itemSelected = e.currentTarget
 		$scope.selectedText = text
 
@@ -166,7 +169,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			// put it back if it's out of bounds or over the dock but not a folder
 			$(itemSelected).css({
 				left: prevPosition.left,
-				top: prevPosition.top
+				top: Math.min(prevPosition.top, placementBounds.y.max)
 			})
 		} else {
 			// if dragged on a folder, put it in
