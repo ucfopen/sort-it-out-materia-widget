@@ -95,6 +95,7 @@ body {
 			margin: 10px auto;
 			position: relative;
 			perspective: 300px; // for 3D
+			word-wrap: break-word;
 
 		}
 	}
@@ -148,7 +149,6 @@ body {
 			transition: all 300ms ease;
 			display: flex;
 			text-align: center;
-			word-wrap: break-word;
 
 			span {
 				min-width: 5%;

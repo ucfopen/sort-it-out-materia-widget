@@ -170,7 +170,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		const underElemId = underElem.attr("id")
 
 		// put it back if it's out of bounds or over the dock but not a folder
-		if (isOutOfBounds(e) || underElemId == "dock") {
+		if (isOutOfBounds(e) || underElemId == "dock-main") {
 			$(itemSelected).animate({
 				left: prevPosition.left,
 				top: Math.min(prevPosition.top, placementBounds.y.max)
