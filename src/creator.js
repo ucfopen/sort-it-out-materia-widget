@@ -195,7 +195,6 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 	$scope.onSaveClicked = () => {
 		console.log("onSaveClicked")
 		const saveError = getSaveError()
-		console.log("save error: ", saveError)
 		if (saveError) {
 			Materia.CreatorCore.cancelSave(saveError)
 		}
@@ -222,12 +221,11 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 				})
 			})
 		}
-		console.log(qset)
 		return qset
 	}
 
 	$scope.onQuestionImportComplete = (items) => {
-		console.log("onQuestionImportComplete")
+		console.log("onQuestionImportComplete", items)
 		// TODO
 		return true
 	}

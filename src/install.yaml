@@ -24,9 +24,9 @@ meta_data:
     - Customizable
     - Scorable
   supported_data:
-    - Multiple Choice # please update me
+    - Custom
   about: >
-    Sequencer, but with buckets
+    Students must sort items on a messy computer desktop into their appropriate folders.
 
   # The text displayed on the widget catalog page.
   excerpt: >
