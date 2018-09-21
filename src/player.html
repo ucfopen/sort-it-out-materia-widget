@@ -92,6 +92,24 @@
 				Put Back on Desktop
 			</div>
 
+			<div id="tutorial" ng-if="showTutorial">
+				<h3>How to play</h3>
+				<div id="tutorial-board">
+					<div class="tutorial-term first"></div>
+					<div class="tutorial-term second"></div>
+					<div class="tutorial-term third"></div>
+					<div>
+						<img src="assets/tutorial.jpg">
+					</div>
+					<div class="cursor">
+						<img src="assets/cursor.svg">
+					</div>
+				</div>
+				<p>Drag items to group them in their corresponding folders.</p>
+				<button id="gotitbtn" ng-click="hideTutorial()">Got it!</button>
+			</div>
+			<div id="tutorial-background" ng-if="showTutorial" ng-click="hideTutorial()"></div>
+
 		</div>
 	</body>
 </html>

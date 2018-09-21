@@ -11,6 +11,7 @@ SortItOut.directive("scroll", () => {
 })
 
 SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
+	$scope.showTutorial = true
 	$scope.showFolderPreview = false
 	$scope.selectedText = false
 	$scope.desktopItems = []
@@ -95,6 +96,8 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		const x = ~~(Math.random() * (xRange) ) + pb.x.min
 		return { x, y }
 	}
+
+	$scope.hideTutorial = () => $scope.showTutorial = false;
 
 	$scope.itemMouseDown = (e, text) => {
 		if ($scope.selectedText) {
