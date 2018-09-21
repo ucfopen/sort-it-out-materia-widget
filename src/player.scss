@@ -89,7 +89,6 @@ body {
 		position: relative;
 		user-select: none;
 
-		// folder-icon is the back panel
 		.folder-icon {
 			height: 80%;
 			width: 130px;
@@ -395,6 +394,7 @@ body {
 				height: 25px;
 				width: 90px;
 				animation: firstterm 8s infinite;
+				z-index: 2;
 			}
 			&.second {
 				height: 50px;
@@ -413,6 +413,7 @@ body {
 			top: 0px;
 			left: 0px;
 			animation: cursor 8s infinite;
+			z-index: 3;
 		}
 	}
 
@@ -455,7 +456,7 @@ body {
 		transform: translate(190px, 215px);
 	}
 	35% {
-		transform: translate(230px, 90px);
+		transform: translate(260px, 80px);
 	}
 	45% {
 		transform: translate(300px, 215px);
