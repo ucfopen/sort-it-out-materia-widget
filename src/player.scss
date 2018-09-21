@@ -19,7 +19,7 @@ body {
 	color: rgb(51, 51, 60);
 	display: flex;
 	justify-content: space-between;
-	z-index: 6;
+	z-index: 7;
 	position: relative;
 
 	h1 {
@@ -47,7 +47,7 @@ body {
 	left: 0;
 	right: 0;
 	padding-top: 40px;
-	z-index: 1;
+	z-index: 2;
 
 	.desktop-item {
 		font-size: 20px;
@@ -74,7 +74,7 @@ body {
 	}
 }
 
-#dock {
+.dock {
 	position: fixed;
 	height: 125px;
 	bottom: 0;
@@ -82,7 +82,6 @@ body {
 	right: 0;
 	display: flex;
 	justify-content: space-around;
-	z-index: 4;
 
 	.folder {
 		height: 100%;
@@ -90,54 +89,72 @@ body {
 		position: relative;
 		user-select: none;
 
+		// folder-icon is the back panel
+		.folder-icon {
+			height: 80%;
+			width: 130px;
+			margin: 10px auto;
+			position: relative;
+			perspective: 300px; // for 3D
+
+		}
+	}
+}
+
+#dock-back {
+	z-index: 1;
+
+	&.above {
+		z-index: 4;
+	}
+
+	// folder-icon is the back panel
+	.folder-icon {
+		background-color: darken($folder-color, 15%);
+		border-top-right-radius: 3px;
+		border-bottom-right-radius: 3px;
+		border-bottom-left-radius: 3px;
+
+		// :before is the top tab
+		&:before {
+			content: " ";
+			background-color: darken($folder-color, 15%);
+			position: absolute;
+			height: 10px;
+			width: 60px;
+			top: -10px;
+			border-top-left-radius: 3px;
+			border-top-right-radius: 3px;
+		}
+	}
+}
+
+#dock-main {
+	z-index: 5;
+
+	.folder {
 		&.peeked {
 			.folder-name {
 				transform: rotateX(-40deg) translate3d(0, -9px, 30px);
 			}
 		}
-
-		// folder-icon is the back panel
-		.folder-icon {
-			background-color: darken($folder-color, 15%);
-			height: 80%;
+		.folder-name {
+			content: " ";
+			background-color: $folder-color;
+			position: absolute;
+			height: 100%;
 			width: 130px;
-			margin: 10px auto;
-			border-top-right-radius: 3px;
-			border-bottom-right-radius: 3px;
-			border-bottom-left-radius: 3px;
-			position: relative;
-			perspective: 300px; // for 3D
+			top: 0;
+			border-radius: 3px;
+			transition: all 300ms ease;
+			display: flex;
+			text-align: center;
 			word-wrap: break-word;
 
-			// :before is the top tab
-			&:before {
-				content: " ";
-				background-color: darken($folder-color, 15%);
-				position: absolute;
-				height: 10px;
-				width: 60px;
-				top: -10px;
-				border-top-left-radius: 3px;
-				border-top-right-radius: 3px;
-			}
-
-			.folder-name {
-				content: " ";
-				background-color: $folder-color;
-				position: absolute;
-				height: 100%;
-				width: 130px;
-				top: 0;
-				border-radius: 3px;
-				transition: all 300ms ease;
-				display: flex;
-				text-align: center;
-
-				span {
-					min-width: 5%;
-					margin: auto;
-					padding: 3px;
-				}
+			span {
+				min-width: 5%;
+				margin: auto;
+				padding: 3px;
 			}
 		}
 
@@ -161,7 +178,7 @@ body {
 	left: 5%;
 	bottom: 150px;
 	height: 300px;
-	z-index: 3;
+	z-index: 4;
 	border-radius: 15px;
  	transition: opacity ease 0.3s, bottom ease 0.3s;
 
@@ -249,7 +266,7 @@ body {
 	left: 0;
 	right: 0;
 	background-color: rgba(gray, 0.8);
-	z-index: 2;
+	z-index: 3;
 	opacity: 1;
  	transition: opacity ease 0.3s;
 
@@ -261,7 +278,7 @@ body {
 
 #back-to-desktop {
 	position: fixed;
-	z-index: 5;
+	z-index: 6;
 	top: 50px;
 	left: calc(50% - 200px);
 	width: 400px;
@@ -357,7 +374,7 @@ body {
 	border-radius: 3px;
 	padding: 0 10px;
 	text-align: center;
-	z-index: 8;
+	z-index: 9;
 
 	h3 {
 		font-size: 18px;
@@ -396,7 +413,6 @@ body {
 			top: 0px;
 			left: 0px;
 			animation: cursor 8s infinite;
-			z-index: 10;
 		}
 	}
 
@@ -425,7 +441,7 @@ body {
 	left: 0;
 	right: 0;
 	background-color: rgba(gray, 0.8);
-	z-index: 7;
+	z-index: 8;
 }
 
 @keyframes cursor {

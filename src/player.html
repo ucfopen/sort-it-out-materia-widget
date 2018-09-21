@@ -48,7 +48,7 @@
 				</div>
 			</div>
 
-			<div id="dock" ng-click="hideFolderPreview()">
+			<div id="dock-main" class="dock" ng-click="hideFolderPreview()">
 				<div class="folder"
 					ng-repeat="folder in folders"
 					ng-click="selectFolder($event, $index)"
@@ -57,11 +57,17 @@
 					data-index="{{$index}}">
 					<div class="folder-icon">
 						<div class="folder-name"><span>{{folder.text}}</span></div>
+					</div>
+					<div class="folder-arrow" ng-show="folderPreviewIndex == $index"></div>
+				</div>
+			</div>
+
+			<div id="dock-back" class="dock" ng-class="{above: showFolderPreview}">
+				<div class="folder" ng-repeat="folder in folders">
+					<div class="folder-icon">
 						<div class="peek-items">
 							<div ng-if="folder.items.length > 0">{{folder.items[folder.items.length - 1]}}</div>
 						</div>
-					</div>
-					<div class="folder-arrow" ng-show="folderPreviewIndex == $index">
 					</div>
 				</div>
 			</div>

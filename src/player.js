@@ -168,24 +168,23 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		}
 
 		const underElem = $(document.elementFromPoint(e.clientX, e.clientY))
-		if (isOutOfBounds(e) || underElem.attr("id") == "dock") {
-			// put it back if it's out of bounds or over the dock but not a folder
-			$(itemSelected).css({
+		const underElemId = underElem.attr("id")
+
+		// put it back if it's out of bounds or over the dock but not a folder
+		if (isOutOfBounds(e) || underElemId == "dock") {
+			$(itemSelected).animate({
 				left: prevPosition.left,
 				top: Math.min(prevPosition.top, placementBounds.y.max)
-			})
+			}, 300)
 		} else {
 			// if dragged on a folder, put it in
 			const folderElem = underElem.closest(".folder")
 			if (folderElem.length) {
 				$scope.selectFolder(e, folderElem.data("index"))
 			}
-		}
 
-		// source is a folder
-		if (itemSource != SRC_DESKTOP) {
-			if (underElem.attr("id") == "back-to-desktop") {
-				// if dragged on to the gray background, put it back on the desktop
+			// source is a folder, destination is back-to-desktop
+			if (itemSource != SRC_DESKTOP && underElemId == "back-to-desktop") {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item != $scope.selectedText
 				)
@@ -199,6 +198,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			}
 		}
 
+
 		itemSelected = false
 		$scope.selectedText = false
 		itemSource = SRC_DESKTOP
@@ -209,7 +209,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			e.stopPropagation()
 		}
 		if (index == itemSource) {
-			return
+			return // if dragged to where it already is
 		}
 
 		if ($scope.selectedText) {
