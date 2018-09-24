@@ -38,8 +38,7 @@
 			</div>
 
 			<div id="desktop">
-				<div
-					class="desktop-item" ng-class="{selected: item.text == selectedText}"
+				<div class="desktop-item" ng-class="{selected: item.text == selectedText}"
 					ng-style="{ 'top': item.position.y, 'left': item.position.x }"
 					ng-repeat="item in desktopItems"
 					ng-mousedown="itemMouseDown($event, item.text)"
@@ -63,10 +62,10 @@
 			</div>
 
 			<div id="dock-back" class="dock" ng-class="{above: showFolderPreview}">
-				<div class="folder" ng-repeat="folder in folders">
+				<div class="folder" ng-repeat="folder in folders" data-index="{{$index}}">
 					<div class="folder-icon">
-						<div class="peek-items">
-							<div ng-if="folder.items.length > 0">{{folder.items[folder.items.length - 1]}}</div>
+						<div class="peek-items-container">
+							<div class="peek-item" ng-repeat="item in folder.items.slice().reverse() | limitTo:3">{{item}}</div>
 						</div>
 					</div>
 				</div>
@@ -76,8 +75,7 @@
 				<h1>{{folders[folderPreviewIndex].text}}</h1>
 				<p id="empty-preview" ng-if="folders[folderPreviewIndex].items.length == 0">This folder is empty</p>
 				<div id="preview-scroll-container" scroll>
-					<div
-						class="preview-item" ng-class="{selected: item == selectedText}"
+					<div class="preview-item" ng-class="{selected: item == selectedText}"
 						ng-repeat="item in folders[folderPreviewIndex].items"
 						ng-mousedown="previewMouseDown($event, item)"
 						hm-panstart="standardizeEvent($event, item, previewMouseDown)">
