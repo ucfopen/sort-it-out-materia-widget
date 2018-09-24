@@ -2,6 +2,10 @@ const SortItOut = angular.module("SortItOutScore", [])
 
 SortItOut.controller("SortItOutScoreCtrl", ($scope) => {
 	$scope.start = (instance, qset, scoreTable, isPreview, version = '1') => {
+		$scope.update(qset, scoreTable)
+	}
+
+	$scope.update = (qset, scoreTable) => {
 		$scope.folders = buildFolders(qset, scoreTable)
 		$scope.$apply()
 
