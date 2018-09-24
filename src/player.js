@@ -197,7 +197,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			}
 		}
 
-
 		itemSelected = false
 		$scope.selectedText = false
 		itemSource = SRC_DESKTOP
@@ -280,16 +279,14 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 		const currTop = $("#preview-scroll-container").scrollTop()
 		$("#preview-scroll-container").animate({
 			scrollTop: currTop - 100
-		}, 300)
-		setTimeout( () => $scope.$apply(), 300)
+		}, 300, () => $scope.$apply())
 	}
 
 	$scope.scrollDown = () => {
 		const currTop = $("#preview-scroll-container").scrollTop()
 		$("#preview-scroll-container").animate({
 			scrollTop: currTop + 100
-		}, 300)
-		setTimeout( () => $scope.$apply(), 300)
+		}, 300, () => $scope.$apply())
 	}
 
 	$scope.readyToSubmit = () => {
@@ -305,7 +302,6 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			items.forEach( item => {
 				const id = questionToId[item]
 				Materia.Score.submitQuestionForScoring(id, text)
-
 			})
 		})
 		Materia.Engine.end()
