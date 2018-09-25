@@ -183,7 +183,7 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 			}
 
 			// source is a folder, destination is back-to-desktop
-			if (itemSource != SRC_DESKTOP && underElemId == "back-to-desktop") {
+			if (itemSource != SRC_DESKTOP && underElemId == "desktop-drop-zone") {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item != $scope.selectedText
 				)
