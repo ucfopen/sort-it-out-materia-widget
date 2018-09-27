@@ -1,10 +1,10 @@
 const SortItOut = angular.module("SortItOutCreator", ['ngMaterial', 'ngMessages', 'ngSanitize'])
 
-SortItOut.config( ($mdThemingProvider) =>
+SortItOut.config(["$mdThemingProvider", ($mdThemingProvider) =>
 	$mdThemingProvider.theme('toolbar-dark', 'default').primaryPalette('indigo').dark()
-)
+])
 
-SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
+SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize", ($scope, $mdDialog, $sanitize) => {
 
 	$scope.MAX_ITEM_LENGTH = 30
 	$scope.MAX_NUM_BUCKETS = 5
@@ -237,4 +237,4 @@ SortItOut.controller("SortItOutController", ($scope, $mdDialog, $sanitize) => {
 	}
 
 	Materia.CreatorCore.start($scope)
-})
+}])

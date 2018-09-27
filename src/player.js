@@ -10,7 +10,7 @@ SortItOut.directive("scroll", () => {
 	}
 })
 
-SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
+SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 	$scope.showFolderPreview = false
 	$scope.selectedText = false
 	$scope.desktopItems = []
@@ -308,4 +308,4 @@ SortItOut.controller("SortItOutEngineCtrl", ($scope) => {
 	}
 
 	Materia.Engine.start($scope)
-})
+}])

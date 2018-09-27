@@ -1,6 +1,6 @@
 const SortItOut = angular.module("SortItOutScore", [])
 
-SortItOut.controller("SortItOutScoreCtrl", ($scope) => {
+SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 	$scope.start = (instance, qset, scoreTable, isPreview, version = '1') => {
 		$scope.update(qset, scoreTable)
 	}
@@ -43,4 +43,4 @@ SortItOut.controller("SortItOutScoreCtrl", ($scope) => {
 
 	Materia.ScoreCore.hideResultsTable()
 	Materia.ScoreCore.start($scope)
-})
+}])
