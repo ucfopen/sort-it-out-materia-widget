@@ -14,5 +14,23 @@
     "pretest": "npm run build-dev",
     "test": "karma start ./karma.conf.js --no-auto-watch --single-run"
   },
+  "devDependencies": {
+    "angular": "~1.7.2",
+    "angular-animate": "~1.7.2",
+    "angular-aria": "~1.7.2",
+    "angular-loader": "~1.7.2",
+    "angular-material": "~1.1.10",
+    "angular-mocks": "~1.7.2",
+    "angular-messages": "~1.7.2",
+    "angular-route": "~1.7.2",
+    "angular-sanitize": "~1.7.2",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-coverage": "^0.5.5",
+    "karma-jasmine": "^0.3.8",
+    "karma-json-fixtures-preprocessor": "0.0.6",
+    "karma-mocha-reporter": "^2.1.0",
+    "karma-phantomjs-launcher": "^1.0.2"
+  },
   "author": "University of Central Florida, Center for Distributed Learning"
 }

@@ -23,16 +23,13 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	$scope.newFolder = { name: "" }
 
 	$scope.initNewWidget = (widget) => {
-		console.log("initNewWidget")
 		$scope.title = "My Sort-It-Out Widget"
 		$scope.ready = true
 		$scope.$apply()
 	}
 
 	$scope.initExistingWidget = (title, widget, qset) => {
-		console.log("initExistingWidget")
 		$scope.title = title
-		console.log(qset)
 		$scope.folders = generateFolders(qset.items)
 		$scope.ready = true
 		$scope.$apply()

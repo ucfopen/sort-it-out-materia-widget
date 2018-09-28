@@ -1,8 +1,6 @@
 module.exports = function(config) {
 	config.set({
 
-		// autoWatch: false, // moved into pakcage.json script option
-
 		basePath: './',
 
 		browsers: ['PhantomJS'],
@@ -10,11 +8,23 @@ module.exports = function(config) {
 		files: [
 			'node_modules/angular/angular.js',
 			'node_modules/angular-mocks/angular-mocks.js',
-			'node_modules/materia-client-assets/dist/js/materia.js',
-			'node_modules/materia-client-assets/dist/js/student.js',
-			'node_modules/materia-client-assets/dist/js/author.js',
+			'node_modules/angular-animate/angular-animate.js',
+			'node_modules/angular-aria/angular-aria.js',
+			'node_modules/angular-messages/angular-messages.js',
+			'node_modules/angular-material/angular-material.js',
+			'node_modules/angular-sanitize/angular-sanitize.js',
+			'node_modules/materia-server-client-assets/dist/js/materia.js',
+			'node_modules/materia-server-client-assets/dist/js/student.js',
+			'node_modules/materia-server-client-assets/dist/js/author.js',
+			'node_modules/materia-server-client-assets/dist/js/materia.creatorcore.js',
+			'node_modules/materia-server-client-assets/dist/js/materia.enginecore.js',
+			'node_modules/materia-server-client-assets/dist/js/materia.scorecore.js',
 			'build/demo.json',
-			'build/controllers/*.js',
+			'build/hammer.min.js',
+			'build/angular-hammer.js',
+			'build/creator.js',
+			'build/player.js',
+			'build/scoreScreen.js',
 			'tests/*.js'
 		],
 
@@ -22,7 +32,6 @@ module.exports = function(config) {
 
 		plugins: [
 			'karma-coverage',
-			'karma-eslint',
 			'karma-jasmine',
 			'karma-json-fixtures-preprocessor',
 			'karma-mocha-reporter',
@@ -30,20 +39,10 @@ module.exports = function(config) {
 		],
 
 		preprocessors: {
-			'build/controllers/*.js': ['coverage', 'eslint'],
+			'build/creator.js': ['coverage'],
+			'build/player.js': ['coverage'],
+			'build/scoreScreen.js': ['coverage'],
 			'build/demo.json': ['json_fixtures']
-		},
-
-		// singleRun: true, // moved into pakcage.json script option
-
-		//plugin-specific configurations
-		eslint: {
-			stopOnError: true,
-			stopOnWarning: false,
-			showWarnings: true,
-			engine: {
-				configFile: '.eslintrc.json'
-			}
 		},
 
 		jsonFixturesPreprocessor: {
@@ -51,8 +50,6 @@ module.exports = function(config) {
 		},
 
 		reporters: ['coverage', 'mocha'],
-
-		//reporter-specific configurations
 
 		coverageReporter: {
 			check: {
