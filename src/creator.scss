@@ -40,9 +40,14 @@
 					padding: 20px;
 
 					form {
-						margin: auto;
+						margin: 10px auto;
+						text-align: center;
+						padding: 10px 50px;
+						box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+						border-radius: 10px;
 
 						.folder-input-container {
+							text-align: left;
 							width: 300px;
 						}
 
@@ -54,6 +59,25 @@
 
 							i {
 								line-height: 45px;
+							}
+						}
+
+						.item-image {
+							width: 400px;
+							margin: auto;
+							background: white;
+							padding: 5px;
+							margin-bottom: 5px;
+							position: relative;
+
+							img {
+								max-height: 200px;
+								max-width: 100%;
+							}
+
+							.option-controls {
+								position: absolute;
+								height: 100%;
 							}
 						}
 					}

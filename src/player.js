@@ -15,6 +15,10 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 	$scope.selectedText = false
 	$scope.desktopItems = []
 	$scope.folders = []
+	$scope.enlargeImage = {
+		show: false,
+		url: ""
+	}
 
 	let itemSelected
 	let prevPosition
@@ -22,6 +26,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 	let pickupCount = 0    // every new item picked up will go to the top (z-index)
 	let dragBounds         // bounds for dragging
 	let itemSource         // to track where the dragged item came from
+	let imageMap = {}      // map from item text to image
 	const SRC_DESKTOP = -1 // otherwise itemSource is folderIndex
 	let questionToId       // used for scoring
 	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
@@ -80,8 +85,13 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 
 	const buildItems = qset => {
 		return qset.items.map( item => {
+			const text = item.questions[0].text
+			if (item.options.image) {
+				imageMap[text] = item.options.image
+			}
 			return {
-				text: item.questions[0].text,
+				text,
+				image: item.options.image,
 				position: generateRandomPosition()
 			}
 		})
@@ -102,7 +112,13 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 		if ($scope.selectedText) {
 			return // prevent duplicated calls
 		}
-		itemSelected = e.currentTarget
+
+		if (e.element) { // it's a hammer event, grab container element
+			itemSelected = e.element[0]
+		} else {
+			itemSelected = e.currentTarget
+		}
+
 		$scope.selectedText = text
 
 		const left = parseInt($(itemSelected).css("left"), 10)
@@ -187,8 +203,11 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item != $scope.selectedText
 				)
+				const text = $scope.selectedText
+				const image = imageMap[text]
 				$scope.desktopItems.push({
-					text: $scope.selectedText,
+					text,
+					image,
 					position: {
 						x: e.clientX + $scope.offsetLeft,
 						y: e.clientY + $scope.offsetTop
@@ -263,6 +282,23 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 		questionToId = {}
 		for (let item of qset.items) {
 			questionToId[item.questions[0].text] = item.id
+		}
+	}
+
+	$scope.enlargeImage = (url, e) => {
+		if (e.stopPropagation) {
+			e.stopPropagation()
+		}
+		$scope.enlargeImage.url = url
+		$scope.enlargeImage.show = true
+	}
+
+	$scope.preventDefault = (e, stopPropagation) => {
+		if (e.preventDefault) {
+			e.preventDefault()
+		}
+		if (stopPropagation && e.stopPropagation) {
+			e.stopPropagation()
 		}
 	}
 

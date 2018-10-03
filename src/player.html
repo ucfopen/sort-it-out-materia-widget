@@ -9,6 +9,7 @@
 
 		<!-- STYLESHEETS -->
 		<link rel="stylesheet" type="text/css" href="player.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -43,6 +44,14 @@
 					ng-repeat="item in desktopItems"
 					ng-mousedown="itemMouseDown($event, item.text)"
 					hm-panstart="standardizeEvent($event, item.text, itemMouseDown)">
+
+					<img ng-if="item.image"
+						ng-src="{{item.image.url}}"
+						ng-mousedown="preventDefault($event, false)">
+					<i ng-if="item.image"
+						class="material-icons img-zoom"
+						ng-mousedown="preventDefault($event, true)"
+						ng-click="enlargeImage(item.image.url, $event)">zoom_in</i>
 					{{item.text}}
 				</div>
 			</div>
@@ -96,6 +105,13 @@
 			</div>
 			<div id="back-to-desktop" ng-show="showFolderPreview && selectedText">
 				Put Back on Desktop
+			</div>
+
+			<div id="enlarged-image" ng-class="{hidden: !enlargeImage.show}" ng-click="enlargeImage.show = false">
+				<div>
+					<img ng-if="enlargeImage.show" ng-src="{{enlargeImage.url}}">
+					<i>click anywhere to close</i>
+				</div>
 			</div>
 
 			<div id="tutorial" class="tutorial">

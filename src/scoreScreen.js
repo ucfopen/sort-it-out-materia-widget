@@ -14,9 +14,14 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 
 	const buildFolders = (qset, scoreTable) => {
 		let folders = []
-		let folderNames = {}
+		let folderNames = {} // map from folder name to folder index
+		let imageMap = {}    // map from item name to image url, if available
+
 		for (let item of qset.items) {
 			const folderName = item.answers[0].text
+			if (item.options.image) {
+				imageMap[item.questions[0].text] = item.options.image.url
+			}
 			if (folderNames[folderName] == undefined) {
 				folderNames[folderName] = folders.length
 				folders.push({
@@ -35,7 +40,8 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 			folders[folderIndex].items.push({
 				text: itemName,
 				correct: userFolderName == correctFolderName,
-				correctFolderName
+				correctFolderName,
+				image: imageMap[itemName] || false
 			})
 		}
 		return folders

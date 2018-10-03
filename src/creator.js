@@ -18,6 +18,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 		}
 	]
 	$scope.editFolderIndex = 0
+	$scope.editImageIndex = false
 	$scope.ready = false
 	$scope.showDialog = false
 	$scope.newFolder = { name: "" }
@@ -37,20 +38,22 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 
 	const generateFolders = (qsetItems) => {
 		let folders = []
-		let folderNameMatching = {}
-		let numFolders = 0
+		let folderNames = {} // map from folder name to folder index
 
 		for (let qsetItem of qsetItems) {
 			const folderName = qsetItem.answers[0].text
 			const item = qsetItem.questions[0]
-			if (folderNameMatching[folderName] == undefined) {
+			if (qsetItem.options.image) {
+				item.image = qsetItem.options.image
+			}
+			if (folderNames[folderName] == undefined) {
+				folderNames[folderName] = folders.length
 				folders.push({
 					name: folderName,
 					items: []
 				})
-				folderNameMatching[folderName] = numFolders++
 			}
-			folders[folderNameMatching[folderName]].items.push(item)
+			folders[folderNames[folderName]].items.push(item)
 		}
 		return folders
 	}
@@ -61,6 +64,15 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 
 	$scope.removeItem = (folderIndex, itemIndex) => {
 		$scope.folders[folderIndex].items.splice(itemIndex, 1)
+	}
+
+	$scope.editImage = (folderIndex, itemIndex) => {
+		$scope.editImageIndex = { folderIndex, itemIndex }
+		Materia.CreatorCore.showMediaImporter()
+	}
+
+	$scope.removeImage = (folderIndex, itemIndex) => {
+		delete $scope.folders[folderIndex].items[itemIndex].image
 	}
 
 	$scope.showAddDialog = (ev) => {
@@ -109,6 +121,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	const allUnique = () => {
 		let uniqueItems = {}
 		let uniqueFolderNames = {}
+		let uniqueImageIds = {}
 
 		for (let folder of $scope.folders) {
 			if (uniqueFolderNames[folder.name]) {
@@ -121,6 +134,13 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 					return false
 				}
 				uniqueItems[item.text] = true
+
+				if (item.image) {
+					if (uniqueImageIds[item.image.id]) {
+						return false
+					}
+					uniqueImageIds[item.image.id] = true
+				}
 			}
 		}
 		return true
@@ -128,7 +148,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 
 	const getSaveError = () => {
 		if (!allUnique()) {
-			return "all folder names and items must be unique"
+			return "all folder names, items, and images must be unique"
 		}
 
 		for (let i = 0; i < $scope.folders.length; i++) {
@@ -190,7 +210,6 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	}
 
 	$scope.onSaveClicked = () => {
-		console.log("onSaveClicked")
 		const saveError = getSaveError()
 		if (saveError) {
 			Materia.CreatorCore.cancelSave(saveError)
@@ -208,11 +227,12 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 			const folderName = $sanitize(folder.name)
 			folder.items.forEach( (item) => {
 				const text = $sanitize(item.text)
+				const image = item.image
 				qset.items.push({
 					materiaType: "question",
 					id: null,
 					type: "QA",
-					options: {}, // TODO add 'description'
+					options: image ? { image } : {},
 					questions: [{ text }],
 					answers: [{ value: 100, text: folderName }]
 				})
@@ -231,6 +251,17 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 		console.log("onSaveComplete")
 		// TODO
 		return true
+	}
+
+	// called from Materia creator page
+	$scope.onMediaImportComplete = media => {
+		const id = media[0].id
+		const url = Materia.CreatorCore.getMediaUrl(id)
+		if ($scope.editImageIndex) {
+			const { folderIndex, itemIndex } = $scope.editImageIndex
+			$scope.folders[folderIndex].items[itemIndex].image = { id, url }
+		}
+		$scope.$apply()
 	}
 
 	Materia.CreatorCore.start($scope)

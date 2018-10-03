@@ -3,6 +3,7 @@
 	padding: 20px;
 	margin: 20px 10px;
 	border-radius: 5px;
+	box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
 
 	h1 {
 		margin: 0;
@@ -20,6 +21,7 @@
 		background: #efc4c9;
 		font-size: 20px;
 		border-radius: 5px;
+		box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
 
 		&.correct {
 			background: #d7e3d6;
@@ -35,5 +37,15 @@
 			font-size: 16px;
 			line-height: 24px;
 		}
+
+		.item-image {
+			text-align: center;
+
+			img {
+				height: 150px;
+				box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+			}
+		}
+
 	}
 }

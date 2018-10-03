@@ -50,22 +50,39 @@
 								</button>
 							</div>
 						</md-toolbar>
+
 						<div class="folder-items" layout="column">
 							<form name="folderItemsForm" autocomplete="off" ng-repeat="item in folder.items">
 								<md-input-container class="md-inline-block folder-input-container">
 									<label>Item {{$index + 1}}</label>
 									<input type="text" ng-model="item.text" name="item" required spellcheck="true" autocomplete="off" md-maxlength="MAX_ITEM_LENGTH" pattern='[^"&]*'>
 									<div ng-messages="folderItemsForm.item.$error">
-										<div ng-message="required">Item name is required.</div>
+										<div ng-message="required">{{item.image ? "Unique image name required. ex: 'image1'": "Item name is required."}}</div>
 										<div ng-message="md-maxlength">Item name too long</div>
 										<div ng-message="pattern">Item name cannot contain " or &</div>
 									</div>
 								</md-input-container>
 
+								<md-button class="option-controls" ng-click="editImage(folderIndex, $index)">
+									<md-tooltip md-direction="below">{{item.image ? "Change Image" : "Add Image"}}</md-tooltip>
+									<i class="material-icons">add_photo_alternate</i>
+								</md-button>
+
 								<md-button class="option-controls" ng-click="removeItem(folderIndex, $index)" ng-show="folder.items.length > 1">
 									<md-tooltip md-direction="below">Remove Option</md-tooltip>
-									<i class="material-icons">&#xE15D;</i>
+									<i class="material-icons">remove_circle_outline</i>
 								</md-button>
+
+								<div ng-if="item.image">
+									<div class="item-image">
+										<img src="{{item.image.url }}">
+										<md-button class="option-controls" ng-click="removeImage(folderIndex, $index)">
+											<md-tooltip md-direction="right">Remove Image</md-tooltip>
+											<i class="material-icons">delete</i>
+										</md-button>
+									</div>
+								</div>
+
 							</form>
 							<md-button class="md-accent md-raised toggle-option" ng-click="addItem(folderIndex)" ng-disabled="!validFolder(folderIndex)">
 								Add Item
