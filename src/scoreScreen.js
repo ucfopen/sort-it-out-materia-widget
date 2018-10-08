@@ -47,6 +47,18 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 		return folders
 	}
 
+	$scope.enlargedImageText = "" // text of enlarged image
+
+	$scope.enlargeImage = (e, text) => {
+		if (e.stopImmediatePropagation) {
+			e.stopImmediatePropagation()
+		}
+
+		$scope.enlargedImageText = $scope.enlargedImageText == text ? "" : text
+	}
+
+	$scope.minimizeImage = () => $scope.enlargedImageText = ""
+
 	Materia.ScoreCore.hideResultsTable()
 	Materia.ScoreCore.start($scope)
 }])
