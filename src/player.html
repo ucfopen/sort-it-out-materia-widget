@@ -39,11 +39,11 @@
 			</div>
 
 			<div id="desktop">
-				<div class="desktop-item" ng-class="{selected: item.text == selectedText}"
+				<div class="desktop-item" ng-class="{selected: item.text == selectedItem.text}"
 					ng-style="{ 'top': item.position.y, 'left': item.position.x }"
 					ng-repeat="item in desktopItems"
-					ng-mousedown="itemMouseDown($event, item.text)"
-					hm-panstart="standardizeEvent($event, item.text, itemMouseDown)">
+					ng-mousedown="itemMouseDown($event, item)"
+					hm-panstart="standardizeEvent($event, item, itemMouseDown)">
 
 					<img ng-if="item.image"
 						ng-src="{{item.image.url}}"
@@ -74,7 +74,7 @@
 				<div class="folder" ng-repeat="folder in folders" data-index="{{$index}}">
 					<div class="folder-icon">
 						<div class="peek-items-container">
-							<div class="peek-item" ng-repeat="item in folder.items.slice().reverse() | limitTo:3">{{item}}</div>
+							<div class="peek-item" ng-repeat="item in folder.items.slice().reverse() | limitTo:3">{{item.text}}</div>
 						</div>
 					</div>
 				</div>
@@ -84,26 +84,28 @@
 				<h1>{{folders[folderPreviewIndex].text}}</h1>
 				<p id="empty-preview" ng-if="folders[folderPreviewIndex].items.length == 0">This folder is empty</p>
 				<div id="preview-scroll-container" scroll>
-					<div class="preview-item" ng-class="{selected: item == selectedText}"
+					<div class="preview-item" ng-class="{selected: item.text == selectedItem.text}"
 						ng-repeat="item in folders[folderPreviewIndex].items"
 						ng-mousedown="previewMouseDown($event, item)"
 						hm-panstart="standardizeEvent($event, item, previewMouseDown)">
-						{{item}}
+						<img ng-if="item.image" ng-src="{{item.image.url}}">
+						{{item.text}}
 					</div>
 				</div>
 				<button id="preview-scroll-up" ng-if="showFolderPreview" ng-show="canScrollUp()" ng-click="scrollUp()">&uarr;</button>
 				<button id="preview-scroll-down" ng-if="showFolderPreview" ng-show="canScrollDown()" ng-click="scrollDown()">&darr;</button>
-				<div id="preview-selected-item" ng-show="showFolderPreview && selectedText">
-					{{selectedText}}
+				<div id="preview-selected-item" ng-show="showFolderPreview && selectedItem.text">
+					<img ng-if="selectedItem.image" ng-src="{{selectedItem.image.url}}">
+					{{selectedItem.text}}
 				</div>
 			</div>
 
 			<div id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
 			</div>
 
-			<div id="desktop-drop-zone" ng-show="showFolderPreview && selectedText">
+			<div id="desktop-drop-zone" ng-show="showFolderPreview && selectedItem">
 			</div>
-			<div id="back-to-desktop" ng-show="showFolderPreview && selectedText">
+			<div id="back-to-desktop" ng-show="showFolderPreview && selectedItem">
 				Put Back on Desktop
 			</div>
 

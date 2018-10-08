@@ -12,7 +12,7 @@ SortItOut.directive("scroll", () => {
 
 SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 	$scope.showFolderPreview = false
-	$scope.selectedText = false
+	$scope.selectedItem = false
 	$scope.desktopItems = []
 	$scope.folders = []
 	$scope.enlargeImage = {
@@ -20,15 +20,15 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 		url: ""
 	}
 
-	let itemSelected
-	let prevPosition
+	let prevPosition       // start position of drag
+	let selectedElement    // element that is being dragged
 	let placementBounds    // bounds for random placement
-	let pickupCount = 0    // every new item picked up will go to the top (z-index)
+	let pickupCount = 1    // every new item picked up will go to the top (z-index)
 	let dragBounds         // bounds for dragging
 	let itemSource         // to track where the dragged item came from
-	let imageMap = {}      // map from item text to image
-	const SRC_DESKTOP = -1 // otherwise itemSource is folderIndex
 	let questionToId       // used for scoring
+
+	const SRC_DESKTOP = -1 // indicates drag started on desktop, otherwise itemSource is folderIndex
 	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
 
 	$scope.start = (instance, qset, version) => {
@@ -86,9 +86,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 	const buildItems = qset => {
 		return qset.items.map( item => {
 			const text = item.questions[0].text
-			if (item.options.image) {
-				imageMap[text] = item.options.image
-			}
 			return {
 				text,
 				image: item.options.image,
@@ -108,26 +105,26 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 
 	$scope.hideTutorial = () => $(".tutorial").fadeOut()
 
-	$scope.itemMouseDown = (e, text) => {
-		if ($scope.selectedText) {
+	$scope.itemMouseDown = (e, item) => {
+		if ($scope.selectedItem) {
 			return // prevent duplicated calls
 		}
 
-		if (e.element) { // it's a hammer event, grab container element
-			itemSelected = e.element[0]
+		if (e.element) { // it's a hammer event, grab element with event on it
+			selectedElement = e.element[0]
 		} else {
-			itemSelected = e.currentTarget
+			selectedElement = e.currentTarget
 		}
 
-		$scope.selectedText = text
+		$scope.selectedItem = item
 
-		const left = parseInt($(itemSelected).css("left"), 10)
-		const top = parseInt($(itemSelected).css("top"), 10)
+		const left = parseInt($(selectedElement).css("left"), 10)
+		const top = parseInt($(selectedElement).css("top"), 10)
 
 		$scope.offsetLeft = left - e.clientX
 		$scope.offsetTop = top - e.clientY
 
-		$(itemSelected).css({ top, left, "z-index": pickupCount++ })
+		$(selectedElement).css({ top, left, "z-index": pickupCount++ })
 		prevPosition = { top, left }
 		itemSource = SRC_DESKTOP
 	}
@@ -141,7 +138,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 
 	// hammer event properties are different from native, this changes the event
 	// and will call the regular function after
-	$scope.standardizeEvent = (hammerEvent, param2, cb)=> {
+	$scope.standardizeEvent = (hammerEvent, param2, cb) => {
 		hammerEvent.clientX = hammerEvent.center.x
 		hammerEvent.clientY = hammerEvent.center.y
 		hammerEvent.currentTarget = hammerEvent.target
@@ -163,19 +160,19 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 			}
 		}
 
-		if (itemSelected) {
+		if (selectedElement) {
 			if (isOutOfBounds(e)) {
 				return $scope.mouseUp(e)
 			}
 			const left = e.clientX + $scope.offsetLeft
 			const top = e.clientY + $scope.offsetTop
-			$(itemSelected).css({ top, left })
+			$(selectedElement).css({ top, left })
 		}
 	}
 
 	$scope.mouseUp = e => {
 		$(".peeked").removeClass("peeked")
-		if (!itemSelected) {
+		if (!selectedElement) {
 			return
 		}
 		if (e.stopPropagation) {
@@ -187,7 +184,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 
 		// put it back if it's out of bounds or over the dock but not a folder
 		if (isOutOfBounds(e) || underElemId == "dock-main") {
-			$(itemSelected).animate({
+			$(selectedElement).animate({
 				left: prevPosition.left,
 				top: Math.min(prevPosition.top, placementBounds.y.max)
 			}, 300)
@@ -201,23 +198,18 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 			// source is a folder, destination is back-to-desktop
 			if (itemSource != SRC_DESKTOP && underElemId == "desktop-drop-zone") {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
-					item => item != $scope.selectedText
+					item => item.text != $scope.selectedItem.text
 				)
-				const text = $scope.selectedText
-				const image = imageMap[text]
-				$scope.desktopItems.push({
-					text,
-					image,
-					position: {
-						x: e.clientX + $scope.offsetLeft,
-						y: e.clientY + $scope.offsetTop
-					}
-				})
+				$scope.selectedItem.position = {
+					x: e.clientX + $scope.offsetLeft,
+					y: e.clientY + $scope.offsetTop
+				}
+				$scope.desktopItems.push($scope.selectedItem)
 			}
 		}
 
-		itemSelected = false
-		$scope.selectedText = false
+		selectedElement = false
+		$scope.selectedItem = false
 		itemSource = SRC_DESKTOP
 	}
 
@@ -229,22 +221,22 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 			return // if dragged to where it already is
 		}
 
-		if ($scope.selectedText) {
-			$scope.folders[index].items.push($scope.selectedText)
+		if ($scope.selectedItem) {
+			$scope.folders[index].items.push($scope.selectedItem)
 
 			if (itemSource == SRC_DESKTOP) {
 				$scope.desktopItems = $scope.desktopItems.filter(
-					item => item.text != $scope.selectedText
+					item => item.text != $scope.selectedItem.text
 				)
 			} else {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
-					item => item != $scope.selectedText
+					item => item.text != $scope.selectedItem.text
 				)
 			}
 
 			$(".desktop-item.selected").removeClass("selected")
-			itemSelected = false
-			$scope.selectedText = false
+			selectedElement = false
+			$scope.selectedItem = false
 			itemSource = SRC_DESKTOP
 		} else {
 			$scope.showFolderPreview = true
@@ -257,16 +249,16 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 		$scope.folderPreviewIndex = -1
 	}
 
-	$scope.previewMouseDown = (e, text) => {
-		itemSelected = $("#preview-selected-item")[0]
-		$scope.selectedText = text
+	$scope.previewMouseDown = (e, item) => {
+		selectedElement = $("#preview-selected-item")[0]
+		$scope.selectedItem = item
 
 		const { left, top } = $(e.currentTarget).offset()
 
 		$scope.offsetLeft = left - e.clientX
 		$scope.offsetTop = top - e.clientY
 
-		$(itemSelected).css({ top, left })
+		$(selectedElement).css({ top, left })
 		itemSource = $scope.folderPreviewIndex
 	}
 
@@ -336,7 +328,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 
 		$scope.folders.forEach( ({text, items}) => {
 			items.forEach( item => {
-				const id = questionToId[item]
+				const id = questionToId[item.text]
 				Materia.Score.submitQuestionForScoring(id, text)
 			})
 		})
