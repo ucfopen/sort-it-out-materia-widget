@@ -30,6 +30,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 
 	const SRC_DESKTOP = -1 // indicates drag started on desktop, otherwise itemSource is folderIndex
 	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
+	const DOCK_HEIGHT = 125
 
 	$scope.start = (instance, qset, version) => {
 		generateBounds()
@@ -89,17 +90,20 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 			return {
 				text,
 				image: item.options.image,
-				position: generateRandomPosition()
+				position: generateRandomPosition(item.options.image)
 			}
 		})
 	}
 
-	const generateRandomPosition = () => {
+	const generateRandomPosition = (hasImage) => {
 		const pb = placementBounds
-		const yRange = pb.y.max - pb.y.min - 125
-		const y = ~~(Math.random() * (yRange) ) + pb.y.min
+
+		const yRange = pb.y.max - pb.y.min - DOCK_HEIGHT - (hasImage ? 150 : 0)
+		const y = ~~(Math.random() * yRange) + pb.y.min
+
 		const xRange = pb.x.max - pb.x.min
-		const x = ~~(Math.random() * (xRange) ) + pb.x.min
+		const x = ~~(Math.random() * xRange) + pb.x.min
+
 		return { x, y }
 	}
 
