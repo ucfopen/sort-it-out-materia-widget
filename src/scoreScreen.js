@@ -10,6 +10,13 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 		$scope.$apply()
 
 		Materia.ScoreCore.setHeight( document.documentElement.scrollHeight )
+
+		// need to properly adjust image heights after the scroll height is set
+		document.querySelectorAll(".item-image img").forEach( el => {
+			el.style.maxWidth = "300px"
+			el.style.maxHeight = "150px"
+			el.style.height = "auto"
+		})
 	}
 
 	const buildFolders = (qset, scoreTable) => {
