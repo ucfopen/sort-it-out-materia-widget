@@ -92,6 +92,7 @@
 						{{item.text}}
 					</div>
 				</div>
+				<i class="material-icons" id="preview-close" ng-click="hideFolderPreview()">close</i>
 				<button id="preview-scroll-up" ng-if="showFolderPreview" ng-show="canScrollUp()" ng-click="scrollUp()">&uarr;</button>
 				<button id="preview-scroll-down" ng-if="showFolderPreview" ng-show="canScrollDown()" ng-click="scrollDown()">&darr;</button>
 				<div id="preview-selected-item" ng-show="showFolderPreview && selectedItem.text">

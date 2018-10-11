@@ -271,6 +271,14 @@ body {
 		}
 	}
 
+	#preview-close {
+		color: white;
+		position: absolute;
+		top: 15px;
+		right: 15px;
+		cursor: pointer;
+	}
+
 	#preview-scroll-up,
 	#preview-scroll-down {
 		position: absolute;
