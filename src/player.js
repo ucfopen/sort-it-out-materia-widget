@@ -38,6 +38,10 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 		$scope.title = instance.name
 		$scope.folders = buildFolders(qset)
 		$scope.desktopItems = buildItems(qset)
+		$scope.backgroundImage = "assets/desktop.jpg"
+		if (qset.options && qset.options.backgroundImage) {
+			$scope.backgroundImage = qset.options.backgroundImage
+		}
 		$scope.$apply()
 	}
 

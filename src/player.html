@@ -24,7 +24,7 @@
 		<!-- MAIN WIDGET SCRIPT -->
 		<script src="player.js"></script>
 	</head>
-	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak>
+	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
 		<div id="content"
 			ng-mousemove="mouseMove($event)"
 			hm-panmove="standardizeEvent($event, false, mouseMove)"
