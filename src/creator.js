@@ -95,6 +95,9 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	}
 
 	$scope.createFolder = () => {
+		if (!$scope.newFolder.name.length) {
+			return
+		}
 		$scope.folders.push({
 			name: $scope.newFolder.name,
 			items: [{ text: "" }]
@@ -219,6 +222,12 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	$scope.changeBackgroundImage = () => {
 		editImageIndices = { editBackground: true }
 		Materia.CreatorCore.showMediaImporter()
+	}
+
+	$scope.checkEnter = (e, cb) => {
+		if (e.keyCode == 13) {
+			cb()
+		}
 	}
 
 	$scope.onSaveClicked = () => {

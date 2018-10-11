@@ -122,7 +122,7 @@
 								<form name="folderNameForm" autocomplete="off">
 									<md-input-container class="md-block">
 										<label>Folder Name</label>
-										<input type="text" ng-model="editFolderName" name="editFolderName" required spellcheck="true" autocomplete="off" pattern='[^"&]*'>
+										<input type="text" ng-model="editFolderName" name="editFolderName" required spellcheck="true" autocomplete="off" pattern='[^"&]*' ng-keyup="checkEnter($event, updateName)">
 										<div ng-messages="folderNameForm.editFolderName.$error">
 											<div ng-message="required">Name is required.</div>
 											<div ng-message="pattern">Name cannot contain " or &</div>
@@ -152,7 +152,7 @@
 								<form name="folderNameForm" autocomplete="off">
 									<md-input-container class="md-block">
 										<label>Folder Name</label>
-										<input type="text" ng-model="newFolder.name" name="createFolderName" required spellcheck="true" autocomplete="off" pattern='[^"&]*'>
+										<input type="text" ng-model="newFolder.name" name="createFolderName" required spellcheck="true" autocomplete="off" pattern='[^"&]*' ng-keyup="checkEnter($event, createFolder)">
 										<div ng-messages="folderNameForm.createFolderName.$error">
 											<div ng-message="required">Name is required.</div>
 											<div ng-message="pattern">Name cannot contain " or &</div>
