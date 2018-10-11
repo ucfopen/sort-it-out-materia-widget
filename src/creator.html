@@ -38,7 +38,7 @@
 				</div>
 			</md-toolbar>
 
-			<div layout="column" id="content" ng-show="ready">
+			<div layout="row" id="content" ng-show="ready">
 				<div id="card-container">
 					<md-card class="md-whiteframe-3dp folder" ng-repeat="(folderIndex, folder) in folders">
 						<md-toolbar class="folder-header">
@@ -75,7 +75,7 @@
 
 								<div ng-if="item.image">
 									<div class="item-image">
-										<img src="{{item.image.url }}">
+										<img ng-src="{{item.image.url}}">
 										<md-button class="option-controls" ng-click="removeImage(folderIndex, $index)">
 											<md-tooltip md-direction="right">Remove Image</md-tooltip>
 											<i class="material-icons">delete</i>
@@ -84,16 +84,32 @@
 								</div>
 
 							</form>
-							<md-button class="md-accent md-raised toggle-option" ng-click="addItem(folderIndex)" ng-disabled="!validFolder(folderIndex)">
+							<md-button class="md-primary md-raised toggle-option" ng-click="addItem(folderIndex)" ng-disabled="!validFolder(folderIndex)">
 								Add Item
 							</md-button>
 						</div>
 					</md-card>
 					<div layout layout-align="center center">
-						<md-button id="add-folder" class="md-accent md-raised toggle-option" ng-click="showAddDialog($event)" ng-disabled="!canAddFolder()">
+						<md-button id="add-folder" class="md-primary md-raised toggle-option" ng-click="showAddDialog($event)" ng-disabled="!canAddFolder()">
 							Add Folder
 						</md-button>
 					</div>
+				</div>
+
+				<!-- Preview -->
+				<div id="preview-container">
+					<h1>Preview</h1>
+					<div id="preview" ng-if="backgroundImage" ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
+						<div id="dock" layout="row">
+							<div class="folder" ng-repeat="folder in folders">
+								<span>{{folder.name}}</span>
+							</div>
+						</div>
+					</div>
+					<span>Items will randomly be spread across the desktop.</span>
+					<md-button class="md-raised" ng-click="changeBackgroundImage()">
+						Change Background Image
+					</md-button>
 				</div>
 			</div>
 
@@ -113,7 +129,7 @@
 										</div>
 									</md-input-container>
 
-									<md-button id="edit-folder-save" class="md-accent md-raised toggle-option" ng-click="updateName()" ng-disabled="!editFolderName.length">
+									<md-button id="edit-folder-save" class="md-primary md-raised toggle-option" ng-click="updateName()" ng-disabled="!editFolderName.length">
 										Save
 									</md-button>
 
@@ -143,7 +159,7 @@
 										</div>
 									</md-input-container>
 
-									<md-button id="create-folder-save" class="md-accent md-raised toggle-option" ng-click="createFolder()" ng-disabled="!newFolder.name.length">
+									<md-button id="create-folder-save" class="md-primary md-raised toggle-option" ng-click="createFolder()" ng-disabled="!newFolder.name.length">
 										Create
 									</md-button>
 

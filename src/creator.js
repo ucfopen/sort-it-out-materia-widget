@@ -1,11 +1,13 @@
 const SortItOut = angular.module("SortItOutCreator", ['ngMaterial', 'ngMessages', 'ngSanitize'])
 
 SortItOut.config(["$mdThemingProvider", ($mdThemingProvider) =>
-	$mdThemingProvider.theme('toolbar-dark', 'default').primaryPalette('indigo').dark()
+	$mdThemingProvider.theme('default')
+		.primaryPalette('purple', {
+			'default': '300'
+		})
 ])
 
 SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize", ($scope, $mdDialog, $sanitize) => {
-
 	$scope.MAX_ITEM_LENGTH = 30
 	$scope.MAX_NUM_BUCKETS = 5
 
@@ -13,12 +15,12 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 		{
 			name: "Sample Folder",
 			items: [
-				{ text: "Sample Item" },
+				{ text: "Sample Item" }
 			]
 		}
 	]
 	$scope.editFolderIndex = 0
-	$scope.editImageIndex = false
+	let editImageIndices = {}
 	$scope.ready = false
 	$scope.showDialog = false
 	$scope.newFolder = { name: "" }
@@ -26,6 +28,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	$scope.initNewWidget = (widget) => {
 		$scope.title = "My Sort-It-Out Widget"
 		$scope.ready = true
+		$scope.backgroundImage = "assets/desktop.jpg"
 		$scope.$apply()
 	}
 
@@ -33,6 +36,10 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 		$scope.title = title
 		$scope.folders = generateFolders(qset.items)
 		$scope.ready = true
+		$scope.backgroundImage = "assets/desktop.jpg"
+		if (qset.options && qset.options.backgroundImage) {
+			$scope.backgroundImage = qset.options.backgroundImage
+		}
 		$scope.$apply()
 	}
 
@@ -67,7 +74,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	}
 
 	$scope.editImage = (folderIndex, itemIndex) => {
-		$scope.editImageIndex = { folderIndex, itemIndex }
+		editImageIndices = { folderIndex, itemIndex }
 		Materia.CreatorCore.showMediaImporter()
 	}
 
@@ -209,6 +216,11 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 		)
 	}
 
+	$scope.changeBackgroundImage = () => {
+		editImageIndices = { editBackground: true }
+		Materia.CreatorCore.showMediaImporter()
+	}
+
 	$scope.onSaveClicked = () => {
 		const saveError = getSaveError()
 		if (saveError) {
@@ -221,7 +233,12 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	}
 
 	const generateQset = () => {
-		let qset = { items: [] }
+		let qset = {
+			items: [],
+			options: {
+				backgroundImage: $scope.backgroundImage
+			}
+		}
 
 		for (let folder of $scope.folders) {
 			const folderName = $sanitize(folder.name)
@@ -257,10 +274,15 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	$scope.onMediaImportComplete = media => {
 		const id = media[0].id
 		const url = Materia.CreatorCore.getMediaUrl(id)
-		if ($scope.editImageIndex) {
-			const { folderIndex, itemIndex } = $scope.editImageIndex
+
+		const { folderIndex, itemIndex, editBackground } = editImageIndices
+		if (editBackground) {
+			$scope.backgroundImage = url
+		}
+		else if (folderIndex != undefined && itemIndex != undefined) {
 			$scope.folders[folderIndex].items[itemIndex].image = { id, url }
 		}
+
 		$scope.$apply()
 	}
 

@@ -1,3 +1,5 @@
+$folder-color: #efefac;
+
 #container {
 	background-color: #F3F3F3;
 	overflow: hidden;
@@ -5,6 +7,8 @@
 
 	#creator-header {
 		position: fixed;
+		background-color: #b944cc;
+		border-radius: 0 0 5px 5px;
 
 		.md-toolbar-tools {
 			height: 64px;
@@ -14,6 +18,10 @@
 
 				#widget-title-label {
 					color: rgba(white, 0.85);
+				}
+
+				input {
+					color: white;
 				}
 			}
 		}
@@ -25,8 +33,10 @@
 		overflow-y: auto;
 
 		#card-container {
-			margin: 0 auto 64px;
-			width: 700px;
+			width: 52%;
+			max-width: 600px;
+			margin: 0 auto;
+			overflow: auto;
 
 			.folder {
 				margin-bottom: 25px;
@@ -34,17 +44,21 @@
 				.folder-header {
 					border-top-left-radius: 2px;
 					border-top-right-radius: 2px;
+					background-color: #FFF59D;
+					color: black;
 				}
 
 				.folder-items {
-					padding: 20px;
+					padding: 5px;
+					background-color: #fffce4;
 
 					form {
 						margin: 10px auto;
 						text-align: center;
-						padding: 10px 50px;
+						padding: 10px 20px;
 						box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
 						border-radius: 10px;
+						background-color: white;
 
 						.folder-input-container {
 							text-align: left;
@@ -72,7 +86,9 @@
 
 							img {
 								max-height: 200px;
-								max-width: 100%;
+								max-width: 90%;
+								position: relative;
+								left: -15px;
 							}
 
 							.option-controls {
@@ -89,6 +105,68 @@
 			margin-bottom: 25px;
 			padding: 0 30px;
 		}
+	}
+}
+
+#preview-container {
+	text-align: center;
+	width: 400px;
+	margin: auto;
+
+	h1 {
+		margin-top: -30px;
+		margin-bottom: 10px;
+	}
+
+	#preview {
+		height: 300px;
+		width: 400px;
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center center;
+		margin-bottom: 10px;
+		position: relative;
+
+		#dock {
+			position: absolute;
+			height: 62px;
+			width: 100%;
+			bottom: 0;
+
+			.folder {
+				height: 80%;
+				width: 65px;
+				position: relative;
+				display: flex;
+				user-select: none;
+				margin: 10px auto;
+				position: relative;
+				word-wrap: break-word;
+				background-color: $folder-color;
+				font-size: 8px;
+
+				// :before is the top tab
+				&:before {
+					content: " ";
+					background-color: darken($folder-color, 15%);
+					position: absolute;
+					height: 5px;
+					width: 30px;
+					top: -5px;
+					border-top-left-radius: 2px;
+					border-top-right-radius: 2px;
+				}
+
+				span {
+					margin: auto;
+				}
+			}
+		}
+	}
+
+	& > span {
+		font-style: italic;
+		font-size: 14px;
 	}
 }
 
