@@ -111,7 +111,7 @@ $folder-color: #efefac;
 			margin-bottom: 25px;
 
 			#add-folder-button {
-				padding: 3px 30px;
+				padding: 0 30px;
 			}
 		}
 	}
@@ -143,6 +143,19 @@ $folder-color: #efefac;
 		background-position: center center;
 		margin-bottom: 10px;
 		position: relative;
+
+		#preview-header {
+			height: 20px;
+			width: 390px;
+			position: absolute;
+			top: 0;
+			font-size: 14px;
+			font-weight: bold;
+			color: black;
+			text-align: left;
+			background-image: linear-gradient(rgb(239, 239, 239), rgb(214, 214, 214));
+			padding-left: 10px;
+		}
 
 		#dock {
 			position: absolute;
