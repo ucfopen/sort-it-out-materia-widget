@@ -194,6 +194,10 @@ body {
 				min-width: 5%;
 				margin: auto;
 				padding: 3px;
+
+				&.small {
+					font-size: 0.75em;
+				}
 			}
 		}
 
@@ -228,8 +232,13 @@ body {
 	}
 
 	h1 {
-		margin: 10px 20px;
+		margin: 10px 35px 10px 20px;
 		color: white;
+		line-height: 1em;
+
+		&.small {
+			font-size: 1.75em;
+		}
 	}
 
 	#empty-preview {

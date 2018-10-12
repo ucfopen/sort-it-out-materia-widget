@@ -64,7 +64,9 @@
 					ng-mouseleave="hidePeek()"
 					data-index="{{$index}}">
 					<div class="folder-icon">
-						<div class="folder-name"><span>{{folder.text}}</span></div>
+						<div class="folder-name">
+							<span ng-class="{ small: folder.text.length > 40}">{{folder.text}}</span>
+						</div>
 					</div>
 					<div class="folder-arrow" ng-show="folderPreviewIndex == $index"></div>
 				</div>
@@ -81,7 +83,7 @@
 			</div>
 
 			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
-				<h1>{{folders[folderPreviewIndex].text}}</h1>
+				<h1 ng-class="{ small: folders[folderPreviewIndex].text.length > 40}">{{folders[folderPreviewIndex].text}}</h1>
 				<p id="empty-preview" ng-if="folders[folderPreviewIndex].items.length == 0">This folder is empty</p>
 				<div id="preview-scroll-container" scroll>
 					<div class="preview-item" ng-class="{selected: item.text == selectedItem.text}"

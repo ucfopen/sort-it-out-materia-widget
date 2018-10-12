@@ -102,7 +102,7 @@
 					<div id="preview" ng-if="backgroundImage" ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
 						<div id="dock" layout="row">
 							<div class="folder" ng-repeat="folder in folders">
-								<span>{{folder.name}}</span>
+								<span ng-class="{ small: folder.name.length > 40 }">{{folder.name}}</span>
 							</div>
 						</div>
 					</div>

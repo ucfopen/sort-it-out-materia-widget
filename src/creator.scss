@@ -160,6 +160,11 @@ $folder-color: #efefac;
 				span {
 					margin: auto;
 					font-family: Times;
+					max-width: 100%;
+
+					&.small {
+						font-size: 0.75em;
+					}
 				}
 			}
 		}
