@@ -29,7 +29,7 @@
 
 		<md-content id="container" ng-controller="SortItOutController">
 
-			<md-toolbar md-theme="toolbar-dark" id="creator-header">
+			<md-toolbar id="creator-header">
 				<div class="md-toolbar-tools">
 					<md-input-container class="md-block widget-title" flex>
 						<label id="widget-title-label">Widget Name</label>
@@ -38,7 +38,7 @@
 				</div>
 			</md-toolbar>
 
-			<div layout="row" id="content" ng-show="ready">
+			<div id="content" ng-show="ready">
 				<div id="card-container">
 					<md-card class="md-whiteframe-3dp folder" ng-repeat="(folderIndex, folder) in folders">
 						<md-toolbar class="folder-header">
@@ -89,8 +89,8 @@
 							</md-button>
 						</div>
 					</md-card>
-					<div layout layout-align="center center">
-						<md-button id="add-folder" class="md-primary md-raised toggle-option" ng-click="showAddDialog($event)" ng-disabled="!canAddFolder()">
+					<div id="add-folder">
+						<md-button id="add-folder-button" class="md-primary md-raised toggle-option" ng-click="showAddDialog($event)" ng-disabled="!canAddFolder()">
 							Add Folder
 						</md-button>
 					</div>

@@ -125,7 +125,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 				return false
 			}
 		}
-		return $scope.folders[folderIndex].items.length > 0 // TODO should we allow empty folders?
+		return $scope.folders[folderIndex].items.length > 0
 	}
 
 	const allUnique = () => {
@@ -195,9 +195,10 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	}
 
 	$scope.updateName = () => {
-		// TODO should it validate the name before adding it?
-		$scope.folders[$scope.editFolderIndex].name = $scope.editFolderName
-		$mdDialog.hide()
+		if ($scope.editFolderName.length) {
+			$scope.folders[$scope.editFolderIndex].name = $scope.editFolderName
+			$mdDialog.hide()
+		}
 	}
 
 	$scope.hideDialog = () => {
@@ -267,17 +268,9 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 		return qset
 	}
 
-	$scope.onQuestionImportComplete = (items) => {
-		console.log("onQuestionImportComplete", items)
-		// TODO
-		return true
-	}
+	$scope.onQuestionImportComplete = (items) => true
 
-	$scope.onSaveComplete = () => {
-		console.log("onSaveComplete")
-		// TODO
-		return true
-	}
+	$scope.onSaveComplete = () => true
 
 	// called from Materia creator page
 	$scope.onMediaImportComplete = media => {
