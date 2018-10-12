@@ -107,9 +107,30 @@
 						</div>
 					</div>
 					<span>Items will randomly be spread across the desktop.</span>
-					<md-button class="md-raised" ng-click="changeBackgroundImage()">
+
+					<md-button class="md-raised" ng-click="changeBackgroundImage($event)">
 						Change Background Image
 					</md-button>
+				</div>
+			</div>
+
+			<!-- Background Image Dialog -->
+			<div style="visibility: hidden">
+				<div class="md-dialog-container" id="background-image-dialog-container">
+					<md-dialog id="background-image-dialog">
+						<h3>Background Image</h3>
+						<md-dialog-content>
+							<div class="md-dialog-content">
+								<div class="image-option" ng-repeat="img in imagePresets" ng-style="{'background-image': 'url(' + img.url + ')'}" ng-click="setBackground(img.url)">
+									<md-tooltip md-direction="bottom">{{img.name}}</md-tooltip>
+								</div>
+								<div class="image-option" ng-click="getCustomBackground()">
+									<md-tooltip md-direction="bottom">Custom</md-tooltip>
+									<i class="material-icons">add_photo_alternate</i>
+								</div>
+							</div>
+						</md-dialog-content>
+					</md-dialog>
 				</div>
 			</div>
 

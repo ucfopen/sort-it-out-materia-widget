@@ -194,6 +194,38 @@ $folder-color: #efefac;
 	}
 }
 
+#background-image-dialog {
+	h3 {
+		text-align: center;
+		margin-bottom: 0;
+	}
+
+	.image-option {
+		height: 50px;
+		width: 50px;
+		border-radius: 100%;
+		background-size: 350px;
+		background-position: right;
+		display: inline-block;
+		margin: 15px;
+		position: relative;
+		font-size: 65px;
+		text-align: center;
+		box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+		cursor: pointer;
+
+		&:hover {
+			transform: scale(1.2);
+		}
+
+		i {
+			font-size: 30px;
+			position: relative;
+			top: -21px;
+		}
+	}
+}
+
 #edit-folder-delete {
 	color: white;
 	background-color: #FF3333;

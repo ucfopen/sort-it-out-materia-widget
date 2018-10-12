@@ -24,6 +24,20 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	$scope.ready = false
 	$scope.showDialog = false
 	$scope.newFolder = { name: "" }
+	$scope.imagePresets = [
+		{
+			name: "Classic",
+			url: "assets/desktop.jpg",
+		},
+		{
+			name: "Canvas",
+			url: "assets/canvas.jpg",
+		},
+		{
+			name: "Corkboard",
+			url: "assets/corkboard.jpg"
+		}
+	]
 
 	$scope.initNewWidget = (widget) => {
 		$scope.title = "My Sort-It-Out Widget"
@@ -220,9 +234,26 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 		)
 	}
 
-	$scope.changeBackgroundImage = () => {
+	$scope.changeBackgroundImage = e => {
+		$mdDialog.show({
+			contentElement: "#background-image-dialog-container",
+			parent: angular.element(document.body),
+			targetEvent: e,
+			clickOutsideToClose: true,
+			openFrom: e.currentTarget,
+			closeTo: e.currentTarget
+		})
+	}
+
+	$scope.getCustomBackground = () => {
 		editImageIndices = { editBackground: true }
 		Materia.CreatorCore.showMediaImporter()
+		$mdDialog.hide()
+	}
+
+	$scope.setBackground = url => {
+		$scope.backgroundImage = url
+		$mdDialog.hide()
 	}
 
 	$scope.checkEnter = (e, cb) => {
