@@ -1,12 +1,14 @@
-const SortItOut = angular.module("SortItOutScore", [])
+const SortItOut = angular.module("SortItOutScore", ["ngAnimate"])
 
 SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
+
 	$scope.start = (instance, qset, scoreTable, isPreview, version = '1') => {
 		$scope.update(qset, scoreTable)
 	}
 
 	$scope.update = (qset, scoreTable) => {
 		$scope.folders = buildFolders(qset, scoreTable)
+		$scope.showCorrectAnswers = false
 		$scope.$apply()
 
 		Materia.ScoreCore.setHeight( document.documentElement.scrollHeight )
@@ -33,7 +35,8 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 				folderNames[folderName] = folders.length
 				folders.push({
 					name: folderName,
-					items: []
+					items: [],
+					missedItems: [] // items that were not placed in the folder but should have been
 				})
 			}
 		}
@@ -44,27 +47,26 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 			const correctFolderName = entry.data[2]
 
 			const folderIndex = folderNames[userFolderName]
+			const correct = userFolderName == correctFolderName
+
 			folders[folderIndex].items.push({
 				text: itemName,
-				correct: userFolderName == correctFolderName,
+				correct,
 				correctFolderName,
 				image: imageMap[itemName] || false
 			})
+
+			if (!correct) {
+				folders[folderNames[correctFolderName]].missedItems.push({
+					text: itemName,
+					image: imageMap[itemName] || false,
+					userFolder: userFolderName
+				})
+			}
+
 		}
 		return folders
 	}
-
-	$scope.enlargedImageText = "" // text of enlarged image
-
-	$scope.enlargeImage = (e, text) => {
-		if (e.stopImmediatePropagation) {
-			e.stopImmediatePropagation()
-		}
-
-		$scope.enlargedImageText = $scope.enlargedImageText == text ? "" : text
-	}
-
-	$scope.minimizeImage = () => $scope.enlargedImageText = ""
 
 	Materia.ScoreCore.hideResultsTable()
 	Materia.ScoreCore.start($scope)

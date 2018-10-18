@@ -15,22 +15,49 @@
 
 		<!-- WIDGET DEPENDENCIES -->
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-animate.min.js"></script>
 
 		<!-- MAIN WIDGET SCRIPT -->
 		<script src="scorescreen.js"></script>
 	</head>
 	<body ng-app="SortItOutScore" ng-controller="SortItOutScoreCtrl" ng-cloak>
+		<div id="topOptions">
+			<input ng-model="showCorrectAnswers" type="checkbox" id="show-correct" />
+			<label for="show-correct">Show My Answers</label>
+			<label for="show-correct" id="toggle-switch">
+				<span></span>
+			</label>
+			<label for="show-correct">Show Correct Answers</label>
+		</div>
 		<div class="folder" ng-repeat="folder in folders" ng-click="minimizeImage()">
-			<h1>{{folder.name}}</h1>
-			<div class="empty-text" ng-if="folder.items.length == 0">No items were placed in this folder.</div>
-			<div class="item" ng-class="{correct: item.correct}" ng-repeat="item in folder.items">
-				<span>{{item.text}}<span>
-				<span ng-if="!item.correct" class="correct-folder">
-					Correct folder: {{item.correctFolderName}}
+			<div class="folder-header">
+				<h1>{{folder.name}}</h1>
+				<span class="correct-count">
 				</span>
-				<div style="clear: both"></div>
-				<div class="item-image" ng-if="item.image">
-					<img ng-src="{{item.image}}" ng-click="enlargeImage($event, item.text)" ng-class="{enlarged: enlargedImageText == item.text}">
+			</div>
+			<div class="folder-content">
+				<div class="empty-text" ng-if="folder.items.length == 0">No items were placed in this folder.</div>
+
+				<div class="item" ng-class="{correct: item.correct}" ng-repeat="item in folder.items" ng-show="!showCorrectAnswers || item.correct" slideable>
+					<span>{{item.text}}</span>
+					<span ng-if="!item.correct" class="correct-folder">
+						Correct folder: {{item.correctFolderName}}
+					</span>
+					<div style="clear: both"></div>
+					<div class="item-image" ng-if="item.image">
+						<img ng-src="{{item.image}}">
+					</div>
+				</div>
+
+				<div class="item missed" ng-repeat="item in folder.missedItems" ng-show="showCorrectAnswers" slideable>
+					<span>{{item.text}}</span>
+					<span ng-if="!item.correct" class="correct-folder">
+						You placed in: {{item.userFolder}}
+					</span>
+					<div style="clear: both"></div>
+					<div class="item-image" ng-if="item.image">
+						<img ng-src="{{item.image}}">
+					</div>
 				</div>
 			</div>
 		</div>
