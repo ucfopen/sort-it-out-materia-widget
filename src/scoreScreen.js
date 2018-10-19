@@ -25,6 +25,7 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 		let folders = []
 		let folderNames = {} // map from folder name to folder index
 		let imageMap = {}    // map from item name to image url, if available
+		const pointValue = 100 / qset.items.length
 
 		for (let item of qset.items) {
 			const folderName = item.answers[0].text
@@ -36,7 +37,8 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 				folders.push({
 					name: folderName,
 					items: [],
-					missedItems: [] // items that were not placed in the folder but should have been
+					missedItems: [], // items that were not placed in the folder but should have been
+					pointsOff: 0
 				})
 			}
 		}
@@ -57,11 +59,13 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 			})
 
 			if (!correct) {
-				folders[folderNames[correctFolderName]].missedItems.push({
+				const correctFolderIndex = folderNames[correctFolderName]
+				folders[correctFolderIndex].missedItems.push({
 					text: itemName,
 					image: imageMap[itemName] || false,
 					userFolder: userFolderName
 				})
+				folders[correctFolderIndex].pointsOff -= pointValue
 			}
 
 		}

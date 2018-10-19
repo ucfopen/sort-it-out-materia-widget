@@ -32,7 +32,11 @@
 		<div class="folder" ng-repeat="folder in folders" ng-click="minimizeImage()">
 			<div class="folder-header">
 				<h1>{{folder.name}}</h1>
-				<span class="correct-count">
+				<span class="points-off" ng-if="folder.pointsOff">
+					{{folder.pointsOff | number:0}}%
+				</span>
+				<span class="all-correct" ng-if="!folder.pointsOff">
+					&#x2714;
 				</span>
 			</div>
 			<div class="folder-content">
