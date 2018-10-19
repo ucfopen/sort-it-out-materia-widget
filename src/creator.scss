@@ -48,6 +48,16 @@ $folder-color: #efefac;
 					border-top-right-radius: 2px;
 					background-color: #FFF59D;
 					color: black;
+
+					.folder-btn {
+						min-width: 0;
+						margin: 3px;
+
+						i.material-icons {
+							line-height: 40px;
+							font-size: 20px;
+						}
+					}
 				}
 
 				.folder-items {
@@ -98,6 +108,11 @@ $folder-color: #efefac;
 								height: 100%;
 							}
 						}
+					}
+
+					.add-item-button.disabled {
+						background-color: rgba(0,0,0,0.12);
+						color: rgba(0,0,0,0.38);
 					}
 				}
 			}

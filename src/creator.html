@@ -43,11 +43,16 @@
 					<md-card class="md-whiteframe-3dp folder" ng-repeat="(folderIndex, folder) in folders">
 						<md-toolbar class="folder-header">
 							<div class="md-toolbar-tools">
-								<h3>{{folder.name}}</h3>
+								<h3 ng-click="showEditDialog($event, folderIndex)">
+									{{folder.name}}
+								</h3>
+								<md-button class="folder-btn" ng-click="showEditDialog($event, folderIndex)">
+									<i class="material-icons">edit</i>
+								</md-button>
 								<span flex></span>
-								<md-button class="folder-edit" ng-click="showEditDialog($event, folderIndex)">
-									Edit
-								</button>
+								<md-button class="folder-btn" ng-if="canDeleteFolder()" ng-click="showConfirmDelete($event, folderIndex)">
+									<i class="material-icons">delete</i>
+								</md-button>
 							</div>
 						</md-toolbar>
 
@@ -84,14 +89,15 @@
 								</div>
 
 							</form>
-							<md-button class="md-primary md-raised toggle-option" ng-click="addItem(folderIndex)" ng-disabled="!validFolder(folderIndex)">
+							<md-button class="md-primary md-raised add-item-button" ng-class="{disabled: !validFolder(folderIndex)}" ng-click="addItem(folderIndex)">
 								Add Item
 							</md-button>
 						</div>
 					</md-card>
 					<div id="add-folder">
-						<md-button id="add-folder-button" class="md-primary md-raised toggle-option" ng-click="showAddDialog($event)" ng-disabled="!canAddFolder()">
-							Add Folder
+						<md-button id="add-folder-button" class="md-primary md-raised" ng-click="showAddDialog($event)" ng-disabled="!canAddFolder()" aria-label="Add Folder">
+							<span ng-if="canAddFolder()">Add Folder</span>
+							<span ng-if="!canAddFolder()">Max of 5 Folders Allowed</span>
 						</md-button>
 					</div>
 				</div>
@@ -153,11 +159,11 @@
 										</div>
 									</md-input-container>
 
-									<md-button id="edit-folder-save" class="md-primary md-raised toggle-option" ng-click="updateName()" ng-disabled="!editFolderName.length">
+									<md-button id="edit-folder-save" class="md-primary md-raised" ng-click="updateName()" ng-disabled="!editFolderName.length">
 										Save
 									</md-button>
 
-									<md-button id="edit-folder-delete" class="md-raised toggle-option" ng-click="showConfirmDelete($event)" ng-if="canDeleteFolder()">
+									<md-button id="edit-folder-delete" class="md-raised" ng-click="showConfirmDelete($event, editFolderIndex)" ng-if="canDeleteFolder()">
 										Delete Folder
 									</md-button>
 								</form>
@@ -183,11 +189,11 @@
 										</div>
 									</md-input-container>
 
-									<md-button id="create-folder-save" class="md-primary md-raised toggle-option" ng-click="createFolder()" ng-disabled="!newFolder.name.length">
+									<md-button id="create-folder-save" class="md-primary md-raised" ng-click="createFolder()" ng-disabled="!newFolder.name.length">
 										Create
 									</md-button>
 
-									<md-button id="create-folder-cancel" class="md-raised toggle-option" ng-click="hideDialog()">
+									<md-button id="create-folder-cancel" class="md-raised" ng-click="hideDialog()">
 										Cancel
 									</md-button>
 								</form>

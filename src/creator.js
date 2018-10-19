@@ -1,13 +1,13 @@
-const SortItOut = angular.module("SortItOutCreator", ['ngMaterial', 'ngMessages', 'ngSanitize'])
+const SortItOut = angular.module("SortItOutCreator", ["ngMaterial", "ngMessages", "ngSanitize"])
 
 SortItOut.config(["$mdThemingProvider", ($mdThemingProvider) =>
-	$mdThemingProvider.theme('default')
-		.primaryPalette('purple', {
-			'default': '300'
+	$mdThemingProvider.theme("default")
+		.primaryPalette("purple", {
+			"default": "300"
 		})
 ])
 
-SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize", ($scope, $mdDialog, $sanitize) => {
+SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", "$sanitize", ($scope, $mdDialog, $mdToast, $sanitize) => {
 	$scope.MAX_ITEM_LENGTH = 30
 	$scope.MAX_NUM_BUCKETS = 5
 
@@ -38,6 +38,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 			url: "assets/corkboard.jpg"
 		}
 	]
+	$scope.undoInfo = {}
 
 	$scope.initNewWidget = (widget) => {
 		$scope.title = "My Sort-It-Out Widget"
@@ -80,11 +81,43 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	}
 
 	$scope.addItem = (folderIndex) => {
-		$scope.folders[folderIndex].items.push( { text: "" } )
+		if ($scope.validFolder(folderIndex)) {
+			$scope.folders[folderIndex].items.push( { text: "" } )
+		} else {
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent("Folder contains invalid/empty items. Fix those before adding another item.")
+					.position("top left")
+					.hideDelay(10000)
+			)
+		}
 	}
 
 	$scope.removeItem = (folderIndex, itemIndex) => {
-		$scope.folders[folderIndex].items.splice(itemIndex, 1)
+		const removed = $scope.folders[folderIndex].items.splice(itemIndex, 1)
+		$scope.undoInfo = {
+			data: removed[0],
+			folderIndex,
+			itemIndex
+		}
+
+		const toast = $mdToast.simple()
+			.textContent("Item removed")
+			.action("UNDO")
+			.highlightAction(true)
+			.position("top left")
+
+		$mdToast
+			.show(toast)
+			.then( res => {
+				if (res == "ok") {
+					const { data, folderIndex, itemIndex } = $scope.undoInfo
+					$scope.folders[folderIndex].items.splice(itemIndex, 0, data)
+				}
+			})
+			.catch( // if another toast is triggered before this one leaves, do nothing
+				e => null
+			)
 	}
 
 	$scope.editImage = (folderIndex, itemIndex) => {
@@ -93,7 +126,28 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 	}
 
 	$scope.removeImage = (folderIndex, itemIndex) => {
+		const data = $scope.folders[folderIndex].items[itemIndex].image
 		delete $scope.folders[folderIndex].items[itemIndex].image
+		$scope.undoInfo = { data, folderIndex, itemIndex }
+
+		const toast = $mdToast.simple()
+			.textContent("Image removed")
+			.action("UNDO")
+			.highlightAction(true)
+			.position("top left")
+
+		$mdToast
+			.show(toast)
+			.then( res => {
+				if (res == "ok") {
+					const { data, folderIndex, itemIndex } = $scope.undoInfo
+					$scope.folders[folderIndex].items[itemIndex].image = data
+				}
+			})
+			.catch( // if another toast is triggered before this one leaves, do nothing
+				e => null
+			)
+
 	}
 
 	$scope.showAddDialog = (ev) => {
@@ -220,7 +274,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 		$scope.showDialog = false
 	}
 
-	$scope.showConfirmDelete = (ev) => {
+	$scope.showConfirmDelete = (ev, folderIndex) => {
 		const confirm = $mdDialog.confirm()
 			.title("Are you sure you want to delete this folder?")
 			.textContent("This will delete all items in this folder as well.")
@@ -229,9 +283,34 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$sanitize",
 			.ok("Delete")
 			.cancel("Cancel")
 		$mdDialog.show(confirm).then(
-			() => $scope.folders.splice($scope.editFolderIndex, 1),
+			() => deleteFolder(folderIndex),
 			() => null
 		)
+	}
+
+	const deleteFolder = folderIndex => {
+		const removed = $scope.folders.splice(folderIndex, 1)
+		$scope.undoInfo = {
+			data: removed[0],
+			folderIndex
+		}
+		const toast = $mdToast.simple()
+			.textContent("Folder removed")
+			.action("UNDO")
+			.highlightAction(true)
+			.position("top left")
+
+		$mdToast
+			.show(toast)
+			.then( res => {
+				if (res == "ok") {
+					const { data, folderIndex } = $scope.undoInfo
+					$scope.folders.splice(folderIndex, 0, data)
+				}
+			})
+			.catch( // if another toast is triggered before this one leaves, do nothing
+				e => null
+			)
 	}
 
 	$scope.changeBackgroundImage = e => {
