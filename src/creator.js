@@ -344,12 +344,11 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 	$scope.onSaveClicked = () => {
 		const saveError = getSaveError()
 		if (saveError) {
-			Materia.CreatorCore.cancelSave(saveError)
+			return Materia.CreatorCore.cancelSave(saveError)
 		}
-		else {
-			const qset = generateQset()
-			Materia.CreatorCore.save($scope.title, qset)
-		}
+
+		const qset = generateQset()
+		return Materia.CreatorCore.save($scope.title, qset)
 	}
 
 	const generateQset = () => {

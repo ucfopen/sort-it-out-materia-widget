@@ -2,16 +2,16 @@
 	background: white;
 	margin: 25px 10px;
 	border-radius: 5px;
-	box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 3px 7px rgba(black, 0.5);
 
 	.folder-header {
 		padding: 5px;
 		position: relative;
-		background-color: #fffce4;
+		background-color: #FFFCE4;
 		border-radius: 5px;
 
 		h1 {
-			margin: 0 175px 0 20px;
+			margin: 0 75px 0 20px;
 		}
 
 		.points-off,
@@ -43,15 +43,15 @@
 		.item {
 			padding: 15px;
 			margin: 10px;
-			background: #efc4c9;
+			background: #EFC4C9;
 			font-size: 20px;
 			border-radius: 5px;
-			box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+			box-shadow: 0 3px 7px rgba(black, 0.5);
 			max-height: 275px;
 			transition: all ease-in 0.5s;
 
 			&.correct {
-				background: #d7e3d6;
+				background: #D7E3D6;
 			}
 
 			&.missed {
@@ -80,12 +80,12 @@
 
 				img {
 					height: 150px;
-					box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+					box-shadow: 0 3px 7px rgba(black, 0.5);
 					transition: all ease 0.3s;
 
 					&:hover {
 						transform: scale(2);
-						box-shadow: 0 3px 20px 5px rgba(0, 0, 0, 0.5);
+						box-shadow: 0 3px 20px 5px rgba(black, 0.5);
 					}
 				}
 			}
@@ -100,7 +100,7 @@
 	text-align: center;
 	margin: auto;
 	border-radius: 3px;
-	box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 3px 7px rgba(black, 0.5);
 	width: 50%;
 
 	input[type='checkbox'] {
@@ -113,7 +113,7 @@
 		border-radius: 3px;
 		height: 16px;
 		padding: 4px 0;
-		background: #838e9a;
+		background: #838E9A;
 		position: relative;
 		top: 3px;
 		margin: 0 5px 3px;

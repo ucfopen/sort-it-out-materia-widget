@@ -1,4 +1,4 @@
-$folder-color: #efefac;
+$folder-color: #EFEFAC;
 
 body {
 	margin: 0;
@@ -53,7 +53,7 @@ body {
 		text-align: center;
 		background: white;
 		border-radius: 3px;
-		box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 3px 7px rgba(black, 0.5);
 		padding: 5px 10px;
 		max-width: 175px;
 		position: absolute;
@@ -156,7 +156,7 @@ body {
 				font-size: 14px;
 				padding: 2px;
 				margin: 2px;
-				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+				box-shadow: 0 2px 5px rgba(black, 0.5);
 				border-radius: 3px;
 				text-align: center;
 			}
@@ -416,14 +416,14 @@ body {
 		max-width: 100%;
 		max-height: 100%;
 		margin: 20px auto 5px;
-		box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+		box-shadow: 0 3px 7px rgba(black, 0.3);
 		transition: all ease 0.3s;
 	}
 }
 
 #donearrow {
 	position: absolute;
-	background: #ffff82;
+	background: #FFFF82;
 	display: block;
 	z-index: 9999;
 
@@ -456,7 +456,7 @@ body {
 
 	&:after {
 		border-color: rgba(136, 183, 213, 0);
-		border-left-color: #ffff82;
+		border-left-color: #FFFF82;
 		border-width: 12px;
 		margin-left: 0px;
 	}
@@ -493,7 +493,7 @@ body {
 	top: 80px;
 	left: calc(50% - 210px);
 	background: white;
-	box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 3px 7px rgba(black, 0.3);
 	border-radius: 3px;
 	padding: 0 10px;
 	text-align: center;
@@ -542,7 +542,7 @@ body {
 	}
 
 	#gotitbtn {
-		background: #5fac4b;
+		background: #5FAC4B;
 		color: white;
 		border: 1px solid #4f9c3b;
 		font-size: 16px;
