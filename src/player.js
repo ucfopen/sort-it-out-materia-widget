@@ -48,6 +48,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 	const generateBounds = () => {
 		const width = $("#desktop").width()
 		const height = $("#desktop").height()
+		const menuBarHeight = $("#menu-bar").outerHeight()
 
 		placementBounds = {
 			x: {
@@ -55,7 +56,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 				max: width - 150
 			},
 			y: {
-				min: 45,
+				min: menuBarHeight + 5,
 				max: height - 15
 			}
 		}
@@ -66,8 +67,8 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 				max: width - 15
 			},
 			y: {
-				min: 45,
-				max: height + 15
+				min: menuBarHeight + 5,
+				max: menuBarHeight + height - 15
 			}
 		}
 	}
