@@ -97,7 +97,7 @@
 					<div id="add-folder">
 						<md-button id="add-folder-button" class="md-primary md-raised" ng-click="showAddDialog($event)" ng-disabled="!canAddFolder()" aria-label="Add Folder">
 							<span ng-if="canAddFolder()">Add Folder</span>
-							<span ng-if="!canAddFolder()">Max of 5 Folders Allowed</span>
+							<span ng-if="!canAddFolder()">Max of {{MAX_NUM_FOLDERS}} Folders Allowed</span>
 						</md-button>
 					</div>
 				</div>
@@ -161,10 +161,6 @@
 
 									<md-button id="edit-folder-save" class="md-primary md-raised" ng-click="updateName()" ng-disabled="!editFolderName.length">
 										Save
-									</md-button>
-
-									<md-button id="edit-folder-delete" class="md-raised" ng-click="showConfirmDelete($event, editFolderIndex)" ng-if="canDeleteFolder()">
-										Delete Folder
 									</md-button>
 								</form>
 							</div>

@@ -9,7 +9,7 @@ SortItOut.config(["$mdThemingProvider", ($mdThemingProvider) =>
 
 SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", "$sanitize", ($scope, $mdDialog, $mdToast, $sanitize) => {
 	$scope.MAX_ITEM_LENGTH = 30
-	$scope.MAX_NUM_BUCKETS = 5
+	$scope.MAX_NUM_FOLDERS = 6
 
 	$scope.folders = [
 		{
@@ -175,7 +175,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 	}
 
 	$scope.canAddFolder = () => {
-		return $scope.folders.length < $scope.MAX_NUM_BUCKETS
+		return $scope.folders.length < $scope.MAX_NUM_FOLDERS
 	}
 
 	$scope.canDeleteFolder = () => {

@@ -2,8 +2,8 @@
 general:
   name: Sort It Out!
   group: Materia
-  height: 600
-  width: 800
+  height: 650
+  width: 960
   in_catalog: No
   is_editable: Yes
   is_playable: Yes

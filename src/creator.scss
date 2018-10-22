@@ -40,8 +40,8 @@ $folder-color: #EFEFAC;
 			.folder {
 				margin-bottom: 25px;
 				max-width: 600px;
-				width: 50%;
-				margin-left: calc(20% - 180px);
+				width: 47%;
+				margin-left: calc(18% - 170px);
 
 				.folder-header {
 					border-top-left-radius: 2px;
@@ -67,7 +67,7 @@ $folder-color: #EFEFAC;
 					form {
 						margin: 10px auto;
 						text-align: center;
-						padding: 10px 20px;
+						padding: 10px;
 						box-shadow: 0 3px 7px rgba(black, 0.3);
 						border-radius: 10px;
 						background-color: white;
@@ -119,10 +119,10 @@ $folder-color: #EFEFAC;
 		}
 
 		#add-folder {
-			width: 50%;
+			width: 47%;
 			max-width: 600px;
 			text-align: center;
-			margin-left: calc(20% - 180px);
+			margin-left: calc(18% - 170px);
 			margin-bottom: 25px;
 
 			#add-folder-button {
@@ -134,8 +134,8 @@ $folder-color: #EFEFAC;
 
 #preview-container {
 	text-align: center;
-	width: 400px;
-	margin-right: calc(15% - 135px);
+	width: 480px;
+	margin-right: calc(10% - 105px);
 	position: fixed;
 	top: 15vh;
 	right: 10px;
@@ -143,7 +143,7 @@ $folder-color: #EFEFAC;
 	color: white;
 	border-radius: 3px;
 	box-shadow: 0 3px 7px rgba(black, 0.3);
-	padding: 0 calc(10% - 85px) 10px;
+	padding: 0 calc(10% - 90px) 10px;
 
 
 	h1 {
@@ -151,8 +151,8 @@ $folder-color: #EFEFAC;
 	}
 
 	#preview {
-		height: 300px;
-		width: 400px;
+		height: 325px;
+		width: 480px;
 		background-repeat: no-repeat;
 		background-size: cover;
 		background-position: center center;
@@ -161,7 +161,7 @@ $folder-color: #EFEFAC;
 
 		#preview-header {
 			height: 20px;
-			width: 390px;
+			width: 470px;
 			position: absolute;
 			top: 0;
 			font-size: 14px;
