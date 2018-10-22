@@ -68,7 +68,6 @@
 							<span ng-class="{ small: folder.text.length > 40}">{{folder.text}}</span>
 						</div>
 					</div>
-					<div class="folder-arrow" ng-show="folderPreviewIndex == $index"></div>
 				</div>
 			</div>
 
@@ -79,6 +78,7 @@
 							<div class="peek-item" ng-repeat="item in folder.items.slice().reverse() | limitTo:3">{{item.text}}</div>
 						</div>
 					</div>
+					<div class="folder-arrow" ng-show="folderPreviewIndex == $index"></div>
 				</div>
 			</div>
 
