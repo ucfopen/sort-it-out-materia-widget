@@ -52,6 +52,7 @@
 								<span flex></span>
 								<md-button class="folder-btn" ng-if="canDeleteFolder()" ng-click="showConfirmDelete($event, folderIndex)">
 									<i class="material-icons">delete</i>
+									<md-tooltip md-direction="below">Delete Folder</md-tooltip>
 								</md-button>
 							</div>
 						</md-toolbar>
@@ -90,13 +91,16 @@
 							</form>
 
 							<md-button class="md-primary md-raised add-item-button" ng-class="{disabled: !validFolder(folderIndex)}" ng-click="addItem(folderIndex)">
+								<i class="material-icons">add</i>
 								Add Item
 							</md-button>
 						</div>
 					</md-card>
 					<div id="add-folder">
 						<md-button id="add-folder-button" class="md-primary md-raised" ng-click="showAddDialog($event)" ng-disabled="!canAddFolder()" aria-label="Add Folder">
-							<span ng-if="canAddFolder()">Add Folder</span>
+							<span ng-if="canAddFolder()">
+								<i class="material-icons">create_new_folder</i>Add Folder
+							</span>
 							<span ng-if="!canAddFolder()">Max of {{MAX_NUM_FOLDERS}} Folders Allowed</span>
 						</md-button>
 					</div>
@@ -117,7 +121,7 @@
 					</div>
 					<span>Items will randomly be spread across the desktop.</span>
 
-					<md-button class="md-raised" ng-click="changeBackgroundImage($event)">
+					<md-button id="change-background-button" class="md-raised md-primary" ng-click="changeBackgroundImage($event)">
 						Change Background Image
 					</md-button>
 				</div>

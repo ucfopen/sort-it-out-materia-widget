@@ -68,6 +68,7 @@ $folder-color: #EFEFAC;
 						margin: 10px auto;
 						text-align: center;
 						padding: 10px;
+						min-width: 415px;
 						box-shadow: 0 3px 7px rgba(black, 0.3);
 						border-radius: 10px;
 						background-color: white;
@@ -116,6 +117,19 @@ $folder-color: #EFEFAC;
 					}
 				}
 			}
+
+			.add-item-button i.material-icons,
+			#add-folder-button i.material-icons {
+				position: relative;
+				top: 5px;
+				left: -5px;
+				margin-right: 4px;
+				font-size: 20px;
+			}
+
+			.add-item-button i.material-icons {
+				left: 1px;
+			}
 		}
 
 		#add-folder {
@@ -161,7 +175,7 @@ $folder-color: #EFEFAC;
 
 		#preview-header {
 			height: 20px;
-			width: 470px;
+			width: 430px;
 			position: absolute;
 			top: 0;
 			font-size: 14px;
@@ -170,6 +184,7 @@ $folder-color: #EFEFAC;
 			text-align: left;
 			background-image: linear-gradient(rgb(239, 239, 239), rgb(214, 214, 214));
 			padding-left: 10px;
+			padding-right: 40px;
 		}
 
 		#dock {
@@ -220,6 +235,10 @@ $folder-color: #EFEFAC;
 		font-style: italic;
 		font-size: 14px;
 	}
+
+	#change-background-button {
+		padding: 0px 25px;
+	}
 }
 
 #background-image-dialog {
@@ -254,7 +273,10 @@ $folder-color: #EFEFAC;
 	}
 }
 
-#edit-folder-delete {
-	color: white;
-	background-color: #FF3333;
+.toast-error {
+	top: 60px !important;
+
+	.md-toast-content {
+		background-color: #D11 !important;
+	}
 }

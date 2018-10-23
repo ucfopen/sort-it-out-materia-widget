@@ -89,6 +89,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 					.textContent("Folder contains invalid/empty items. Fix those before adding another item.")
 					.position("top left")
 					.hideDelay(10000)
+					.toastClass("toast-error")
 			)
 		}
 	}
