@@ -33,10 +33,12 @@
 			<div id="menu-bar">
 				<h1 id="title">{{title}}</h1>
 				<div id="donearrow" ng-show="readyToSubmit()">Click to finish</div>
-				<button ng-click="submitClick()" ng-disabled="!readyToSubmit()">
+				<button ng-click="submitClick()" ng-class="{disabled: !readyToSubmit()}">
 					Submit Answers
 				</button>
-				<div id="no-submit"
+				<div id="no-submit" ng-class="{hidden: readyToSubmit() || !showNoSubmit}">
+					All items must be placed in a folder before submitting.
+				</div>
 			</div>
 
 			<div id="desktop">

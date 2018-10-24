@@ -37,6 +37,38 @@ body {
 			background-image: linear-gradient(rgb(102, 175, 250), rgb(10, 128, 255));
 			color: white;
 		}
+
+		&.disabled {
+			background: none;
+			color: #555;
+			border: 1px solid #999;
+			cursor: not-allowed;
+		}
+
+		&:hover {
+			background-image: linear-gradient(rgb(125, 200, 255), rgb(15, 135, 255));
+
+			&.disabled {
+				background: rgba(255, 96, 96, 0.3);
+			}
+		}
+	}
+
+	#no-submit {
+		position: absolute;
+		top: 44px;
+		right: 4px;
+		background-color: #D33;
+		color: white;
+		padding: 8px 25px;
+		border-radius: 3px;
+		transition: cubic-bezier(0.4, 1.5, 0.6, 1) all 0.5s;
+
+		&.hidden {
+			top: -50px;
+			opacity: 0;
+			transition: cubic-bezier(0.4, 0, 0.6, -0.5) all 0.5s;
+		}
 	}
 }
 

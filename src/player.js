@@ -12,6 +12,7 @@ SortItOut.directive("scroll", () => {
 
 SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 	$scope.showFolderPreview = false
+	$scope.showNoSubmit = false
 	$scope.selectedItem = false
 	$scope.desktopItems = []
 	$scope.folders = []
@@ -332,6 +333,11 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 
 	$scope.submitClick = () => {
 		if (!$scope.readyToSubmit()) {
+			$scope.showNoSubmit = true
+			setTimeout( () => {
+				$scope.showNoSubmit = false
+				$scope.$apply()
+			}, 5000)
 			return
 		}
 
