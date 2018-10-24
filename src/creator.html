@@ -43,14 +43,18 @@
 					<md-card class="md-whiteframe-3dp folder" ng-repeat="(folderIndex, folder) in folders">
 						<md-toolbar class="folder-header">
 							<div class="md-toolbar-tools">
-								<h3 ng-click="showEditDialog($event, folderIndex)">
-									{{folder.name}}
-								</h3>
-								<md-button class="folder-btn" ng-click="showEditDialog($event, folderIndex)">
-									<i class="material-icons">edit</i>
-								</md-button>
+								<form name="folderNameForm" autocomplete="off">
+									<md-input-container md-no-float class="md-block folder-name-input">
+										<input type="text" ng-model="folder.name" name="name" required spellcheck="true" autocomplete="off" pattern='[^"&]*' md-maxlength="60" placeholder="Folder {{folderIndex + 1 }} Name">
+										<div ng-messages="folderNameForm.name.$error">
+											<div ng-message="required">Name is required.</div>
+											<div ng-message="md-maxlength">Name too long</div>
+											<div ng-message="pattern">Name cannot contain " or &</div>
+										</div>
+									</md-input-container>
+								</form>
 								<span flex></span>
-								<md-button class="folder-btn" ng-if="canDeleteFolder()" ng-click="showConfirmDelete($event, folderIndex)">
+								<md-button class="folder-delete" ng-if="canDeleteFolder()" ng-click="showConfirmDelete($event, folderIndex)">
 									<i class="material-icons">delete</i>
 									<md-tooltip md-direction="below">Delete Folder</md-tooltip>
 								</md-button>
@@ -104,27 +108,28 @@
 							<span ng-if="!canAddFolder()">Max of {{MAX_NUM_FOLDERS}} Folders Allowed</span>
 						</md-button>
 					</div>
-				</div>
 
-				<!-- Preview -->
-				<div id="preview-container">
-					<h1>Preview</h1>
-					<div id="preview" ng-if="backgroundImage" ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
-						<div id="preview-header">
-							{{title}}
-						</div>
-						<div id="dock" layout="row">
-							<div class="folder" ng-repeat="folder in folders">
-								<span ng-class="{ small: folder.name.length > 40 }">{{folder.name}}</span>
+					<!-- Preview -->
+					<div id="preview-container">
+						<h1>Preview</h1>
+						<div id="preview" ng-if="backgroundImage" ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
+							<div id="preview-header">
+								{{title}}
+							</div>
+							<div id="dock" layout="row">
+								<div class="preview-folder" ng-repeat="folder in folders">
+									<span ng-class="{ small: folder.name.length > 40 }">{{folder.name}}</span>
+								</div>
 							</div>
 						</div>
-					</div>
-					<span>Items will randomly be spread across the desktop.</span>
+						<span>Items will randomly be spread across the desktop.</span>
 
-					<md-button id="change-background-button" class="md-raised md-primary" ng-click="changeBackgroundImage($event)">
-						Change Background Image
-					</md-button>
+						<md-button id="change-background-button" class="md-raised md-primary" ng-click="changeBackgroundImage($event)">
+							Change Background Image
+						</md-button>
+					</div>
 				</div>
+
 			</div>
 
 			<!-- Background Image Dialog -->
@@ -147,32 +152,6 @@
 				</div>
 			</div>
 
-			<!-- Folder Edit Dialog -->
-			<div style="visibility: hidden">
-				<div class="md-dialog-container" id="edit-dialog-container">
-					<md-dialog id="edit-dialog">
-						<md-dialog-content>
-							<div class="md-dialog-content">
-								<form name="folderNameForm" autocomplete="off">
-									<md-input-container class="md-block">
-										<label>Folder Name</label>
-										<input type="text" ng-model="editFolderName" name="editFolderName" required spellcheck="true" autocomplete="off" pattern='[^"&]*' ng-keyup="checkEnter($event, updateName)">
-										<div ng-messages="folderNameForm.editFolderName.$error">
-											<div ng-message="required">Name is required.</div>
-											<div ng-message="pattern">Name cannot contain " or &</div>
-										</div>
-									</md-input-container>
-
-									<md-button id="edit-folder-save" class="md-primary md-raised" ng-click="updateName()" ng-disabled="!editFolderName.length">
-										Save
-									</md-button>
-								</form>
-							</div>
-						</md-dialog-content>
-					</md-dialog>
-				</div>
-			</div>
-
 			<!-- Create Folder Dialog -->
 			<div style="visibility: hidden">
 				<div class="md-dialog-container" id="create-dialog-container">
@@ -189,12 +168,12 @@
 										</div>
 									</md-input-container>
 
-									<md-button id="create-folder-save" class="md-primary md-raised" ng-click="createFolder()" ng-disabled="!newFolder.name.length">
-										Create
-									</md-button>
-
 									<md-button id="create-folder-cancel" class="md-raised" ng-click="hideDialog()">
 										Cancel
+									</md-button>
+
+									<md-button id="create-folder-save" class="md-primary md-raised" ng-click="createFolder()" ng-disabled="!newFolder.name.length">
+										Create
 									</md-button>
 								</form>
 							</div>
