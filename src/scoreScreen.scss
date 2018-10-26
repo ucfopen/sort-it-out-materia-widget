@@ -8,10 +8,15 @@
 		padding: 5px;
 		position: relative;
 		background-color: #FFFCE4;
-		border-radius: 5px;
+		border-radius: 5px 5px 0 0;
+
+		.folder-icon {
+			margin-left: 10px
+		}
 
 		h1 {
-			margin: 0 75px 0 20px;
+			margin: 0 75px 0 10px;
+			display: inline;
 		}
 
 		.points-off,
@@ -40,6 +45,7 @@
 			display: flex;
 			flex: 1 0 auto;
 			margin: 10px;
+			font-weight: bold;
 
 			div {
 				width: 50%;
@@ -49,26 +55,30 @@
 		.folder-row {
 			display: flex;
 			flex: 1 0 auto;
-			margin: 10px;
-			box-shadow: 0 3px 7px rgba(black, 0.5);
-			border-radius: 3px;
+			border-top: 2px solid black;
 
 			& > div {
 				width: 50%;
 			}
 
-
-			&.correct {
-				background: #D7E3D6;
-			}
-
-			&.missed {
-				background: #EFC4C9;
-			}
-
 			.info {
 				padding: 15px;
 				margin: 10px;
+			}
+
+			.missing {
+				padding: 0 15px;
+				margin: 0 10px;
+				display: flex;
+
+				& > div {
+					height: 50%;
+					min-height: 70px;
+					width: 60%;
+					margin: auto;
+					border: 3px dashed #F66;
+					position: relative;
+				}
 			}
 
 			.item {
@@ -77,21 +87,23 @@
 				font-size: 20px;
 				border-radius: 5px;
 				background-color: white;
-				box-shadow: 0 3px 7px rgba(black, 0.5);
 				max-height: 275px;
 				transition: all ease-in 0.5s;
+				position: relative;
 
-				&.ng-hide {
-					max-height: 0;
-					overflow: hidden;
-					opacity: 0;
+				&:hover {
+					z-index: 3; // for image zooming
 				}
 
-				.correct-folder {
-					float: right;
-					font-style: italic;
-					font-size: 16px;
-					line-height: 24px;
+				&.extra {
+					.overlay .incorrect.small {
+						position: relative;
+						top: -16px;
+					}
+				}
+
+				&.short {
+					margin: 30px 10px;
 				}
 
 				.item-image {
@@ -99,13 +111,45 @@
 					box-shadow: 0 3px 7px rgba(black, 0.5);
 					transition: all ease 0.3s;
 
-					&:hover {
-						transform: scale(2) translate(-20%);
+					&.zoom:hover {
+						transform: scale(2) translate(20%);
 						box-shadow: 0 3px 20px 5px rgba(black, 0.5);
 					}
+				}
 
-					&.left:hover {
-						transform: scale(2) translate(20%);
+
+				p.item-belongs {
+					margin: 3px 0 0;
+					font-size: 16px;
+					font-style: italic;
+				}
+			}
+
+			.overlay {
+				position: absolute;
+				height: 100%;
+				width: 100%;
+				top: 0;
+				left: 0;
+				border-radius: 3px;
+				display: flex;
+
+
+				div {
+					margin: auto;
+					border-radius: 100%;
+					color: white;
+
+					&.incorrect {
+						background: rgba(red, 0.6);
+						font-size: 36px;
+						padding: 0px 12px 3px;
+					}
+
+					&.correct {
+						background: rgba(green, 0.8);
+						font-size: 30px;
+						padding: 5px 10px 4px;
 					}
 				}
 			}
