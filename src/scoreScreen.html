@@ -21,14 +21,6 @@
 		<script src="scorescreen.js"></script>
 	</head>
 	<body ng-app="SortItOutScore" ng-controller="SortItOutScoreCtrl" ng-cloak>
-		<div id="topOptions">
-			<input ng-model="showCorrectAnswers" type="checkbox" id="show-correct" />
-			<label for="show-correct">Show My Answers</label>
-			<label for="show-correct" id="toggle-switch">
-				<span></span>
-			</label>
-			<label for="show-correct">Show Correct Answers</label>
-		</div>
 		<div class="folder" ng-repeat="folder in folders" ng-click="minimizeImage()">
 			<div class="folder-header">
 				<h1>{{folder.name}}</h1>
@@ -40,27 +32,45 @@
 				</span>
 			</div>
 			<div class="folder-content">
-				<div class="empty-text" ng-if="folder.items.length == 0">No items were placed in this folder.</div>
-
-				<div class="item" ng-class="{correct: item.correct}" ng-repeat="item in folder.items" ng-show="!showCorrectAnswers || item.correct" slideable>
-					<span>{{item.text}}</span>
-					<span ng-if="!item.correct" class="correct-folder">
-						Correct folder: {{item.correctFolderName}}
-					</span>
-					<div style="clear: both"></div>
-					<div class="item-image" ng-if="item.image">
-						<img ng-src="{{item.image}}">
+				<div class="header">
+					<div>
+						Correct Items ({{folder.items.length}})
+					</div>
+					<div>
+						Items You Placed ({{folder.placeCount}})
+					</div>
+				</div>
+				<div class="folder-row" ng-repeat="item in folder.items" ng-class="{correct: item.correct, missed: !item.correct}">
+					<div class="item">
+						<span>{{item.text}}</span>
+						<div ng-if="item.image">
+							<img class="item-image left" ng-src="{{item.image}}">
+						</div>
+					</div>
+					<div class="item" ng-if="item.correct">
+						<span>&#9989; {{item.text}}</span>
+						<div ng-if="item.image">
+							<img class="item-image" ng-src="{{item.image}}">
+						</div>
+					</div>
+					<div class="info" ng-if="!item.correct">
+						&#10060; You placed in: {{item.userFolderName}}
 					</div>
 				</div>
 
-				<div class="item missed" ng-repeat="item in folder.missedItems" ng-show="showCorrectAnswers" slideable>
-					<span>{{item.text}}</span>
-					<span ng-if="!item.correct" class="correct-folder">
-						You placed in: {{item.userFolder}}
-					</span>
-					<div style="clear: both"></div>
-					<div class="item-image" ng-if="item.image">
-						<img ng-src="{{item.image}}">
+				<div class="extra-items-separator" ng-if="folder.extraItems.length">
+					Extra Items You Placed in this Folder
+				</div>
+
+				<div class="folder-row missed" ng-repeat="item in folder.extraItems">
+					<div class="info">
+						Belongs in: {{item.correctFolderName}}
+					</div>
+					<div class="item">
+						<span>&#10060; {{item.text}}</span>
+						<div ng-if="item.image">
+							<img class="item-image" ng-src="{{item.image}}">
+						</div>
 					</div>
 				</div>
 			</div>

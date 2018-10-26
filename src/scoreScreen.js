@@ -14,7 +14,7 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 		Materia.ScoreCore.setHeight( document.documentElement.scrollHeight )
 
 		// need to properly adjust image heights after the scroll height is set
-		document.querySelectorAll(".item-image img").forEach( el => {
+		document.querySelectorAll(".item-image").forEach( el => {
 			el.style.maxWidth = "300px"
 			el.style.maxHeight = "150px"
 			el.style.height = "auto"
@@ -23,8 +23,8 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 
 	const buildFolders = (qset, scoreTable) => {
 		let folders = []
-		let folderNames = {} // map from folder name to folder index
-		let imageMap = {}    // map from item name to image url, if available
+		let folderNames = {}
+		let imageMap = {}
 		const pointValue = 100 / qset.items.length
 
 		for (let item of qset.items) {
@@ -37,7 +37,8 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 				folders.push({
 					name: folderName,
 					items: [],
-					missedItems: [], // items that were not placed in the folder but should have been
+					extraItems: [], // items that were placed here that don't belong
+					placeCount: 0,  // number of items user placed in this folder
 					pointsOff: 0
 				})
 			}
@@ -48,27 +49,29 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 			const userFolderName = entry.data[1]
 			const correctFolderName = entry.data[2]
 
-			const folderIndex = folderNames[userFolderName]
+			const correctFolderIndex = folderNames[correctFolderName]
+			const userFolderIndex = folderNames[userFolderName]
 			const correct = userFolderName == correctFolderName
 
-			folders[folderIndex].items.push({
+			folders[correctFolderIndex].items.push({
 				text: itemName,
 				correct,
-				correctFolderName,
+				userFolderName,
 				image: imageMap[itemName] || false
 			})
 
+			folders[userFolderIndex].placeCount++
+
 			if (!correct) {
-				const correctFolderIndex = folderNames[correctFolderName]
-				folders[correctFolderIndex].missedItems.push({
+				folders[userFolderIndex].extraItems.push({
 					text: itemName,
 					image: imageMap[itemName] || false,
-					userFolder: userFolderName
+					correctFolderName
 				})
 				folders[correctFolderIndex].pointsOff -= pointValue
 			}
-
 		}
+
 		return folders
 	}
 
