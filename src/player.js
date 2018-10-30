@@ -101,7 +101,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 		})
 	}
 
-	const generateRandomPosition = (hasImage) => {
+	const generateRandomPosition = hasImage => {
 		const pb = placementBounds
 
 		const yRange = pb.y.max - pb.y.min - DOCK_HEIGHT - (hasImage ? 150 : 0)
@@ -165,7 +165,9 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 			const folderElem = underElem.closest(".folder")
 			if (folderElem.length) {
 				folderElem.addClass("peeked")
+				$(selectedElement).addClass("shrink")
 			} else {
+				$(".shrink").removeClass("shrink")
 				$(".peeked").removeClass("peeked")
 			}
 		}
@@ -194,6 +196,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 
 		// put it back if it's out of bounds or over the dock but not a folder
 		if (isOutOfBounds(e) || underElemId == "dock-main") {
+			$(".shrink").removeClass("shrink")
 			$(selectedElement).animate({
 				left: prevPosition.left,
 				top: Math.min(prevPosition.top, placementBounds.y.max)

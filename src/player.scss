@@ -117,10 +117,15 @@ body {
 		}
 
 		&.selected {
+			transition: transform ease 0.3s;
 			background-color: #BBF3FF;
 			cursor: grabbing;
 			cursor: -webkit-grabbing;
 			cursor: -moz-grabbing;
+		}
+
+		&.shrink {
+			transform: scale(0.7)
 		}
 
 		.img-zoom {
@@ -393,11 +398,21 @@ body {
 		position: fixed;
 		margin: 10px;
 		background-color: #BBF3FF;
+		transition: transform ease 0.3s;
 
 		user-select: none;
 		cursor: grabbing;
 		cursor: -webkit-grabbing;
 		cursor: -moz-grabbing;
+
+		&.shrink {
+			transform: scale(0.7);
+		}
+
+		&.ng-animate {
+			transition: 0s none;
+			animation: 0s none;
+		}
 
 		img {
 			display: block;
@@ -465,7 +480,7 @@ body {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	z-index: 9;
+	z-index: 6;
 	transition: opacity ease 0.3s;
 
 	&.hidden {
