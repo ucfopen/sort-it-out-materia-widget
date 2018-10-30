@@ -11,12 +11,13 @@
 		border-radius: 5px 5px 0 0;
 
 		.folder-icon {
-			margin-left: 10px
+			top: 10px;
+			left: 15px;
+			position: absolute;
 		}
 
 		h1 {
-			margin: 0 75px 0 10px;
-			display: inline;
+			margin: 0 75px 0 45px;
 		}
 
 		.points-off,
@@ -52,6 +53,12 @@
 			}
 		}
 
+		.extra-header {
+			font-size: 22px;
+			margin: 40px 0 10px;
+			font-weight: bold;
+		}
+
 		.folder-row {
 			display: flex;
 			flex: 1 0 auto;
@@ -70,14 +77,24 @@
 				padding: 0 15px;
 				margin: 0 10px;
 				display: flex;
+				flex-direction: column;
+
+				&.short {
+					height: 125px;
+				}
 
 				& > div {
 					height: 50%;
 					min-height: 70px;
 					width: 60%;
-					margin: auto;
+					margin: auto auto 4px;
 					border: 3px dashed #F66;
 					position: relative;
+				}
+
+				.item-placed {
+					font-style: italic;
+					margin-bottom: auto;
 				}
 			}
 
@@ -85,21 +102,12 @@
 				padding: 15px;
 				margin: 10px;
 				font-size: 20px;
-				border-radius: 5px;
-				background-color: white;
 				max-height: 275px;
-				transition: all ease-in 0.5s;
 				position: relative;
+				word-break: break-word;
 
 				&:hover {
 					z-index: 3; // for image zooming
-				}
-
-				&.extra {
-					.overlay .incorrect.small {
-						position: relative;
-						top: -16px;
-					}
 				}
 
 				&.short {
@@ -134,22 +142,13 @@
 				border-radius: 3px;
 				display: flex;
 
-
-				div {
+				img {
+					width: 45px;
 					margin: auto;
-					border-radius: 100%;
-					color: white;
 
-					&.incorrect {
-						background: rgba(red, 0.6);
-						font-size: 36px;
-						padding: 0px 12px 3px;
-					}
-
-					&.correct {
-						background: rgba(green, 0.8);
-						font-size: 30px;
-						padding: 5px 10px 4px;
+					&.shift-up {
+						position: relative;
+						top: -15px;
 					}
 				}
 			}

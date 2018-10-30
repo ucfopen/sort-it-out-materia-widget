@@ -37,15 +37,15 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 				folders.push({
 					name: folderName,
 					items: [],
-					extraItems: [], // items that were placed here that don't belong
-					placeCount: 0,  // number of items user placed in this folder
+					extraItems: [],  // items that were placed here that don't belong
+					correctCount: 0, // number of items correctly placed
 					pointsOff: 0
 				})
 			}
 		}
 
 		for (let entry of scoreTable) {
-			const itemName = entry.data[0]
+			const text = entry.data[0]
 			const userFolderName = entry.data[1]
 			const correctFolderName = entry.data[2]
 
@@ -53,19 +53,25 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 			const userFolderIndex = folderNames[userFolderName]
 			const correct = userFolderName == correctFolderName
 
-			folders[correctFolderIndex].items.push({
-				text: itemName,
-				correct,
-				userFolderName,
-				image: imageMap[itemName] || false
-			})
-
 			folders[userFolderIndex].placeCount++
 
-			if (!correct) {
+			const item = {
+				text,
+				correct,
+				userFolderName,
+				image: imageMap[text] || false
+			}
+
+			// put the correct ones at the beginning of the array
+			if (correct) {
+				folders[correctFolderIndex].items.unshift(item)
+				folders[userFolderIndex].correctCount++
+			}
+			else {
+				folders[correctFolderIndex].items.push(item)
 				folders[userFolderIndex].extraItems.push({
-					text: itemName,
-					image: imageMap[itemName] || false,
+					text,
+					image: imageMap[text] || false,
 					correctFolderName
 				})
 				folders[correctFolderIndex].pointsOff -= pointValue

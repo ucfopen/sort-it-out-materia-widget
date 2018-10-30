@@ -35,12 +35,13 @@
 			<div class="folder-content">
 				<div class="header">
 					<div>
-						Correct Items ({{folder.items.length}})
+						Items That Belong ({{folder.items.length}})
 					</div>
 					<div>
-						Items You Placed ({{folder.placeCount}})
+						Items You Placed Correctly ({{folder.correctCount}})
 					</div>
 				</div>
+
 				<div class="folder-row" ng-repeat="item in folder.items">
 					<div class="item" ng-class="{short: !item.image}">
 						<span>{{item.text}}</span>
@@ -48,20 +49,27 @@
 							<img class="item-image zoom" ng-src="{{item.image}}">
 						</div>
 					</div>
+
 					<div class="item correct" ng-if="item.correct" ng-class="{short: !item.image}">
 						<span>{{item.text}}</span>
 						<div ng-if="item.image">
 							<img class="item-image" ng-src="{{item.image}}">
 						</div>
 						<div class="overlay">
-							<div class="correct" ng-class="{small: !item.image}">&#x2714;</div>
+							<img src="assets/correct.png">
 						</div>
 					</div>
-					<div class="missing" ng-if="!item.correct">
+
+					<div class="missing" ng-if="!item.correct" ng-class="{short: !item.image}">
 						<div class="overlay">
-							<div class="small incorrect">&times;</div>
+							<img src="assets/wrong.png">
 						</div>
+						<span class="item-placed">You placed in: {{item.userFolderName}}
 					</div>
+				</div>
+
+				<div class="extra-header" ng-if="folder.extraItems.length">
+					<span>Extra Items You Placed in this Folder ({{folder.extraItems.length}})</span>
 				</div>
 
 				<div class="folder-row" ng-repeat="item in folder.extraItems">
@@ -74,7 +82,7 @@
 						</div>
 						<p class="item-belongs">Belongs in: {{item.correctFolderName}}</p>
 						<div class="overlay">
-							<div class="incorrect" ng-class="{small: !item.image}">&times;</div>
+							<img class="shift-up" src="assets/wrong.png">
 						</div>
 					</div>
 				</div>
