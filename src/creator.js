@@ -40,7 +40,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 	]
 	$scope.undoInfo = {}
 
-	$scope.initNewWidget = (widget) => {
+	$scope.initNewWidget = widget => {
 		$scope.title = "My Sort-It-Out Widget"
 		$scope.ready = true
 		$scope.backgroundImage = "assets/desktop.jpg"
@@ -58,7 +58,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		$scope.$apply()
 	}
 
-	const generateFolders = (qsetItems) => {
+	const generateFolders = qsetItems => {
 		let folders = []
 		let folderNames = {} // map from folder name to folder index
 
@@ -80,7 +80,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		return folders
 	}
 
-	$scope.addItem = (folderIndex) => {
+	$scope.addItem = folderIndex => {
 		if ($scope.validFolder(folderIndex)) {
 			$scope.folders[folderIndex].items.push( { text: "" } )
 		} else {
@@ -151,7 +151,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 
 	}
 
-	$scope.showAddDialog = (ev) => {
+	$scope.showAddDialog = ev => {
 		$scope.showDialog = true
 		$mdDialog.show({
 			contentElement: "#create-dialog-container",
@@ -183,7 +183,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		return $scope.folders.length > 1
 	}
 
-	$scope.validFolder = (folderIndex) => {
+	$scope.validFolder = folderIndex => {
 		for (let item of $scope.folders[folderIndex].items) {
 			const validLength = (
 				item.text &&
@@ -378,7 +378,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		return qset
 	}
 
-	$scope.onQuestionImportComplete = (items) => true
+	$scope.onQuestionImportComplete = items => true
 
 	$scope.onSaveComplete = () => true
 

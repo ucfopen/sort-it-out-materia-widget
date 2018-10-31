@@ -54,10 +54,13 @@ $folder-color: #EFEFAC;
 						max-height: 80px;
 						height: 80px;
 
+						form {
+							width: calc(100% - 50px);
+						}
+
 						.folder-name-input {
 							position: relative;
 							top: 10px;
-							width: 300px;
 						}
 
 						.folder-delete {
