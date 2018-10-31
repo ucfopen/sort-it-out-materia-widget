@@ -285,7 +285,7 @@ body {
 	height: 300px;
 	z-index: 4;
 	border-radius: 15px;
- 	transition: opacity ease 0.3s, bottom ease 0.3s;
+	transition: opacity ease 0.3s, bottom ease 0.3s;
 
 	&.hidden {
 		opacity: 0;
@@ -448,28 +448,46 @@ body {
 	left: calc(50% - 400px);
 	width: 800px;
 	height: 140px;
-	background: rgba(green, 0.3);
+	background: rgba(0, 225, 0, 0.3);
 	border: 4px dashed green;
 	border-radius: 10px;
 	font-size: 32px;
 	line-height: 130px;
 	box-sizing: border-box;
 	text-align: center;
-	text-shadow: 0 0 30px white;
+	text-shadow: 0 0 30px white, 0 0 50px white;
 	font-weight: bold;
 }
 
-#desktop-drop-zone {
+#desktop-zone-container {
 	position: fixed;
 	z-index: 6;
 	top: 50px;
-	left: calc(50% - 400px);
-	width: 800px;
+	left: 0;
+	width: 100%;
 	height: 140px;
 
-	&:hover + #back-to-desktop {
-		background: rgba(green, 0.5);
+	&:hover ~ #back-to-desktop {
+		background: rgba(0, 225, 0, 0.5);
 		font-size: 36px;
+	}
+
+	#desktop-zone1 {
+		position: absolute;
+		z-index: 6;
+		top: 0;
+		left: 0;
+		height: 475px;
+		width: 50px;
+	}
+
+	#desktop-zone2 {
+		position: absolute;
+		z-index: 6;
+		top: 0;
+		right: 0;
+		height: 475px;
+		width: 50px;
 	}
 }
 

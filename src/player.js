@@ -209,7 +209,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 			}
 
 			// source is a folder, destination is back-to-desktop
-			if (itemSource != SRC_DESKTOP && underElemId == "desktop-drop-zone") {
+			if (itemSource != SRC_DESKTOP && underElem.hasClass("desktop-zone")) {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item.text != $scope.selectedItem.text
 				)
@@ -266,7 +266,21 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 		selectedElement = $("#preview-selected-item")[0]
 		$scope.selectedItem = item
 
-		const { left, top } = $(e.currentTarget).offset()
+		let { left, top } = $(e.currentTarget).offset()
+
+		// slight shift to keep things looking good
+		left -= 10
+		top -= 10
+
+		// if there's an image, move it down so it seems more centered
+		if (item.image) {
+			top -= 50
+		}
+
+		// if preview item is long, shift drag item to match
+		if (e.clientX - left > 150) {
+			left += (e.clientX - left) / 2
+		}
 
 		$scope.offsetLeft = left - e.clientX
 		$scope.offsetTop = top - e.clientY

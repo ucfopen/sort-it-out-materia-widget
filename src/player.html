@@ -84,6 +84,11 @@
 				</div>
 			</div>
 
+			<div id="desktop-zone-container" class="desktop-zone" ng-show="showFolderPreview && selectedItem">
+				<div id="desktop-zone1" class="desktop-zone"></div>
+				<div id="desktop-zone2" class="desktop-zone"></div>
+			</div>
+
 			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
 				<h1 ng-class="{ small: folders[folderPreviewIndex].text.length > 40}">{{folders[folderPreviewIndex].text}}</h1>
 				<p id="empty-preview" ng-if="folders[folderPreviewIndex].items.length == 0">This folder is empty</p>
@@ -108,11 +113,7 @@
 			<div id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
 			</div>
 
-			<div id="desktop-drop-zone" ng-show="showFolderPreview && selectedItem">
-			</div>
-			<div id="back-to-desktop" ng-show="showFolderPreview && selectedItem">
-				Put Back on Desktop
-			</div>
+			<div id="back-to-desktop" ng-show="showFolderPreview && selectedItem">Put Back on Desktop</div>
 
 			<div id="enlarged-image" ng-class="{hidden: !enlargeImage.show}" ng-click="enlargeImage.show = false">
 				<div>
