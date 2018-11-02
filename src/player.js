@@ -275,7 +275,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
 
 		// if there's an image, move it down so it seems more centered
 		if (item.image) {
-			top -= 50
+			top -= 25
 		}
 
 		// if preview item is long, shift drag item to match
