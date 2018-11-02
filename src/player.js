@@ -11,6 +11,7 @@ SortItOut.directive("scroll", () => {
 })
 
 SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
+	$scope.tutorialPage = 1
 	$scope.showFolderPreview = false
 	$scope.showNoSubmit = false
 	$scope.selectedItem = false

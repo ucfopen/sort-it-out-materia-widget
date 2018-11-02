@@ -124,19 +124,69 @@
 
 			<div id="tutorial" class="tutorial">
 				<h3>How to play</h3>
-				<div id="tutorial-board">
-					<div class="tutorial-term first"></div>
-					<div class="tutorial-term second"></div>
-					<div class="tutorial-term third"></div>
-					<div>
-						<img src="assets/tutorial.jpg">
+
+				<div id="tutorial-board-container" ng-class="{page2: tutorialPage == 2}">
+					<div id="tutorial-board1" class="tutorial-board" ng-class="{hidden: tutorialPage != 1}">
+						<div class="tutorial-term first">
+							<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span> <span>aaaaaaaaaa</span>
+						</div>
+						<div class="tutorial-term second">
+							<span>aaaaaaaaaaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
+							<span>aaaaaaaaa</span> <span>aaaaa</span> <span>aaaaaaaaaaaaaa</span>
+							<span>aaaaaaaaaaaaaaaaaa</span>
+						</div>
+						<div class="tutorial-term third">
+							<span>aaaaa</span> <span>aaaaaaaa</span>
+						</div>
+						<div>
+							<img src="assets/tutorial.jpg">
+						</div>
+						<div class="cursor">
+							<img src="assets/cursor.svg">
+						</div>
 					</div>
-					<div class="cursor">
-						<img src="assets/cursor.svg">
+
+					<div id="tutorial-board2" class="tutorial-board" ng-class="{hidden: tutorialPage != 2}">
+						<div class="tutorial-term fourth">
+							<span>aaaaaaaaa</span> <span>aaaaa</span>  <span>aaaaaaaa</span> <span>aaaaaa</span>
+						</div>
+						<div class="tutorial-term fifth">
+							<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span>
+						</div>
+
+						<div id="tutorial-folder-preview">
+							<span>&times;</span>
+							<span>aaaaaaaa</span> <span>aaaa</span> <span>aaaaaaaaaaa</span>
+							<div class="tutorial-term sixth">
+								<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
+							</div>
+							<div class="tutorial-term seventh">
+								<span>aaaaaaaaa</span> <span>aaaaa</span>  <span>aaaaaaaa</span> <span>aaaaaa</span>
+							</div>
+							<div class="tutorial-term eigth">
+								<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span>
+							</div>
+						</div>
+
+						<div>
+							<img src="assets/tutorial.jpg">
+						</div>
+						<div class="cursor page2">
+							<img src="assets/cursor.svg">
+						</div>
 					</div>
 				</div>
-				<p>Drag items to group them in their corresponding folders.</p>
-				<button id="gotitbtn" ng-click="hideTutorial()">Got it!</button>
+				<p ng-show="tutorialPage==1">Drag items to group them in their corresponding folders.</p>
+				<p ng-show="tutorialPage==2">Items can be moved between folders, or back onto the desktop.</p>
+
+				<div ng-show="tutorialPage == 2" id="tutorial-prev">
+					<button ng-click="tutorialPage = 1">Back</button>
+				</div>
+				<div ng-show="tutorialPage == 1" id="tutorial-next">
+					<button ng-click="tutorialPage = 2">Next</button>
+				</div>
+
+				<button id="gotitbtn" ng-click="hideTutorial()" ng-show="tutorialPage == 2">Got it!</button>
 			</div>
 			<div id="tutorial-background" class="tutorial" ng-click="hideTutorial()"></div>
 
