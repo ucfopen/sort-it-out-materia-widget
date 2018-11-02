@@ -81,6 +81,10 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 		return folders
 	}
 
+	$scope.zoomImage = e => {
+		$(e.currentTarget).closest(".item").toggleClass("zoom")
+	}
+
 	Materia.ScoreCore.hideResultsTable()
 	Materia.ScoreCore.start($scope)
 }])
