@@ -77,21 +77,23 @@
 					</div>
 				</div>
 
-				<div class="extra-header" ng-if="folder.extraItems.length">
-					<span>Extra Items You Placed in this Folder ({{folder.extraItems.length}})</span>
-				</div>
-
-				<div class="folder-row" ng-repeat="item in folder.extraItems">
-					<div class="info">
+				<div class="extra-section" ng-if="folder.extraItems.length">
+					<div class="extra-header">
+						<span>Extra Items You Placed in this Folder ({{folder.extraItems.length}})</span>
 					</div>
-					<div class="item extra">
-						<span>{{item.text}}</span>
-						<div ng-if="item.image">
-							<img class="item-image" ng-src="{{item.image}}">
+
+					<div class="folder-row" ng-repeat="item in folder.extraItems">
+						<div class="info">
 						</div>
-						<p class="item-belongs">Belongs in: {{item.correctFolderName}}</p>
-						<div class="overlay">
-							<img class="shift-up" src="assets/wrong.png">
+						<div class="item extra">
+							<span>{{item.text}}</span>
+							<div ng-if="item.image">
+								<img class="item-image" ng-src="{{item.image}}">
+							</div>
+							<p class="item-belongs">Belongs in: {{item.correctFolderName}}</p>
+							<div class="overlay">
+								<img class="shift-up" src="assets/wrong.png">
+							</div>
 						</div>
 					</div>
 				</div>

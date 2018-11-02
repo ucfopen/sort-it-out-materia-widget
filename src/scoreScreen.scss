@@ -56,7 +56,7 @@
 
 		.extra-header {
 			font-size: 22px;
-			margin: 40px 0 10px;
+			margin: 20px 0;
 			font-weight: bold;
 		}
 
@@ -183,9 +183,11 @@
 			}
 		}
 
-		.extra-items-separator {
-			font-size: 22px;
-			padding-top: 15px;
+		.extra-section {
+			background: #FEE;
+			border-radius: 5px;
+			padding: 5px;
+			margin-top: 40px;
 		}
 	}
 }
