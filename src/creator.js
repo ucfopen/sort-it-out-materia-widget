@@ -36,6 +36,10 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		{
 			name: "Corkboard",
 			url: "assets/corkboard.jpg"
+		},
+		{
+			name: "Solid Blue",
+			url: "assets/blue.png"
 		}
 	]
 	$scope.undoInfo = {}
