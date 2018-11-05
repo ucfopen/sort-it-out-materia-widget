@@ -25,7 +25,7 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 		let folders = []
 		let folderNames = {}
 		let imageMap = {}
-		const pointValue = 100 / qset.items.length
+		$scope.questionValue = 100 / qset.items.length
 
 		for (let item of qset.items) {
 			const folderName = item.answers[0].text
@@ -74,7 +74,7 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
 					image: imageMap[text] || false,
 					correctFolderName
 				})
-				folders[correctFolderIndex].pointsOff -= pointValue
+				folders[correctFolderIndex].pointsOff -= $scope.questionValue
 			}
 		}
 

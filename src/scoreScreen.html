@@ -72,6 +72,7 @@
 					<div class="missing" ng-if="!item.correct" ng-class="{short: !item.image}">
 						<div class="overlay">
 							<img src="assets/wrong.png">
+							<span class="minus-percent">-{{questionValue | number:0}}%</span>
 						</div>
 						<span class="item-placed">You placed in: {{item.userFolderName}}
 					</div>

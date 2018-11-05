@@ -93,6 +93,14 @@
 					position: relative;
 				}
 
+				.minus-percent {
+					position: absolute;
+					top: calc(50% - 16px);
+					right: -65px;
+					font-size: 20px;
+					color: #F66;
+				}
+
 				.item-placed {
 					font-style: italic;
 					margin-bottom: auto;
