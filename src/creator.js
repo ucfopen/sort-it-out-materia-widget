@@ -90,7 +90,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		} else {
 			$mdToast.show(
 				$mdToast.simple()
-					.textContent("Folder contains invalid/empty items. Fix those before adding another item.")
+					.textContent("Folder contains invalid/empty item(s). Fix item(s) before adding another item.")
 					.position("top left")
 					.hideDelay(10000)
 					.toastClass("toast-error")
@@ -230,10 +230,6 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 	}
 
 	const getSaveError = () => {
-		if (!allUnique()) {
-			return "all folder names, items, and images must be unique"
-		}
-
 		for (let i = 0; i < $scope.folders.length; i++) {
 			if (!$scope.validFolder(i)) {
 				const folderName = $scope.folders[i].name
@@ -245,6 +241,10 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 			if (!folder.name || !folder.name.length) {
 				return "all folders must have names"
 			}
+		}
+
+		if (!allUnique()) {
+			return "all folder names, items, and images must be unique"
 		}
 
 		if (!$scope.title || !$scope.title.length) {
