@@ -1,3 +1,8 @@
+body {
+	font-family: "Lato", "Verdana";
+	word-break: break-all;
+}
+
 .folder {
 	background: white;
 	margin: 25px 10px;
@@ -11,14 +16,13 @@
 		border-radius: 5px 5px 0 0;
 
 		.folder-icon {
-			top: 10px;
+			top: 12px;
 			left: 15px;
 			position: absolute;
 		}
 
 		h1 {
 			margin: 0 75px 0 45px;
-			word-break: break-word;
 		}
 
 		.points-off,
@@ -30,7 +34,7 @@
 		}
 
 		.points-off {
-			color: #C00;
+			color: #F66;
 		}
 
 		.all-correct {
@@ -43,7 +47,7 @@
 		text-align: center;
 
 		.header {
-			font-size: 22px;
+			font-size: 20px;
 			display: flex;
 			flex: 1 0 auto;
 			margin: 10px;
@@ -55,7 +59,7 @@
 		}
 
 		.extra-header {
-			font-size: 22px;
+			font-size: 20px;
 			margin: 20px 0;
 			font-weight: bold;
 		}
@@ -104,16 +108,16 @@
 				.item-placed {
 					font-style: italic;
 					margin-bottom: auto;
+					font-size: 14px;
 				}
 			}
 
 			.item {
 				padding: 15px;
 				margin: 10px;
-				font-size: 20px;
+				font-size: 18px;
 				max-height: 275px;
 				position: relative;
-				word-break: break-word;
 
 				&:hover {
 					z-index: 3; // for image zooming
@@ -148,6 +152,10 @@
 					transition: all ease 0.3s;
 				}
 
+				.item-text {
+					margin: 0 0 5px;
+				}
+
 				.item-image {
 					height: 150px;
 					box-shadow: 0 3px 7px rgba(black, 0.5);
@@ -163,9 +171,9 @@
 					}
 				}
 
-				p.item-belongs {
-					margin: 3px 0 0;
-					font-size: 16px;
+				.item-belongs {
+					margin: 5px 0 0;
+					font-size: 14px;
 					font-style: italic;
 				}
 			}

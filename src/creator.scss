@@ -1,5 +1,9 @@
 $folder-color: #EFEFAC;
 
+body {
+	font-family: "Lato";
+}
+
 #container {
 	background-color: #F3F3F3;
 	overflow: hidden;
@@ -114,7 +118,7 @@ $folder-color: #EFEFAC;
 
 							img {
 								max-height: 200px;
-								max-width: 90%;
+								max-width: 85%;
 								position: relative;
 								left: -15px;
 							}
@@ -193,7 +197,7 @@ $folder-color: #EFEFAC;
 			width: 430px;
 			position: absolute;
 			top: 0;
-			font-size: 14px;
+			font-size: 13px;
 			font-weight: bold;
 			color: black;
 			text-align: left;
@@ -215,10 +219,9 @@ $folder-color: #EFEFAC;
 				display: flex;
 				user-select: none;
 				margin: 10px auto;
-				position: relative;
 				word-wrap: break-word;
 				background-color: $folder-color;
-				font-size: 8px;
+				font-size: 7px;
 
 				// :before is the top tab
 				&:before {
