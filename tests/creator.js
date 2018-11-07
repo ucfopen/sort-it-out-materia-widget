@@ -1,6 +1,4 @@
 describe('SortItOut', function() {
-	console.log("\n\n\n\naaa\n\n\n\n");
-
 	var widgetInfo = window.__demo__['build/demo'];
 	var qset = widgetInfo.qset;
 	var $scope = {};
@@ -66,12 +64,26 @@ describe('SortItOut', function() {
 			expect($scope.folders[0].items.length).toBe(4);
 		});
 
-		it('should prevent more than 5 folders', function() {
+		it('should allow 6 folders to be added', function() {
 			expect($scope.folders.length).toBe(5);
+			expect($scope.canAddFolder()).toBe(true);
+			$scope.newFolder.name = "test"
+			$scope.createFolder();
+			expect($scope.folders.length).toBe(6);
+		});
+
+		it('should prevent more than 6 folders', function() {
+			expect($scope.folders.length).toBe(6);
 			expect($scope.canAddFolder()).toBe(false);
 			$scope.createFolder();
-			expect($scope.folders.length).toBe(5);
+			expect($scope.folders.length).toBe(6);
 			expect($scope.canAddFolder()).toBe(false);
+		});
+
+		it('should allow a folder to be deleted', function() {
+			expect($scope.folders.length).toBe(6);
+			$scope.deleteFolder(5);
+			expect($scope.folders.length).toBe(5);
 		});
 
 		it('should prevent adding another item in an invalid folder', function() {
@@ -174,6 +186,14 @@ describe('SortItOut', function() {
 			var testQuestion = successReport.qset.items[0];
 			expect(testQuestion.questions[0].text).toBe('1853 - 1890');
 			expect(testQuestion.answers[0].text).toBe('Vincent van Gogh');
+		});
+
+		it('should be able to change the background image', function() {
+			var prevImage = $scope.backgroundImage;
+			$scope.setBackground("test.png");
+			expect($scope.backgroundImage).toEqual("test.png");
+			$scope.setBackground(prevImage);
+			expect($scope.backgroundImage).toEqual(prevImage);
 		});
 	});
 });

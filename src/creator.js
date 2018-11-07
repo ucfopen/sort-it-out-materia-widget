@@ -288,12 +288,12 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 			.ok("Delete")
 			.cancel("Cancel")
 		$mdDialog.show(confirm).then(
-			() => deleteFolder(folderIndex),
+			() => $scope.deleteFolder(folderIndex),
 			() => null
 		)
 	}
 
-	const deleteFolder = folderIndex => {
+	$scope.deleteFolder = folderIndex => {
 		const removed = $scope.folders.splice(folderIndex, 1)
 		$scope.undoInfo = {
 			data: removed[0],
