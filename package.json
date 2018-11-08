@@ -5,14 +5,28 @@
   },
   "version": "0.0.1",
   "dependencies": {
-    "materia-widget-development-kit": "https://github.com/ucfopen/Materia-Widget-Dev-Kit.git#v1.2.3-alpha1"
+    "materia-widget-development-kit": "v2.1.0"
   },
   "scripts": {
     "start": "webpack-dev-server",
-    "build-dev": "webpack",
     "build": "webpack -p",
-    "pretest": "npm run build-dev",
-    "test": "karma start ./karma.conf.js --no-auto-watch --single-run"
+    "build-dev": "webpack",
+    "test": "TZ='America/New_York' jest --verbose",
+    "test-ci": "TZ='America/New_York' CI=true jest --ci --useStderr --coverage --coverageReporters text-summary cobertura"
+  },
+   "jest": {
+    "coverageReporters": ["text-summary", "lcov"],
+    "verbose": false,
+    "moduleFileExtensions": ["js"],
+    "collectCoverageFrom": ["src/**/*.js"],
+    "coverageThreshold": {
+      "global": {
+        "statements": 99,
+        "branches": 89,
+        "functions": 100,
+        "lines": 99
+      }
+    }
   },
   "devDependencies": {
     "angular": "~1.7.2",
@@ -24,13 +38,7 @@
     "angular-messages": "~1.7.2",
     "angular-route": "~1.7.2",
     "angular-sanitize": "~1.7.2",
-    "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-coverage": "^0.5.5",
-    "karma-jasmine": "^0.3.8",
-    "karma-json-fixtures-preprocessor": "0.0.6",
-    "karma-mocha-reporter": "^2.1.0",
-    "karma-phantomjs-launcher": "^1.0.2"
+    "jest": "^23.6.0"
   },
   "author": "University of Central Florida, Center for Distributed Learning"
 }

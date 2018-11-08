@@ -10,7 +10,7 @@ SortItOut.directive("scroll", () => {
 	}
 })
 
-SortItOut.controller("SortItOutEngineCtrl", ["$scope", ($scope) => {
+SortItOut.controller("SortItOutEngineCtrl", ["$scope", function ($scope) {
 	$scope.tutorialPage = 1
 	$scope.showFolderPreview = false
 	$scope.showNoSubmit = false

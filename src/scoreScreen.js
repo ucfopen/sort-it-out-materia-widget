@@ -1,6 +1,6 @@
 const SortItOut = angular.module("SortItOutScore", ["ngAnimate"])
 
-SortItOut.controller("SortItOutScoreCtrl", ["$scope", ($scope) => {
+SortItOut.controller("SortItOutScoreCtrl", ["$scope", function ($scope) {
 
 	$scope.start = (instance, qset, scoreTable, isPreview, version = '1') => {
 		$scope.update(qset, scoreTable)
