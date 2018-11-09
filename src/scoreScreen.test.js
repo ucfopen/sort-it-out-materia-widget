@@ -1,0 +1,204 @@
+describe('ScoreScreen Controller', function() {
+	require('angular/angular.js');
+	require('angular-mocks/angular-mocks.js');
+	require('angular-animate/angular-animate.js');
+	require('jquery/jquery.min.js');
+
+	var $scope
+	var $controller
+	var $timeout
+	var widgetInfo
+	var qsets
+	var scoreTables
+
+	beforeEach(() => {
+		jest.resetModules();
+
+		// mock materia
+		global.Materia = {
+			ScoreCore: {
+				hideResultsTable: jest.fn(),
+				setHeight: jest.fn(),
+				start: jest.fn()
+			}
+		}
+
+		angular.mock.module('SortItOutScore')
+		require('./scoreScreen.js')
+
+		// mock scope
+		$scope = {
+			$apply: jest.fn()
+		}
+
+		scoreTables = generateScoreTables()
+		qsets = generateQsets()
+
+		// initialize the angular controller
+		inject(function(_$controller_, _$timeout_){
+			// instantiate the controller
+			$controller = _$controller_('SortItOutScoreCtrl', { $scope: $scope });
+			$timeout = _$timeout_;
+		})
+	})
+
+	var quickStart = (qset, scoreTable) => {
+		var instance = {};
+		var isPreview = false;
+		$scope.start(instance, qset, scoreTable, isPreview);
+	}
+
+	it('should start properly', function() {
+		expect(Materia.ScoreCore.start).toHaveBeenCalled();
+		expect(Materia.ScoreCore.hideResultsTable).toHaveBeenCalled();
+
+		quickStart(qsets[0], scoreTables[0]);
+		$timeout.flush();
+		expect($scope.folders.length).toBe(2);
+	});
+
+	it('should start properly with images', function() {
+		quickStart(qsets[1], scoreTables[1]);
+	});
+
+	it('should have the folders in the correct order', function() {
+		quickStart(qsets[0], scoreTables[0]);
+		expect($scope.folders[0].name).toBe("Folder 1");
+		expect($scope.folders[1].name).toBe("Folder 2");
+	});
+
+	it('should handle wrong answers', function() {
+		// swap the responses for the items
+		var s = scoreTables[0];
+		[s[0].data[1], s[1].data[1]] = [s[1].data[1], s[0].data[1]];
+
+		quickStart(qsets[0], scoreTables[0]);
+	});
+
+	var generateScoreTables = () => {
+		// the 100% correct score tables that match each qset
+		var scoreTable1 = [
+			{
+				"data": ["Item 1", "Folder 1", "Folder 1"],
+				"data_style": ["question", "response", "answer"],
+				"score": 100,
+				"feedback": null,
+				"type": "SCORE_QUESTION_ANSWERED",
+				"style": "full-value",
+				"tag": "div",
+				"symbol": "%",
+				"graphic": "score",
+				"display_score": true
+			},
+			{
+				"data": ["Item 2", "Folder 2", "Folder 2"],
+				"data_style": ["question", "response", "answer"],
+				"score": 100,
+				"feedback": null,
+				"type": "SCORE_QUESTION_ANSWERED",
+				"style": "full-value",
+				"tag": "div",
+				"symbol": "%",
+				"graphic": "score",
+				"display_score": true
+			}
+		];
+
+		var scoreTable2 = [
+			{
+				"data": ["Picture 1", "Folder 1", "Folder 1"],
+				"data_style": ["question", "response", "answer"],
+				"score": 100,
+				"feedback": null,
+				"type": "SCORE_QUESTION_ANSWERED",
+				"style": "full-value",
+				"tag": "div",
+				"symbol": "%",
+				"graphic": "score",
+				"display_score": true
+			},
+			{
+				"data": ["Item 1", "Folder 1", "Folder 1"],
+				"data_style": ["question", "response", "answer"],
+				"score": 100,
+				"feedback": null,
+				"type": "SCORE_QUESTION_ANSWERED",
+				"style": "full-value",
+				"tag": "div",
+				"symbol": "%",
+				"graphic": "score",
+				"display_score": true
+			},
+			{
+				"data": ["Item 2", "Folder 2", "Folder 2"],
+				"data_style": ["question", "response", "answer"],
+				"score": 100,
+				"feedback": null,
+				"type": "SCORE_QUESTION_ANSWERED",
+				"style": "full-value",
+				"tag": "div",
+				"symbol": "%",
+				"graphic": "score",
+				"display_score": true
+			}
+		];
+
+		return [scoreTable1, scoreTable2];
+	}
+
+	var generateQsets = () => {
+		var qset1 = {
+			"items": [
+				{
+					"questions": [{ "text": "Item 1" }],
+					"answers": [{ "text": "Folder 1" }],
+					"options": [],
+					"assets": []
+				},
+				{
+					"questions": [{ "text": "Item 2" }],
+					"answers": [{ "text": "Folder 2" }],
+					"options": [],
+					"assets": []
+				}
+			],
+			"options": {
+				"backgroundImage": "assets/desktop.jpg"
+			}
+		};
+
+		var qset2 = {
+			"items": [
+				{
+					"questions": [{ "text": "Item 1" }],
+					"answers": [{ "text": "Folder 1" }],
+					"options": [],
+					"assets": []
+				},
+				{
+					"questions": [{ "text": "Picture 1" }],
+					"answers": [{ "text": "Folder 1" }],
+					"options": {
+						"image": {
+							"id": "q29nk",
+							"url": "http://localhost/media/q29nk"
+						}
+					},
+					"assets": []
+				},
+				{
+					"questions": [{ "text": "Item 2" }],
+					"answers": [{ "text": "Folder 2" }],
+					"options": [],
+					"assets": []
+				}
+			],
+			"options": {
+				"backgroundImage": "assets/desktop.jpg"
+			},
+			"id": "5963"
+		};
+
+		return [qset1, qset2];
+	}
+});

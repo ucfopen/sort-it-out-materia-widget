@@ -45,7 +45,7 @@
 					<div class="item" ng-class="{short: !item.image}">
 						<p class="item-text">{{item.text}}</p>
 						<div ng-if="item.image" class="zoom-container">
-							<img class="item-image" ng-src="{{item.image}}">
+							<img class="item-image" ng-src="{{item.image}}" ng-class="{sized: loaded}">
 							<span class="img-zoom-icon">
 								<svg ng-click="zoomImage($event)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 									<path fill="white" d="M0 0h24v24H0V0z"/>
@@ -60,7 +60,7 @@
 					<div class="item correct" ng-if="item.correct" ng-class="{short: !item.image}">
 						<p class="item-text">{{item.text}}</p>
 						<div ng-if="item.image">
-							<img class="item-image" ng-src="{{item.image}}">
+							<img class="item-image" ng-src="{{item.image}}" ng-class="{sized: loaded}">
 						</div>
 						<div class="overlay">
 							<img src="assets/correct.png">
@@ -87,7 +87,7 @@
 						<div class="item extra">
 							<p class="item-text">{{item.text}}</p>
 							<div ng-if="item.image">
-								<img class="item-image" ng-src="{{item.image}}">
+								<img class="item-image" ng-src="{{item.image}}" ng-class="{sized: loaded}">
 							</div>
 							<p class="item-belongs">Belongs in: {{item.correctFolderName}}</p>
 							<div class="overlay">

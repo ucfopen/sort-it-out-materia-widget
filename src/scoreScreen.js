@@ -1,6 +1,7 @@
 const SortItOut = angular.module("SortItOutScore", ["ngAnimate"])
 
-SortItOut.controller("SortItOutScoreCtrl", ["$scope", function ($scope) {
+SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", function ($scope, $timeout) {
+	$scope.loaded = false
 
 	$scope.start = (instance, qset, scoreTable, isPreview, version = '1') => {
 		$scope.update(qset, scoreTable)
@@ -12,16 +13,11 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", function ($scope) {
 		$scope.$apply()
 
 		Materia.ScoreCore.setHeight( $("html").height() )
-		setTimeout( () => {
+		$timeout( () => {
 			Materia.ScoreCore.setHeight( $("html").height() )
 			// need to properly adjust image heights after the scroll height is set
-			document.querySelectorAll(".item-image").forEach( el => {
-				el.style.maxWidth = "300px"
-				el.style.maxHeight = "150px"
-				el.style.height = "auto"
-			})
+			$scope.loaded = true
 		}, 5000)
-
 	}
 
 	const buildFolders = (qset, scoreTable) => {
@@ -48,9 +44,7 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", function ($scope) {
 		}
 
 		for (let entry of scoreTable) {
-			const text = entry.data[0]
-			const userFolderName = entry.data[1]
-			const correctFolderName = entry.data[2]
+			const [text, userFolderName, correctFolderName]  = entry.data
 
 			const correctFolderIndex = folderNames[correctFolderName]
 			const userFolderIndex = folderNames[userFolderName]

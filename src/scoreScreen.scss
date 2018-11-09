@@ -158,7 +158,13 @@ body {
 
 				.item-image {
 					height: 150px;
+					max-height: 150px;
 					box-shadow: 0 3px 7px rgba(black, 0.5);
+
+					&.sized {
+						max-width: 300px;
+						height: auto;
+					}
 				}
 
 				.img-zoom-icon {
