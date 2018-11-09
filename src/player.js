@@ -10,7 +10,7 @@ SortItOut.directive("scroll", () => {
 	}
 })
 
-SortItOut.controller("SortItOutEngineCtrl", ["$scope", function ($scope) {
+SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($scope, $timeout) {
 	$scope.tutorialPage = 1
 	$scope.showFolderPreview = false
 	$scope.showNoSubmit = false
@@ -352,9 +352,8 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", function ($scope) {
 	$scope.submitClick = () => {
 		if (!$scope.readyToSubmit()) {
 			$scope.showNoSubmit = true
-			setTimeout( () => {
+			$timeout( () => {
 				$scope.showNoSubmit = false
-				$scope.$apply()
 			}, 5000)
 			return
 		}

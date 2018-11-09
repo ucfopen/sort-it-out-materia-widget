@@ -38,7 +38,8 @@
     "angular-messages": "~1.7.2",
     "angular-route": "~1.7.2",
     "angular-sanitize": "~1.7.2",
-    "jest": "^23.6.0"
+    "jest": "^23.6.0",
+    "jquery": "1.9.1"
   },
   "author": "University of Central Florida, Center for Distributed Learning"
 }
