@@ -254,26 +254,6 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		return false
 	}
 
-	$scope.showEditDialog = (ev, folderIndex) => {
-		$scope.editFolderIndex = folderIndex
-		$scope.editFolderName = $scope.folders[folderIndex].name
-		$mdDialog.show({
-			contentElement: "#edit-dialog-container",
-			parent: angular.element(document.body),
-			targetEvent: ev,
-			clickOutsideToClose: true,
-			openFrom: ev.currentTarget,
-			closeTo: ev.currentTarget
-		})
-	}
-
-	$scope.updateName = () => {
-		if ($scope.editFolderName.length) {
-			$scope.folders[$scope.editFolderIndex].name = $scope.editFolderName
-			$mdDialog.hide()
-		}
-	}
-
 	$scope.hideDialog = () => {
 		$mdDialog.hide()
 		$scope.showDialog = false

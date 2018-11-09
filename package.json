@@ -12,13 +12,13 @@
     "build": "webpack -p",
     "build-dev": "webpack",
     "test": "TZ='America/New_York' jest --verbose",
-    "test-ci": "TZ='America/New_York' CI=true jest --ci --useStderr --coverage --coverageReporters text-summary cobertura"
+    "test-ci": "TZ='America/New_York' CI=true jest --ci --useStderr --coverage"
   },
    "jest": {
-    "coverageReporters": ["text-summary", "lcov"],
+    "coverageReporters": ["text-summary", "lcov", "cobertura"],
     "verbose": false,
     "moduleFileExtensions": ["js"],
-    "collectCoverageFrom": ["src/**/*.js"],
+    "collectCoverageFrom": ["src/{creator,scoreScreen,player}.js"],
     "coverageThreshold": {
       "global": {
         "statements": 99,
