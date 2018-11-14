@@ -2,6 +2,10 @@ const SortItOut = angular.module("SortItOutScore", ["ngAnimate"])
 
 SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", function ($scope, $timeout) {
 	$scope.loaded = false
+	$scope.zoomIndex = {
+		folder: -1,
+		item: -1
+	}
 
 	$scope.start = (instance, qset, scoreTable, isPreview, version = '1') => {
 		$scope.update(qset, scoreTable)
@@ -12,12 +16,18 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", function ($sco
 		$scope.showCorrectAnswers = false
 		$scope.$apply()
 
-		Materia.ScoreCore.setHeight( $("html").height() )
+		Materia.ScoreCore.setHeight( getHeight() )
 		$timeout( () => {
-			Materia.ScoreCore.setHeight( $("html").height() )
+			Materia.ScoreCore.setHeight( getHeight() )
 			// need to properly adjust image heights after the scroll height is set
 			$scope.loaded = true
 		}, 5000)
+	}
+
+	const getHeight = () => {
+		return Math.ceil(parseFloat(
+			window.getComputedStyle(document.querySelector("html")).height
+		))
 	}
 
 	const buildFolders = (qset, scoreTable) => {
@@ -78,8 +88,19 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", function ($sco
 		return folders
 	}
 
-	$scope.zoomImage = e => {
-		$(e.currentTarget).closest(".item").toggleClass("zoom")
+	$scope.zoomImage = (folder, item) => {
+		if ($scope.zoomIndex.folder == folder && $scope.zoomIndex.item == item) {
+			$scope.zoomIndex = {
+				folder: -1,
+				item: -1
+			}
+		}
+		else {
+			$scope.zoomIndex = {
+				folder,
+				item
+			}
+		}
 	}
 
 	Materia.ScoreCore.hideResultsTable()

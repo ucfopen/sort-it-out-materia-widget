@@ -67,12 +67,111 @@ describe('ScoreScreen Controller', function() {
 		expect($scope.folders[1].name).toBe("Folder 2");
 	});
 
+	it('should handle correct answers', function() {
+		quickStart(qsets[0], scoreTables[0]);
+
+		// check values for first folder
+		expect($scope.folders[0].name).toBe("Folder 1");
+		expect($scope.folders[0].items.length).toBe(1);
+		expect($scope.folders[0].extraItems.length).toBe(0);
+		expect($scope.folders[0].correctCount).toBe(1);
+		expect($scope.folders[0].pointsOff).toBe(0);
+
+		// check items in first folder
+		expect($scope.folders[0].items[0].correct).toBe(true);
+		expect($scope.folders[0].items[0].image).toBe(false);
+		expect($scope.folders[0].items[0].text).toBe("Item 1");
+		expect($scope.folders[0].items[0].userFolderName).toBe("Folder 1");
+
+		// check values for second folder
+		expect($scope.folders[1].name).toBe("Folder 2");
+		expect($scope.folders[1].items.length).toBe(1);
+		expect($scope.folders[1].extraItems.length).toBe(0);
+		expect($scope.folders[1].correctCount).toBe(1);
+		expect($scope.folders[1].pointsOff).toBe(0);
+
+		// check items in second folder
+		expect($scope.folders[1].items[0].correct).toBe(true);
+		expect($scope.folders[1].items[0].image).toBe(false);
+		expect($scope.folders[1].items[0].text).toBe("Item 2");
+		expect($scope.folders[1].items[0].userFolderName).toBe("Folder 2");
+	});
+
 	it('should handle wrong answers', function() {
 		// swap the responses for the items
 		var s = scoreTables[0];
 		[s[0].data[1], s[1].data[1]] = [s[1].data[1], s[0].data[1]];
 
 		quickStart(qsets[0], scoreTables[0]);
+
+		// check values for first folder
+		expect($scope.folders[0].name).toBe("Folder 1");
+		expect($scope.folders[0].items.length).toBe(1);
+		expect($scope.folders[0].extraItems.length).toBe(1);
+		expect($scope.folders[0].correctCount).toBe(0);
+		expect($scope.folders[0].pointsOff).toBe(0 - $scope.questionValue);
+
+		// check items in first folder
+		expect($scope.folders[0].items[0].correct).toBe(false);
+		expect($scope.folders[0].items[0].image).toBe(false);
+		expect($scope.folders[0].items[0].text).toBe("Item 1");
+		expect($scope.folders[0].items[0].userFolderName).toBe("Folder 2");
+
+		// check values for second folder
+		expect($scope.folders[1].name).toBe("Folder 2");
+		expect($scope.folders[1].items.length).toBe(1);
+		expect($scope.folders[1].extraItems.length).toBe(1);
+		expect($scope.folders[1].correctCount).toBe(0);
+		expect($scope.folders[1].pointsOff).toBe(0 - $scope.questionValue);
+
+		// check items in second folder
+		expect($scope.folders[1].items[0].correct).toBe(false);
+		expect($scope.folders[1].items[0].image).toBe(false);
+		expect($scope.folders[1].items[0].text).toBe("Item 2");
+		expect($scope.folders[1].items[0].userFolderName).toBe("Folder 1");
+	});
+
+	it('should zoom an image correctly', function() {
+		quickStart(qsets[1], scoreTables[1]);
+		expect($scope.zoomIndex.folder).toBe(-1);
+		expect($scope.zoomIndex.item).toBe(-1);
+
+		// the second item in the first folder of the qset has an image
+		$scope.zoomImage(0, 1);
+		expect($scope.zoomIndex.folder).toBe(0);
+		expect($scope.zoomIndex.item).toBe(1);
+	});
+
+	it('should unzoom an image correctly', function() {
+		quickStart(qsets[1], scoreTables[1]);
+		expect($scope.zoomIndex.folder).toBe(-1);
+		expect($scope.zoomIndex.item).toBe(-1);
+
+		// the second item in the first folder of the qset has an image
+		$scope.zoomImage(0, 1);
+		expect($scope.zoomIndex.folder).toBe(0);
+		expect($scope.zoomIndex.item).toBe(1);
+
+		// zooming something that is already zoomed with unzoom it
+		$scope.zoomImage(0, 1);
+		expect($scope.zoomIndex.folder).toBe(-1);
+		expect($scope.zoomIndex.item).toBe(-1);
+	});
+
+	it('should swap between zoomed images correctly', function() {
+		quickStart(qsets[1], scoreTables[1]);
+		expect($scope.zoomIndex.folder).toBe(-1);
+		expect($scope.zoomIndex.item).toBe(-1);
+
+		// zoom one image
+		$scope.zoomImage(0, 1);
+		expect($scope.zoomIndex.folder).toBe(0);
+		expect($scope.zoomIndex.item).toBe(1);
+
+		// click the zoom button on a different picture without unzooming the previous
+		$scope.zoomImage(1, 1);
+		expect($scope.zoomIndex.folder).toBe(1);
+		expect($scope.zoomIndex.item).toBe(1);
 	});
 
 	var generateScoreTables = () => {
@@ -143,7 +242,58 @@ describe('ScoreScreen Controller', function() {
 			}
 		];
 
-		return [scoreTable1, scoreTable2];
+		var scoreTable3 = [
+			{
+				"data": ["Picture 1", "Folder 1", "Folder 1"],
+				"data_style": ["question", "response", "answer"],
+				"score": 100,
+				"feedback": null,
+				"type": "SCORE_QUESTION_ANSWERED",
+				"style": "full-value",
+				"tag": "div",
+				"symbol": "%",
+				"graphic": "score",
+				"display_score": true
+			},
+			{
+				"data": ["Item 1", "Folder 1", "Folder 1"],
+				"data_style": ["question", "response", "answer"],
+				"score": 100,
+				"feedback": null,
+				"type": "SCORE_QUESTION_ANSWERED",
+				"style": "full-value",
+				"tag": "div",
+				"symbol": "%",
+				"graphic": "score",
+				"display_score": true
+			},
+			{
+				"data": ["Item 2", "Folder 2", "Folder 2"],
+				"data_style": ["question", "response", "answer"],
+				"score": 100,
+				"feedback": null,
+				"type": "SCORE_QUESTION_ANSWERED",
+				"style": "full-value",
+				"tag": "div",
+				"symbol": "%",
+				"graphic": "score",
+				"display_score": true
+			},
+			{
+				"data": ["Picture 2", "Folder 2", "Folder 2"],
+				"data_style": ["question", "response", "answer"],
+				"score": 100,
+				"feedback": null,
+				"type": "SCORE_QUESTION_ANSWERED",
+				"style": "full-value",
+				"tag": "div",
+				"symbol": "%",
+				"graphic": "score",
+				"display_score": true
+			}
+		];
+
+		return [scoreTable1, scoreTable2, scoreTable3];
 	}
 
 	var generateQsets = () => {
@@ -199,6 +349,48 @@ describe('ScoreScreen Controller', function() {
 			"id": "5963"
 		};
 
-		return [qset1, qset2];
+		var qset3 = {
+			"items": [
+				{
+					"questions": [{ "text": "Item 1" }],
+					"answers": [{ "text": "Folder 1" }],
+					"options": [],
+					"assets": []
+				},
+				{
+					"questions": [{ "text": "Picture 1" }],
+					"answers": [{ "text": "Folder 1" }],
+					"options": {
+						"image": {
+							"id": "q29nk",
+							"url": "http://localhost/media/q29nk"
+						}
+					},
+					"assets": []
+				},
+				{
+					"questions": [{ "text": "Item 2" }],
+					"answers": [{ "text": "Folder 2" }],
+					"options": [],
+					"assets": []
+				},
+				{
+					"questions": [{ "text": "Picture 2" }],
+					"answers": [{ "text": "Folder 2" }],
+					"options": {
+						"image": {
+							"id": "a41gm",
+							"url": "http://localhost/media/a41gm"
+						}
+					},
+					"assets": []
+				}
+			],
+			"options": {
+				"backgroundImage": "assets/desktop.jpg"
+			}
+		};
+
+		return [qset1, qset2, qset3];
 	}
 });
