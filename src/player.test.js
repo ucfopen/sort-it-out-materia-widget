@@ -20,6 +20,9 @@ describe('Player Controller', function() {
 			Engine: {
 				start: jest.fn(),
 				end: jest.fn()
+			},
+			Score: {
+				submitQuestionForScoring: jest.fn()
 			}
 		}
 
@@ -62,8 +65,25 @@ describe('Player Controller', function() {
 		$scope.start(widgetInfo, qset.data);
 		$scope.submitClick();
 		expect(Materia.Engine.end).not.toHaveBeenCalled();
+		expect(Materia.Score.submitQuestionForScoring).not.toHaveBeenCalled();
 		expect($scope.showNoSubmit).toBe(true)
 		$timeout.flush();
 		expect($scope.showNoSubmit).toBe(false)
 	});
+
+	it('should successfully submit', function() {
+		$scope.start(widgetInfo, qset.data);
+
+		// just dump everything in the first folder
+		$scope.folders[0].items = $scope.desktopItems;
+		$scope.desktopItems = [];
+
+		expect($scope.desktopItems.length).toBe(0);
+		expect($scope.folders.length).toBe(5);
+		expect($scope.folders[0].items.length).toBe(17);
+		$scope.submitClick();
+		expect($scope.showNoSubmit).toBe(false);
+		expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledTimes(17);
+		expect(Materia.Engine.end).toHaveBeenCalledTimes(1);
+	})
 });
