@@ -29,15 +29,15 @@
     }
   },
   "devDependencies": {
-    "angular": "~1.7.2",
-    "angular-animate": "~1.7.2",
-    "angular-aria": "~1.7.2",
-    "angular-loader": "~1.7.2",
+    "angular": "~1.6.9",
+    "angular-animate": "~1.6.9",
+    "angular-aria": "~1.6.9",
+    "angular-loader": "~1.6.9",
     "angular-material": "~1.1.10",
-    "angular-mocks": "~1.7.2",
-    "angular-messages": "~1.7.2",
-    "angular-route": "~1.7.2",
-    "angular-sanitize": "~1.7.2",
+    "angular-mocks": "~1.6.9",
+    "angular-messages": "~1.6.9",
+    "angular-route": "~1.6.9",
+    "angular-sanitize": "~1.6.9",
     "jest": "^23.6.0",
     "jquery": "1.9.1"
   },
