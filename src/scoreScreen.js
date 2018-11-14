@@ -1,4 +1,4 @@
-const SortItOut = angular.module("SortItOutScore", ["ngAnimate"])
+const SortItOut = angular.module("SortItOutScore", [])
 
 SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", function ($scope, $timeout) {
 	$scope.loaded = false
