@@ -131,6 +131,47 @@ describe('ScoreScreen Controller', function() {
 		expect($scope.folders[1].items[0].userFolderName).toBe("Folder 1");
 	});
 
+	it('should be able to swap between different plays, even if the widget data differs', function() {
+		// for a published widget that has been edited but there are score logs for both verions
+
+		// start with one qset/scoretable
+		quickStart(qsets[0], scoreTables[0]);
+
+		// then swap the data (user uses "prev. attempts" dropdown)
+		$scope.update(qsets[1], scoreTables[1])
+
+		// then check everything
+		// check values for first folder
+		expect($scope.folders[0].name).toBe("Folder 1");
+		expect($scope.folders[0].items.length).toBe(2);
+		expect($scope.folders[0].extraItems.length).toBe(0);
+		expect($scope.folders[0].correctCount).toBe(2);
+		expect($scope.folders[0].pointsOff).toBe(0);
+
+		// check items in first folder
+		expect($scope.folders[0].items[0].correct).toBe(true);
+		expect($scope.folders[0].items[0].image).toBe(false);
+		expect($scope.folders[0].items[0].text).toBe("Item 1");
+		expect($scope.folders[0].items[0].userFolderName).toBe("Folder 1");
+		expect($scope.folders[0].items[1].correct).toBe(true);
+		expect($scope.folders[0].items[1].image).toBe("http://localhost/media/q29nk"); // TODO
+		expect($scope.folders[0].items[1].text).toBe("Picture 1");
+		expect($scope.folders[0].items[1].userFolderName).toBe("Folder 1");
+
+		// check values for second folder
+		expect($scope.folders[1].name).toBe("Folder 2");
+		expect($scope.folders[1].items.length).toBe(1);
+		expect($scope.folders[1].extraItems.length).toBe(0);
+		expect($scope.folders[1].correctCount).toBe(1);
+		expect($scope.folders[1].pointsOff).toBe(0);
+
+		// check items in second folder
+		expect($scope.folders[1].items[0].correct).toBe(true);
+		expect($scope.folders[1].items[0].image).toBe(false);
+		expect($scope.folders[1].items[0].text).toBe("Item 2");
+		expect($scope.folders[1].items[0].userFolderName).toBe("Folder 2");
+	})
+
 	it('should zoom an image correctly', function() {
 		quickStart(qsets[1], scoreTables[1]);
 		expect($scope.zoomIndex.folder).toBe(-1);
