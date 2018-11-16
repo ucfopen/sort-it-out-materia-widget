@@ -17,6 +17,7 @@ describe('ScoreScreen Controller', function() {
 		// mock materia
 		global.Materia = {
 			ScoreCore: {
+				getMediaUrl: jest.fn( (id) => `media/${id}`),
 				hideResultsTable: jest.fn(),
 				setHeight: jest.fn(),
 				start: jest.fn()
@@ -154,7 +155,7 @@ describe('ScoreScreen Controller', function() {
 		expect($scope.folders[0].items[0].text).toBe("Item 1");
 		expect($scope.folders[0].items[0].userFolderName).toBe("Folder 1");
 		expect($scope.folders[0].items[1].correct).toBe(true);
-		expect($scope.folders[0].items[1].image).toBe("http://localhost/media/q29nk"); // TODO
+		expect($scope.folders[0].items[1].image).toBe("media/q29nk");
 		expect($scope.folders[0].items[1].text).toBe("Picture 1");
 		expect($scope.folders[0].items[1].userFolderName).toBe("Folder 1");
 
@@ -354,7 +355,7 @@ describe('ScoreScreen Controller', function() {
 				}
 			],
 			"options": {
-				"backgroundImage": "assets/desktop.jpg"
+				"backgroundImageAsset": "assets/desktop.jpg"
 			}
 		};
 
@@ -370,10 +371,7 @@ describe('ScoreScreen Controller', function() {
 					"questions": [{ "text": "Picture 1" }],
 					"answers": [{ "text": "Folder 1" }],
 					"options": {
-						"image": {
-							"id": "q29nk",
-							"url": "http://localhost/media/q29nk"
-						}
+						"image": "q29nk"
 					},
 					"assets": []
 				},
@@ -385,7 +383,7 @@ describe('ScoreScreen Controller', function() {
 				}
 			],
 			"options": {
-				"backgroundImage": "assets/desktop.jpg"
+				"backgroundImageAsset": "assets/desktop.jpg"
 			},
 			"id": "5963"
 		};
@@ -402,10 +400,7 @@ describe('ScoreScreen Controller', function() {
 					"questions": [{ "text": "Picture 1" }],
 					"answers": [{ "text": "Folder 1" }],
 					"options": {
-						"image": {
-							"id": "q29nk",
-							"url": "http://localhost/media/q29nk"
-						}
+						"image": "q29nk"
 					},
 					"assets": []
 				},
@@ -419,16 +414,13 @@ describe('ScoreScreen Controller', function() {
 					"questions": [{ "text": "Picture 2" }],
 					"answers": [{ "text": "Folder 2" }],
 					"options": {
-						"image": {
-							"id": "a41gm",
-							"url": "http://localhost/media/a41gm"
-						}
+						"image": "a41gm"
 					},
 					"assets": []
 				}
 			],
 			"options": {
-				"backgroundImage": "assets/desktop.jpg"
+				"backgroundImageAsset": "assets/desktop.jpg"
 			}
 		};
 

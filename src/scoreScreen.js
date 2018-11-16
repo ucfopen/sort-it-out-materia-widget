@@ -39,7 +39,9 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", function ($sco
 		for (let item of qset.items) {
 			const folderName = item.answers[0].text
 			if (item.options.image) {
-				imageMap[item.questions[0].text] = item.options.image.url
+				imageMap[item.questions[0].text] = Materia.ScoreCore.getMediaUrl(
+					item.options.image
+				)
 			}
 			if (folderNames[folderName] == undefined) {
 				folderNames[folderName] = folders.length

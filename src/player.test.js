@@ -18,8 +18,9 @@ describe('Player Controller', function() {
 		// mock materia
 		global.Materia = {
 			Engine: {
-				start: jest.fn(),
-				end: jest.fn()
+				end: jest.fn(),
+				getMediaUrl: jest.fn( (id) => `media/${id}`),
+				start: jest.fn()
 			},
 			Score: {
 				submitQuestionForScoring: jest.fn()
@@ -85,5 +86,15 @@ describe('Player Controller', function() {
 		expect($scope.showNoSubmit).toBe(false);
 		expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledTimes(17);
 		expect(Materia.Engine.end).toHaveBeenCalledTimes(1);
-	})
+	});
+
+	it('should load a background image by id', function() {
+		var qset2 = JSON.parse(JSON.stringify(qset));
+		qset2.data.options = {
+			backgroundImageAsset: false,
+			backgroundImageId: "a12bc"
+		};
+		$scope.start(widgetInfo, qset2.data);
+		expect($scope.backgroundImage).toBe("media/a12bc");
+	});
 });

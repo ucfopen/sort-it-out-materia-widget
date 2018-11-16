@@ -43,10 +43,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "q29nk",
-							"url": "http://localhost/media/q29nk"
-						}
+						"image": "<%MEDIA='assets/demo-assets/q29nk.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -68,10 +65,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "JE4mG",
-							"url": "http://localhost/media/JE4mG"
-						}
+						"image": "<%MEDIA='assets/demo-assets/JE4mG.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -93,10 +87,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "Shm4W",
-							"url": "http://localhost/media/Shm4W"
-						}
+						"image": "<%MEDIA='assets/demo-assets/Shm4W.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -138,10 +129,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "GXtSa",
-							"url": "http://localhost/media/GXtSa"
-						}
+						"image": "<%MEDIA='assets/demo-assets/GXtSa.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -163,10 +151,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "V9DsG",
-							"url": "http://localhost/media/V9DsG"
-						}
+						"image": "<%MEDIA='assets/demo-assets/V9DsG.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -208,10 +193,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "HcSB6",
-							"url": "http://localhost/media/HcSB6"
-						}
+						"image": "<%MEDIA='assets/demo-assets/HcSB6.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -233,10 +215,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "WrQTw",
-							"url": "http://localhost/media/WrQTw"
-						}
+						"image": "<%MEDIA='assets/demo-assets/WrQTw.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -278,10 +257,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "PbP0q",
-							"url": "http://localhost/media/PbP0q"
-						}
+						"image": "<%MEDIA='assets/demo-assets/PbP0q.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -303,10 +279,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "5QcWe",
-							"url": "http://localhost/media/5QcWe"
-						}
+						"image": "<%MEDIA='assets/demo-assets/5QcWe.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -348,10 +321,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "Wdf0K",
-							"url": "http://localhost/media/Wdf0K"
-						}
+						"image": "<%MEDIA='assets/demo-assets/Wdf0K.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -373,10 +343,7 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "a41gm",
-							"url": "http://localhost/media/a41gm"
-						}
+						"image": "<%MEDIA='assets/demo-assets/a41gm.jpeg'%>"
 					},
 					"assets": []
 				},
@@ -398,16 +365,13 @@
 						}
 					],
 					"options": {
-						"image": {
-							"id": "BYC92",
-							"url": "http://localhost/media/BYC92"
-						}
+						"image": "<%MEDIA='assets/demo-assets/BYC92.jpeg'%>"
 					},
 					"assets": []
 				}
 			],
 			"options": {
-				"backgroundImage": "assets/canvas.jpg"
+				"backgroundImageAsset": "assets/canvas.jpg"
 			},
 			"id": "5189"
 		}

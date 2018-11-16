@@ -34,9 +34,7 @@ describe('Creator Controller', function() {
 						id: 'abc'
 					}]);
 				}),
-				getMediaUrl: jest.fn().mockImplementation(id => {
-					return 'http://' + id + '.jpg';
-				})
+				getMediaUrl: jest.fn( (id) => `media/${id}`)
 			}
 		}
 
@@ -50,8 +48,7 @@ describe('Creator Controller', function() {
 
 		// mock scope
 		$scope = {
-			$apply: jest.fn() // TODO idk what's going on here
-			// $apply: jest.fn().mockImplementation(fn => {fn()})
+			$apply: jest.fn()
 		}
 
 		// initialize the angular controller
@@ -302,6 +299,6 @@ describe('Creator Controller', function() {
 		expect($scope.backgroundImage).toBe("assets/canvas.jpg");
 
 		$scope.getCustomBackground();
-		expect($scope.backgroundImage).toBe("http://abc.jpg");
+		expect($scope.backgroundImage).toBe("media/abc");
 	});
 });

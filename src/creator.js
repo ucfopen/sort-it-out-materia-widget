@@ -43,6 +43,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		}
 	]
 	$scope.undoInfo = {}
+	$scope.customBackground = false
 
 	$scope.initNewWidget = widget => {
 		$scope.title = "My Sort-It-Out Widget"
@@ -56,8 +57,14 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		$scope.folders = generateFolders(qset.items)
 		$scope.ready = true
 		$scope.backgroundImage = "assets/desktop.jpg"
-		if (qset.options && qset.options.backgroundImage) {
-			$scope.backgroundImage = qset.options.backgroundImage
+		if (qset.options.backgroundImageId) {
+			$scope.backgroundImage = Materia.CreatorCore.getMediaUrl(
+				qset.options.backgroundImageId
+			)
+			$scope.backgroundImageId = qset.options.backgroundImageId
+			$scope.customBackground = true
+		} else if (qset.options.backgroundImageAsset) {
+			$scope.backgroundImage = qset.options.backgroundImageAsset
 		}
 		$scope.$apply()
 	}
@@ -70,7 +77,10 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 			const folderName = qsetItem.answers[0].text
 			const item = qsetItem.questions[0]
 			if (qsetItem.options.image) {
-				item.image = qsetItem.options.image
+				item.image = {
+					id: qsetItem.options.image,
+					url: Materia.CreatorCore.getMediaUrl(qsetItem.options.image)
+				}
 			}
 			if (folderNames[folderName] == undefined) {
 				folderNames[folderName] = folders.length
@@ -152,7 +162,6 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 			.catch( // if another toast is triggered before this one leaves, do nothing
 				e => null
 			)
-
 	}
 
 	$scope.showAddDialog = ev => {
@@ -317,6 +326,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 
 	$scope.setBackground = url => {
 		$scope.backgroundImage = url
+		$scope.customBackground = false
 		$mdDialog.hide()
 	}
 
@@ -337,10 +347,12 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 	}
 
 	const generateQset = () => {
+		const customBg = $scope.customBackground
 		let qset = {
 			items: [],
 			options: {
-				backgroundImage: $scope.backgroundImage
+				backgroundImageId: customBg ? $scope.backgroundImageId : false,
+				backgroundImageAsset: !customBg ? $scope.backgroundImage : false
 			}
 		}
 
@@ -353,7 +365,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 					materiaType: "question",
 					id: null,
 					type: "QA",
-					options: image ? { image } : {},
+					options: image ? { image: image.id } : {},
 					questions: [{ text }],
 					answers: [{ value: 100, text: folderName }]
 				})
@@ -374,6 +386,8 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		const { folderIndex, itemIndex, editBackground } = editImageIndices
 		if (editBackground) {
 			$scope.backgroundImage = url
+			$scope.backgroundImageId = id
+			$scope.customBackground = true
 		}
 		else if (folderIndex != undefined && itemIndex != undefined) {
 			$scope.folders[folderIndex].items[itemIndex].image = { id, url }

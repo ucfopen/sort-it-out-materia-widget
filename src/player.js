@@ -41,8 +41,12 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 		$scope.folders = buildFolders(qset)
 		$scope.desktopItems = buildItems(qset)
 		$scope.backgroundImage = "assets/desktop.jpg"
-		if (qset.options && qset.options.backgroundImage) {
-			$scope.backgroundImage = qset.options.backgroundImage
+		if (qset.options.backgroundImageId) {
+			$scope.backgroundImage = Materia.Engine.getMediaUrl(
+				qset.options.backgroundImageId
+			)
+		} else if (qset.options.backgroundImageAsset) {
+			$scope.backgroundImage = qset.options.backgroundImageAsset
 		}
 		$scope.$apply()
 	}
@@ -94,9 +98,12 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 	const buildItems = qset => {
 		return qset.items.map( item => {
 			const text = item.questions[0].text
+			const image = item.options.image
+				? Materia.Engine.getMediaUrl(item.options.image)
+				: false
 			return {
 				text,
-				image: item.options.image,
+				image,
 				position: generateRandomPosition(item.options.image)
 			}
 		})
