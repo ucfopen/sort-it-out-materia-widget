@@ -47,6 +47,7 @@ body {
 				width: 46%;
 				max-width: 600px;
 				margin-left: calc(18% - 165px);
+				border-radius: 3px;
 
 				.folder-header {
 					border-top-left-radius: 2px;
@@ -168,7 +169,7 @@ body {
 #preview-container {
 	text-align: center;
 	width: 480px;
-	margin-right: calc(10% - 95px);
+	margin-right: calc(10% - 90px);
 	position: fixed;
 	top: 15vh;
 	right: 10px;
