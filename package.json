@@ -21,9 +21,27 @@
     "collectCoverageFrom": ["src/{creator,scoreScreen,player}.js"],
     "coverageThreshold": {
       "global": {
+        "statements": 65,
+        "branches": 50,
+        "functions": 50,
+        "lines": 65
+      },
+      "src/creator.js": {
+        "statements": 85,
+        "branches": 75,
+        "functions": 60,
+        "lines": 85
+      },
+      "src/player.js": {
+        "statements": 40,
+        "branches": 15,
+        "functions": 30,
+        "lines": 40
+      },
+      "src/scoreScreen.js": {
         "statements": 99,
-        "branches": 89,
-        "functions": 100,
+        "branches": 99,
+        "functions": 99,
         "lines": 99
       }
     }
