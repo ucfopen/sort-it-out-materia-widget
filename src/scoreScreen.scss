@@ -9,6 +9,10 @@ body {
 	border-radius: 5px;
 	box-shadow: 0 3px 7px rgba(black, 0.5);
 
+	&:last-of-type {
+		margin-bottom: 30px;
+	}
+
 	.folder-header {
 		padding: 5px;
 		position: relative;
