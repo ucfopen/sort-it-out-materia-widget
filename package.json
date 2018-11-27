@@ -23,7 +23,7 @@
       "global": {
         "statements": 65,
         "branches": 50,
-        "functions": 50,
+        "functions": 55,
         "lines": 65
       },
       "src/creator.js": {
@@ -33,10 +33,10 @@
         "lines": 85
       },
       "src/player.js": {
-        "statements": 40,
-        "branches": 15,
-        "functions": 30,
-        "lines": 40
+        "statements": 45,
+        "branches": 20,
+        "functions": 40,
+        "lines": 45
       },
       "src/scoreScreen.js": {
         "statements": 99,

@@ -97,4 +97,25 @@ describe('Player Controller', function() {
 		$scope.start(widgetInfo, qset2.data);
 		expect($scope.backgroundImage).toBe("media/a12bc");
 	});
+
+	it('should show the folder preview', function() {
+		$scope.start(widgetInfo, qset.data);
+		expect($scope.showFolderPreview).toBe(false);
+		expect($scope.folderPreviewIndex).toBeUndefined();
+
+		expect($scope.selectedItem).toBe(false);
+		$scope.selectFolder({}, 1);
+		expect($scope.showFolderPreview).toBe(true);
+		expect($scope.folderPreviewIndex).toBe(1);
+	});
+
+	it('should hide the folder preview', function() {
+		$scope.start(widgetInfo, qset.data);
+		$scope.selectFolder({}, 1);
+		expect($scope.showFolderPreview).toBe(true);
+		expect($scope.folderPreviewIndex).toBe(1);
+		$scope.hideFolderPreview();
+		expect($scope.showFolderPreview).toBe(false);
+		expect($scope.folderPreviewIndex).toBe(-1);
+	});
 });

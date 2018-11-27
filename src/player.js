@@ -35,8 +35,8 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 	const DOCK_HEIGHT = 125
 
 	$scope.start = (instance, qset, version) => {
-		generateBounds()
 		generateQuestionToId(qset)
+		generateBounds()
 		$scope.title = instance.name
 		$scope.folders = buildFolders(qset)
 		$scope.desktopItems = buildItems(qset)
@@ -49,6 +49,13 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 			$scope.backgroundImage = qset.options.backgroundImageAsset
 		}
 		$scope.$apply()
+	}
+
+	const generateQuestionToId = qset => {
+		questionToId = {}
+		for (let item of qset.items) {
+			questionToId[item.questions[0].text] = item.id
+		}
 	}
 
 	const generateBounds = () => {
@@ -80,29 +87,22 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 	}
 
 	const buildFolders = qset => {
-		let folders = []
-		let seenFolders = {}
+		let folderNames = new Set
 		qset.items.forEach( item => {
-			const text = item.answers[0].text
-			if (!seenFolders[text]) {
-				seenFolders[text] = true
-				folders.push({
-					text,
-					items: []
-				})
-			}
+			folderNames.add(item.answers[0].text)
 		})
-		return folders
+		return Array.from(folderNames).map( text => {
+			return { text, items: [] }
+		})
 	}
 
 	const buildItems = qset => {
 		return qset.items.map( item => {
-			const text = item.questions[0].text
 			const image = item.options.image
 				? Materia.Engine.getMediaUrl(item.options.image)
 				: false
 			return {
-				text,
+				text: item.questions[0].text,
 				image,
 				position: generateRandomPosition(item.options.image)
 			}
@@ -127,14 +127,10 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 		if ($scope.selectedItem) {
 			return // prevent duplicated calls
 		}
-
-		if (e.element) { // it's a hammer event, grab element with event on it
-			selectedElement = e.element[0]
-		} else {
-			selectedElement = e.currentTarget
-		}
-
 		$scope.selectedItem = item
+
+		// hammer events store the element differently
+		selectedElement = e.element ? e.element[0] : e.currentTarget
 
 		const left = parseInt($(selectedElement).css("left"), 10)
 		const top = parseInt($(selectedElement).css("top"), 10)
@@ -168,16 +164,14 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 	}
 
 	$scope.mouseMove = e => {
-		if (e.center) { // if it's a hammer event
-			const underElem = $(document.elementFromPoint(e.clientX, e.clientY))
-			const folderElem = underElem.closest(".folder")
-			if (folderElem.length) {
-				folderElem.addClass("peeked")
-				$(selectedElement).addClass("shrink")
-			} else {
-				$(".shrink").removeClass("shrink")
-				$(".peeked").removeClass("peeked")
-			}
+		const underElem = $(document.elementFromPoint(e.clientX, e.clientY))
+		const folderElem = underElem.closest(".folder")
+		if (folderElem.length) {
+			folderElem.addClass("peeked")
+			$(selectedElement).addClass("shrink")
+		} else {
+			$(".shrink").removeClass("shrink")
+			$(".peeked").removeClass("peeked")
 		}
 
 		if (selectedElement) {
@@ -305,13 +299,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 		$(".peeked").removeClass("peeked")
 	}
 
-	const generateQuestionToId = qset => {
-		questionToId = {}
-		for (let item of qset.items) {
-			questionToId[item.questions[0].text] = item.id
-		}
-	}
-
 	$scope.enlargeImage = (url, e) => {
 		if (e.stopPropagation) {
 			e.stopPropagation()
@@ -320,6 +307,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 		$scope.enlargeImage.show = true
 	}
 
+	// this is used to prevent dragging of the images on macOS
 	$scope.preventDefault = (e, stopPropagation) => {
 		if (e.preventDefault) {
 			e.preventDefault()
