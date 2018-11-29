@@ -23,11 +23,19 @@ meta_data:
   features:
     - Customizable
     - Scorable
+    - Mobile Friendly
+    - Media
   supported_data:
     - Custom
   about: >
-    Students must sort items on a messy computer desktop into their appropriate folders.
+    Sort It Out! provides items randomly
+    spread across the screen with folders
+    at the bottom. Students are asked to
+    drag and drop the items into their
+    appropriate folders.
 
   # The text displayed on the widget catalog page.
   excerpt: >
-    Students must sort items into groups.
+    Students must sort items on a messy
+    computer desktop into their appropriate
+    folders.
