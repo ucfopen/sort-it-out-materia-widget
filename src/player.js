@@ -24,9 +24,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 
 	let prevPosition       // start position of drag
 	let selectedElement    // element that is being dragged
-	let placementBounds    // bounds for random placement
 	let pickupCount = 1    // every new item picked up will go to the top (z-index)
-	let dragBounds         // bounds for dragging
 	let itemSource         // to track where the dragged item came from
 	let questionToId       // used for scoring
 
@@ -63,7 +61,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 		const height = $("#desktop").height()
 		const menuBarHeight = $("#menu-bar").outerHeight()
 
-		placementBounds = {
+		$scope.placementBounds = {
 			x: {
 				min: 15,
 				max: width - 150
@@ -74,7 +72,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 			}
 		}
 
-		dragBounds = {
+		$scope.dragBounds = {
 			x: {
 				min: 15,
 				max: width - 15
@@ -110,7 +108,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 	}
 
 	const generateRandomPosition = hasImage => {
-		const pb = placementBounds
+		const pb = $scope.placementBounds
 
 		const yRange = pb.y.max - pb.y.min - DOCK_HEIGHT - (hasImage ? 150 : 0)
 		const y = ~~(Math.random() * yRange) + pb.y.min
@@ -143,8 +141,8 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 		itemSource = SRC_DESKTOP
 	}
 
-	const isOutOfBounds = e => {
-		const db = dragBounds
+	$scope.isOutOfBounds = e => {
+		const db = $scope.dragBounds
 		const outOfBoundsX = e.clientX < db.x.min || e.clientX > db.x.max
 		const outOfBoundsY = e.clientY < db.y.min || e.clientY > db.y.max
 		return outOfBoundsX || outOfBoundsY
@@ -163,11 +161,12 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 		}
 	}
 
-	$scope.mouseMove = e => {
+	$scope.panMove = e => {
 		const underElem = $(document.elementFromPoint(e.clientX, e.clientY))
 		const folderElem = underElem.closest(".folder")
 		if (folderElem.length) {
-			folderElem.addClass("peeked")
+			const index = folderElem.data("index")
+			$(`.folder[data-index=${index}]`).addClass("peeked")
 			$(selectedElement).addClass("shrink")
 		} else {
 			$(".shrink").removeClass("shrink")
@@ -175,7 +174,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 		}
 
 		if (selectedElement) {
-			if (isOutOfBounds(e)) {
+			if ($scope.isOutOfBounds(e)) {
 				return $scope.mouseUp(e)
 			}
 			const left = e.clientX + $scope.offsetLeft
@@ -197,11 +196,11 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 		const underElemId = underElem.attr("id")
 
 		// put it back if it's out of bounds or over the dock but not a folder
-		if (isOutOfBounds(e) || underElemId == "dock-main") {
+		if ($scope.isOutOfBounds(e) || underElemId == "dock-main") {
 			$(".shrink").removeClass("shrink")
 			$(selectedElement).animate({
 				left: prevPosition.left,
-				top: Math.min(prevPosition.top, placementBounds.y.max)
+				top: Math.min(prevPosition.top, $scope.placementBounds.y.max)
 			}, 300)
 		} else {
 			// if dragged on a folder, put it in

@@ -24,7 +24,7 @@
 	</head>
 	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
 		<div id="content"
-			hm-panmove="standardizeEvent($event, false, mouseMove)"
+			hm-panmove="standardizeEvent($event, false, panMove)"
 			hm-panend="standardizeEvent($event, false, mouseUp)"
 			ng-mouseup="mouseUp($event)">
 			<div id="menu-bar">
