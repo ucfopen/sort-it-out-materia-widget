@@ -43,8 +43,8 @@ body {
 
 			.folder {
 				margin-bottom: 25px;
-				min-width: 440px;
-				width: 46%;
+				min-width: 420px;
+				width: 44%;
 				max-width: 600px;
 				margin-left: calc(18% - 165px);
 				border-radius: 3px;
@@ -88,14 +88,14 @@ body {
 						margin: 10px auto;
 						text-align: center;
 						padding: 10px;
-						min-width: 400px;
+						min-width: 375px;
 						box-shadow: 0 3px 7px rgba(black, 0.3);
 						border-radius: 10px;
 						background-color: white;
 
 						.folder-input-container {
 							text-align: left;
-							width: 280px;
+							width: 250px;
 						}
 
 						button.md-button.option-controls {
@@ -110,7 +110,7 @@ body {
 						}
 
 						.item-image {
-							width: 400px;
+							width: 350px;
 							margin: auto;
 							background: white;
 							padding: 5px;
@@ -169,7 +169,7 @@ body {
 #preview-container {
 	text-align: center;
 	width: 480px;
-	margin-right: calc(10% - 90px);
+	margin-right: calc(10% - 85px);
 	position: fixed;
 	top: 15vh;
 	right: 10px;
@@ -177,7 +177,7 @@ body {
 	color: white;
 	border-radius: 3px;
 	box-shadow: 0 3px 7px rgba(black, 0.3);
-	padding: 0 calc(10% - 90px) 10px;
+	padding: 0 calc(10% - 85px) 10px;
 	pointer-events: none; // to allow scrolling of cards behind
 
 	h1 {
