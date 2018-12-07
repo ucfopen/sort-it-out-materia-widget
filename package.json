@@ -5,7 +5,7 @@
   },
   "version": "0.0.1",
   "dependencies": {
-    "materia-widget-development-kit": "v2.1.0"
+    "materia-widget-development-kit": "v2.2.0"
   },
   "scripts": {
     "start": "webpack-dev-server",
@@ -14,7 +14,7 @@
     "test": "TZ='America/New_York' jest --verbose",
     "test-ci": "TZ='America/New_York' CI=true jest --ci --useStderr --coverage"
   },
-   "jest": {
+  "jest": {
     "coverageReporters": ["text-summary", "lcov", "cobertura"],
     "verbose": false,
     "moduleFileExtensions": ["js"],
