@@ -26,6 +26,10 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 	$scope.newFolder = { name: "" }
 	$scope.imagePresets = [
 		{
+			name: "Solid Blue",
+			url: "assets/blue.png"
+		},
+		{
 			name: "Classic",
 			url: "assets/desktop.jpg",
 		},
@@ -36,10 +40,6 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		{
 			name: "Corkboard",
 			url: "assets/corkboard.jpg"
-		},
-		{
-			name: "Solid Blue",
-			url: "assets/blue.png"
 		}
 	]
 	$scope.undoInfo = {}
@@ -48,7 +48,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 	$scope.initNewWidget = widget => {
 		$scope.title = "My Sort-It-Out Widget"
 		$scope.ready = true
-		$scope.backgroundImage = "assets/desktop.jpg"
+		$scope.backgroundImage = "assets/blue.png"
 		$scope.$apply()
 	}
 
@@ -56,7 +56,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		$scope.title = title
 		$scope.folders = generateFolders(qset.items)
 		$scope.ready = true
-		$scope.backgroundImage = "assets/desktop.jpg"
+		$scope.backgroundImage = "assets/blue.png"
 		if (qset.options.backgroundImageId) {
 			$scope.backgroundImage = Materia.CreatorCore.getMediaUrl(
 				qset.options.backgroundImageId
