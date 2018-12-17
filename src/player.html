@@ -58,6 +58,7 @@
 
 			<div id="dock-main" class="dock" ng-click="hideFolderPreview()">
 				<div class="folder"
+					ng-class="{opened: folderPreviewIndex == $index}"
 					ng-repeat="folder in folders"
 					ng-click="selectFolder($event, $index)"
 					ng-mouseenter="peekFolder($index)"
@@ -72,7 +73,7 @@
 			</div>
 
 			<div id="dock-back" class="dock" ng-class="{above: showFolderPreview}">
-				<div class="folder" ng-repeat="folder in folders" data-index="{{$index}}">
+				<div class="folder" ng-repeat="folder in folders" data-index="{{$index}}" ng-class="{opened: folderPreviewIndex == $index}">
 					<div class="folder-icon">
 						<div class="peek-items-container">
 							<div class="peek-item" ng-repeat="item in folder.items.slice().reverse() | limitTo:3">{{item.text}}</div>

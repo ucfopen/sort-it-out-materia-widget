@@ -231,8 +231,15 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 		if (e.stopPropagation) {
 			e.stopPropagation()
 		}
+
 		if (index == itemSource) {
 			return // if dragged to where it already is
+		}
+
+		// if currently-opened folder is clicked, close that folder
+		if (index == $scope.folderPreviewIndex) {
+			$scope.hideFolderPreview()
+			return
 		}
 
 		if ($scope.selectedItem) {

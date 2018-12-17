@@ -237,6 +237,10 @@ body {
 		top: -20px;
 	}
 
+	.folder.opened .peek-items-container {
+		display: none;
+	}
+
 	.folder-arrow {
 		position: absolute;
 		top: -25px;
@@ -260,12 +264,14 @@ body {
 	z-index: 5;
 
 	.folder {
-		&.peeked {
+		&.peeked,
+		&.opened {
 			.folder-name {
 				transform: rotateX(-40deg) translate3d(0, -9px, 30px);
 				opacity: 0.9;
 			}
 		}
+
 		.folder-name {
 			content: " ";
 			background-color: $folder-color;
