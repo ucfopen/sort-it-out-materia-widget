@@ -64,7 +64,7 @@ describe('Creator Controller', function() {
 		$scope.initNewWidget(widgetInfo);
 		//time to check default values
 		expect($scope.title).toBe('My Sort-It-Out Widget');
-		expect($scope.backgroundImage).toBe('assets/desktop.jpg');
+		expect($scope.backgroundImage).toBe('assets/blue.png');
 		expect($scope.ready).toBe(true);
 
 		//next make sure there is one sample folder
@@ -79,7 +79,7 @@ describe('Creator Controller', function() {
 		$scope.initExistingWidget('Famous Artists', widgetInfo, qset.data);
 		// check widget info
 		expect($scope.title).toBe('Famous Artists');
-		expect($scope.backgroundImage).toBe('assets/canvas.jpg');
+		expect($scope.backgroundImage).toBe('assets/blue.png');
 		expect($scope.ready).toBe(true);
 	});
 
@@ -296,7 +296,7 @@ describe('Creator Controller', function() {
 
 	it('should properly set the background to a custom image', function() {
 		$scope.initExistingWidget('Famous Artists', widgetInfo, qset.data);
-		expect($scope.backgroundImage).toBe("assets/canvas.jpg");
+		expect($scope.backgroundImage).toBe("assets/blue.png");
 
 		$scope.getCustomBackground();
 		expect($scope.backgroundImage).toBe("media/abc");
