@@ -246,6 +246,13 @@ body {
 		border-top: 20px solid rgba(black, 0.8);
 		height: 0;
 		width: 0;
+		transition: all ease 0.3s;
+		opacity: 1;
+
+		&.ng-hide {
+			opacity: 0;
+			top: 75px;
+		}
 	}
 }
 
