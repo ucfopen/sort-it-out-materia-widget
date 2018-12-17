@@ -90,7 +90,7 @@ body {
 		background: white;
 		border-radius: 2px;
 		box-shadow: 0 3px 7px rgba(black, 0.5);
-		padding: 10px 10px;
+		padding: 10px;
 		max-width: 175px;
 		position: absolute;
 		display: table;
@@ -343,7 +343,7 @@ body {
 		.preview-item {
 			font-size: 18px;
 			background: white;
-			border-radius: 3px;
+			border-radius: 2px;
 			padding: 5px 10px;
 			display: inline-block;
 			position: relative;
@@ -415,7 +415,7 @@ body {
 		max-width: 175px;
 		text-align: center;
 		border-radius: 3px;
-		padding: 5px 10px;
+		padding: 10px;
 		display: table;
 		position: fixed;
 		margin: 10px;
@@ -441,7 +441,9 @@ body {
 			margin: auto;
 			max-width: 100%;
 			max-height: 150px;
+			border-radius: 5px;
 			-webkit-user-drag: none;
+			margin-bottom: 10px;
 		}
 	}
 }
