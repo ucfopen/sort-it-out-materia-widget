@@ -2,7 +2,7 @@ const SortItOut = angular.module("SortItOutCreator", ["ngMaterial", "ngMessages"
 
 SortItOut.config(["$mdThemingProvider", function ($mdThemingProvider) {
 	$mdThemingProvider.theme("default")
-		.primaryPalette("purple", {
+		.primaryPalette("indigo", {
 			"default": "300"
 		})
 }])

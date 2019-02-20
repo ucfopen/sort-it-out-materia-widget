@@ -39,7 +39,7 @@
 			</div>
 
 			<div id="desktop">
-				<div class="desktop-item" ng-class="{selected: item.text == selectedItem.text}"
+				<div class="desktop-item" ng-class="{'selected': item.text == selectedItem.text, 'no-image': !item.image}"
 					ng-style="{ 'top': item.position.y, 'left': item.position.x }"
 					ng-repeat="item in desktopItems"
 					ng-mousedown="itemMouseDown($event, item)"
