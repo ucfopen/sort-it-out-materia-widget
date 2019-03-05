@@ -7,7 +7,7 @@ SortItOut.config(["$mdThemingProvider", function ($mdThemingProvider) {
 		})
 }])
 
-SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", "$sanitize", function ($scope, $mdDialog, $mdToast, $sanitize) {
+SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", "sanitizeHelper", function ($scope, $mdDialog, $mdToast, sanitizeHelper) {
 	$scope.MAX_ITEM_LENGTH = 30
 	$scope.MAX_NUM_FOLDERS = 6
 
@@ -74,7 +74,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		let folderNames = {} // map from folder name to folder index
 
 		for (let qsetItem of qsetItems) {
-			const folderName = qsetItem.answers[0].text
+			const folderName = sanitizeHelper.desanitize(qsetItem.answers[0].text)
 			const item = qsetItem.questions[0]
 			if (qsetItem.options.image) {
 				item.image = {
@@ -89,6 +89,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 					items: []
 				})
 			}
+			item.text = sanitizeHelper.desanitize(item.text)
 			folders[folderNames[folderName]].items.push(item)
 		}
 		return folders
@@ -357,9 +358,9 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		}
 
 		for (let folder of $scope.folders) {
-			const folderName = $sanitize(folder.name)
+			const folderName = sanitizeHelper.sanitize(folder.name)
 			folder.items.forEach( (item) => {
-				const text = $sanitize(item.text)
+				const text = sanitizeHelper.sanitize(item.text)
 				const image = item.image
 				qset.items.push({
 					materiaType: "question",
@@ -397,4 +398,37 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 	}
 
 	Materia.CreatorCore.start($scope)
+}])
+
+SortItOut.service('sanitizeHelper', [ function() {
+	const SANITIZE_CHARACTERS = {
+		'&' : '&amp;',
+		'>' : '&gt;',
+		'<' : '&lt;',
+		'"' : '&#34;'
+	}
+
+	const sanitize = (input) => {
+		if (!input) return;
+		for (var k in SANITIZE_CHARACTERS) {
+			let v = SANITIZE_CHARACTERS[k]
+			let re = new RegExp(k, "g")
+			input = input.replace(re, v)
+		}
+		return input
+	}
+
+	const desanitize = (input) => {
+		if (!input) return;
+		for (var k in SANITIZE_CHARACTERS) {
+			let v = SANITIZE_CHARACTERS[k]
+			let re = new RegExp(v, "g")
+			input = input.replace(re, k)
+		}
+		return input
+	}
+	return {
+		sanitize: sanitize,
+		desanitize: desanitize
+	}
 }])

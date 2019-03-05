@@ -10,7 +10,7 @@ SortItOut.directive("scroll", () => {
 	}
 })
 
-SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($scope, $timeout) {
+SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelper", function ($scope, $timeout, sanitizeHelper) {
 	$scope.tutorialPage = 1
 	$scope.showFolderPreview = false
 	$scope.showNoSubmit = false
@@ -87,7 +87,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 	const buildFolders = qset => {
 		let folderNames = new Set
 		qset.items.forEach( item => {
-			folderNames.add(item.answers[0].text)
+			folderNames.add(sanitizeHelper.desanitize(item.answers[0].text))
 		})
 		return Array.from(folderNames).map( text => {
 			return { text, items: [] }
@@ -100,7 +100,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 				? Materia.Engine.getMediaUrl(item.options.image)
 				: false
 			return {
-				text: item.questions[0].text,
+				text: sanitizeHelper.desanitize(item.questions[0].text),
 				image,
 				position: generateRandomPosition(item.options.image)
 			}
@@ -369,4 +369,37 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", function ($sc
 	}
 
 	Materia.Engine.start($scope)
+}])
+
+SortItOut.service('sanitizeHelper', [ function() {
+	const SANITIZE_CHARACTERS = {
+		'&' : '&amp;',
+		'>' : '&gt;',
+		'<' : '&lt;',
+		'"' : '&#34;'
+	}
+
+	const sanitize = (input) => {
+		if (!input) return;
+		for (var k in SANITIZE_CHARACTERS) {
+			let v = SANITIZE_CHARACTERS[k]
+			let re = new RegExp(k, "g")
+			input = input.replace(re, v)
+		}
+		return input
+	}
+
+	const desanitize = (input) => {
+		if (!input) return;
+		for (var k in SANITIZE_CHARACTERS) {
+			let v = SANITIZE_CHARACTERS[k]
+			let re = new RegExp(v, "g")
+			input = input.replace(re, k)
+		}
+		return input
+	}
+	return {
+		sanitize: sanitize,
+		desanitize: desanitize
+	}
 }])
