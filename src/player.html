@@ -1,31 +1,194 @@
 <!DOCTYPE html>
-<!-- INJECTS IE CLASSES ONTO HTML TAG -->
-<!--[if IE 8 ]>    <html class="IE8"> <![endif]-->
-<!--[if IE 9 ]>    <html class="IE9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html class=""> <!--<![endif]-->
+<html>
 	<head>
-		<title>Hello Widget</title>
+		<title>Sort-it-Out! Player</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 		<!-- STYLESHEETS -->
 		<link rel="stylesheet" type="text/css" href="player.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script src="materia.enginecore.js"></script>
-		<script src="materia.score.js"></script>
 
-		<!-- YOUR PREREQUISITES -->
-		<!-- <script src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js'></script> -->
+		<!-- WIDGET DEPENDENCIES -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-animate.min.js"></script>
+		<script src="hammer.min.js"></script>
+		<script src="angular-hammer.js"></script>
 
-		<!-- MAIN PLAYER SCRIPT -->
-		<script src='player.js'></script>
+		<!-- MAIN WIDGET SCRIPT -->
+		<script src="player.js"></script>
 	</head>
-	<body>
-	
-	<!-- sample alternative angular app code below -->
-	<!-- <body ng-app="myWidgetPlayerApp" ng-controller="myWidgetPlayerCtrl"> -->
+	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
+		<div id="content"
+			hm-panmove="standardizeEvent($event, false, panMove)"
+			hm-panend="standardizeEvent($event, false, mouseUp)"
+			ng-mouseup="mouseUp($event)">
+			<div id="menu-bar">
+				<h1 id="title">{{title}}</h1>
+				<div id="donearrow" ng-show="readyToSubmit()">Click to finish</div>
+				<button ng-click="submitClick()" ng-class="{disabled: !readyToSubmit()}">
+					Submit Answers
+				</button>
+				<div id="no-submit" ng-class="{hidden: readyToSubmit() || !showNoSubmit}">
+					All items must be placed in a folder before submitting.
+				</div>
+			</div>
 
-		
+			<div id="desktop">
+				<div class="desktop-item" ng-class="{'selected': item.text == selectedItem.text, 'no-image': !item.image}"
+					ng-style="{ 'top': item.position.y, 'left': item.position.x }"
+					ng-repeat="item in desktopItems"
+					ng-mousedown="itemMouseDown($event, item)"
+					hm-panstart="standardizeEvent($event, item, itemMouseDown)">
+
+					<img ng-if="item.image"
+						ng-src="{{item.image}}"
+						ng-mousedown="preventDefault($event, false)">
+					<i ng-if="item.image"
+						class="material-icons img-zoom"
+						ng-mousedown="preventDefault($event, true)"
+						ng-click="enlargeImage(item.image, $event)">zoom_in</i>
+					{{item.text}}
+				</div>
+			</div>
+
+			<div id="dock-main" class="dock" ng-click="hideFolderPreview()">
+				<div class="folder"
+					ng-class="{opened: folderPreviewIndex == $index}"
+					ng-repeat="folder in folders"
+					ng-click="selectFolder($event, $index)"
+					ng-mouseenter="peekFolder($index)"
+					ng-mouseleave="hidePeek()"
+					data-index="{{$index}}">
+					<div class="folder-icon">
+						<div class="folder-name">
+							<span ng-class="{ small: folder.text.length > 40}">{{folder.text}}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="dock-back" class="dock" ng-class="{above: showFolderPreview}">
+				<div class="folder" ng-repeat="folder in folders" data-index="{{$index}}" ng-class="{opened: folderPreviewIndex == $index}">
+					<div class="folder-icon">
+						<div class="peek-items-container">
+							<div class="peek-item" ng-repeat="item in folder.items.slice().reverse() | limitTo:3">{{item.text}}</div>
+						</div>
+					</div>
+					<div class="folder-arrow" ng-show="folderPreviewIndex == $index"></div>
+				</div>
+			</div>
+
+			<div id="desktop-zone-container" class="desktop-zone" ng-show="showFolderPreview && selectedItem">
+				<div id="desktop-zone1" class="desktop-zone"></div>
+				<div id="desktop-zone2" class="desktop-zone"></div>
+			</div>
+
+			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
+				<h1 ng-class="{ small: folders[folderPreviewIndex].text.length > 40}">{{folders[folderPreviewIndex].text}}</h1>
+				<p id="empty-preview" ng-if="folders[folderPreviewIndex].items.length == 0">This folder is empty</p>
+				<div id="preview-scroll-container" scroll>
+					<div class="preview-item" ng-class="{selected: item.text == selectedItem.text}"
+						ng-repeat="item in folders[folderPreviewIndex].items"
+						ng-mousedown="previewMouseDown($event, item)"
+						hm-panstart="standardizeEvent($event, item, previewMouseDown)">
+						<img ng-if="item.image" ng-src="{{item.image}}">
+						{{item.text}}
+					</div>
+				</div>
+				<i class="material-icons" id="preview-close" ng-click="hideFolderPreview()">close</i>
+				<button id="preview-scroll-up" ng-if="showFolderPreview" ng-show="canScrollUp()" ng-click="scrollUp()">&uarr;</button>
+				<button id="preview-scroll-down" ng-if="showFolderPreview" ng-show="canScrollDown()" ng-click="scrollDown()">&darr;</button>
+				<div id="preview-selected-item" ng-show="showFolderPreview && selectedItem.text">
+					<img ng-if="selectedItem.image" ng-src="{{selectedItem.image}}">
+					{{selectedItem.text}}
+				</div>
+			</div>
+
+			<div id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
+			</div>
+
+			<div id="back-to-desktop" ng-show="showFolderPreview && selectedItem">Put Back on Desktop</div>
+
+			<div id="enlarged-image" ng-class="{hidden: !enlargeImage.show}" ng-click="enlargeImage.show = false">
+				<div>
+					<img ng-if="enlargeImage.show" ng-src="{{enlargeImage.url}}">
+					<i>click anywhere to close</i>
+				</div>
+			</div>
+
+			<div id="tutorial" class="tutorial">
+				<h3>How to play</h3>
+
+				<div id="tutorial-board-container" ng-class="{page2: tutorialPage == 2}">
+					<div id="tutorial-board1" class="tutorial-board" ng-class="{hidden: tutorialPage != 1}">
+						<div class="tutorial-term first">
+							<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span> <span>aaaaaaaaaa</span>
+						</div>
+						<div class="tutorial-term second">
+							<span>aaaaaaaaaaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
+							<span>aaaaaaaaa</span> <span>aaaaa</span> <span>aaaaaaaaaaaaaa</span>
+							<span>aaaaaaaaaaaaaaaaaa</span>
+						</div>
+						<div class="tutorial-term third">
+							<span>aaaaa</span> <span>aaaaaaaa</span>
+						</div>
+						<div>
+							<img src="assets/tutorial.jpg">
+						</div>
+						<div class="cursor">
+							<img src="assets/cursor.svg">
+						</div>
+					</div>
+
+					<div id="tutorial-board2" class="tutorial-board" ng-class="{hidden: tutorialPage != 2}">
+						<div class="tutorial-term fourth">
+							<span>aaaaaaaaa</span> <span>aaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
+						</div>
+						<div class="tutorial-term fifth">
+							<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span>
+						</div>
+
+						<div id="tutorial-folder-preview">
+							<span>&times;</span>
+							<span>aaaaaaaa</span> <span>aaaa</span> <span>aaaaaaaaaaa</span>
+							<div class="tutorial-term sixth">
+								<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
+							</div>
+							<div class="tutorial-term seventh">
+								<span>aaaaaaaaa</span> <span>aaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
+							</div>
+							<div class="tutorial-term eigth">
+								<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span>
+							</div>
+						</div>
+
+						<div>
+							<img src="assets/tutorial.jpg">
+						</div>
+						<div class="cursor page2">
+							<img src="assets/cursor.svg">
+						</div>
+					</div>
+				</div>
+				<p ng-show="tutorialPage==1">Drag items to group them in their corresponding folders.</p>
+				<p ng-show="tutorialPage==2">Items can be moved between folders or back onto the desktop.</p>
+
+				<div ng-show="tutorialPage == 2" id="tutorial-prev">
+					<button ng-click="tutorialPage = 1">Back</button>
+				</div>
+				<div ng-show="tutorialPage == 1" id="tutorial-next">
+					<button ng-click="tutorialPage = 2">Next</button>
+				</div>
+
+				<button id="gotitbtn" ng-click="hideTutorial()" ng-show="tutorialPage == 2">Got it!</button>
+			</div>
+			<div id="tutorial-background" class="tutorial" ng-click="hideTutorial()"></div>
+
+		</div>
 	</body>
 </html>
-

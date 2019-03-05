@@ -1,6 +1,26 @@
 const path = require('path')
+const baseConfig = require('materia-widget-development-kit/webpack-widget').getLegacyWidgetBuildConfig()
 
-// load the reusable legacy webpack config from materia-widget-dev
-let webpackConfig = require('materia-widget-development-kit/webpack-widget').getLegacyWidgetBuildConfig()
+baseConfig.entry = {
+	'creator.js': ['./src/creator.js'],
+	'player.js': ['./src/player.js'],
+	'scoreScreen.js': ['./src/scoreScreen.js'],
+	'creator.css': ['./src/creator.scss', './src/creator.html'],
+	'player.css': ['./src/player.scss', './src/player.html'],
+	'scoreScreen.css': ['./src/scoreScreen.scss', './src/scoreScreen.html'],
+	'angular-hammer.js': ['./src/angular-hammer.js'],
+	'hammer.min.js': ['./src/hammer.min.js']
+}
 
-module.exports = webpackConfig
+baseConfig.module.rules.push({
+	test: /\.js$/,
+	use: {
+		loader: 'babel-loader',
+		options: {
+			presets: ['babel-preset-env']
+		}
+	},
+	exclude: /(node_modules|bower_components)/,
+})
+
+module.exports = baseConfig

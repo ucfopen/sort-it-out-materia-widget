@@ -5,24 +5,59 @@
   },
   "version": "0.0.1",
   "dependencies": {
-    "materia-widget-development-kit": "git+ssh://git@clu.cdl.ucf.edu:materia/materia-widget-development-kit.git#v1.2.0"
+    "materia-widget-development-kit": "v2.2.0"
   },
   "scripts": {
     "start": "webpack-dev-server",
-    "build-dev": "webpack",
     "build": "webpack -p",
-    "pretest": "npm run build-dev",
-    "test": "karma start ./karma.conf.js --no-auto-watch --single-run"
+    "build-dev": "webpack",
+    "test": "TZ='America/New_York' jest --verbose",
+    "test-ci": "TZ='America/New_York' CI=true jest --ci --useStderr --coverage"
   },
-  "author": "University of Central Florida, Center for Distributed Learning",
+  "jest": {
+    "coverageReporters": ["text-summary", "lcov", "cobertura"],
+    "verbose": false,
+    "moduleFileExtensions": ["js"],
+    "collectCoverageFrom": ["src/{creator,scoreScreen,player}.js"],
+    "coverageThreshold": {
+      "global": {
+        "statements": 70,
+        "branches": 60,
+        "functions": 55,
+        "lines": 70
+      },
+      "src/creator.js": {
+        "statements": 85,
+        "branches": 75,
+        "functions": 60,
+        "lines": 85
+      },
+      "src/player.js": {
+        "statements": 50,
+        "branches": 30,
+        "functions": 45,
+        "lines": 50
+      },
+      "src/scoreScreen.js": {
+        "statements": 99,
+        "branches": 99,
+        "functions": 99,
+        "lines": 99
+      }
+    }
+  },
   "devDependencies": {
-    "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-coverage": "^0.5.5",
-    "karma-eslint": "^2.1.0",
-    "karma-jasmine": "^0.3.8",
-    "karma-json-fixtures-preprocessor": "0.0.6",
-    "karma-mocha-reporter": "^2.1.0",
-    "karma-phantomjs-launcher": "^1.0.2"
-  }
+    "angular": "~1.6.9",
+    "angular-animate": "~1.6.9",
+    "angular-aria": "~1.6.9",
+    "angular-loader": "~1.6.9",
+    "angular-material": "~1.1.10",
+    "angular-mocks": "~1.6.9",
+    "angular-messages": "~1.6.9",
+    "angular-route": "~1.6.9",
+    "angular-sanitize": "~1.6.9",
+    "jest": "^23.6.0",
+    "jquery": "1.9.1"
+  },
+  "author": "University of Central Florida, Center for Distributed Learning"
 }

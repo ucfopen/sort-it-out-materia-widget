@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Sort-it-Out! Scorescreen</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<!-- STYLESHEETS -->
+		<link rel="stylesheet" type="text/css" href="scoreScreen.css">
+		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+
+		<!-- REQUIRED MATERIA JAVASCRIPT -->
+		<script src="materia.scorecore.js"></script>
+
+		<!-- WIDGET DEPENDENCIES -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+
+		<!-- MAIN WIDGET SCRIPT -->
+		<script src="scoreScreen.js"></script>
+	</head>
+	<body ng-app="SortItOutScore" ng-controller="SortItOutScoreCtrl" ng-cloak>
+		<div class="folder" ng-repeat="(folderIndex, folder) in folders" ng-click="minimizeImage()">
+			<div class="folder-header">
+				<svg class="folder-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+				<h1>{{folder.name}}</h1>
+				<span class="points-off" ng-if="folder.pointsOff">
+					{{folder.pointsOff | number:0}}%
+				</span>
+				<span class="all-correct" ng-if="!folder.pointsOff">
+					&#x2714;
+				</span>
+			</div>
+			<div class="folder-content">
+				<div class="header">
+					<div>
+						Items That Belong ({{folder.items.length}})
+					</div>
+					<div>
+						Items You Placed Correctly ({{folder.correctCount}})
+					</div>
+				</div>
+
+				<div class="folder-row" ng-repeat="(itemIndex, item) in folder.items">
+					<div class="item" ng-class="{short: !item.image, zoom: (itemIndex == zoomIndex.item && folderIndex == zoomIndex.folder)}">
+						<p class="item-text">{{item.text}}</p>
+						<div ng-if="item.image" class="zoom-container">
+							<img class="item-image" ng-src="{{item.image}}" ng-class="{sized: loaded}">
+							<span class="img-zoom-icon">
+								<svg ng-click="zoomImage(folderIndex, itemIndex)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+									<path fill="white" d="M0 0h24v24H0V0z"/>
+									<path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+									<path class="zoom-plus" d="M12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z"/>
+									<path d="M7 9h5v1H7z"/>
+								</svg>
+							</span>
+						</div>
+					</div>
+
+					<div class="item correct" ng-if="item.correct" ng-class="{short: !item.image}">
+						<p class="item-text">{{item.text}}</p>
+						<div ng-if="item.image">
+							<img class="item-image" ng-src="{{item.image}}" ng-class="{sized: loaded}">
+						</div>
+						<div class="overlay">
+							<img src="assets/correct.png">
+						</div>
+					</div>
+
+					<div class="missing" ng-if="!item.correct" ng-class="{short: !item.image}">
+						<div class="overlay">
+							<img src="assets/wrong.png">
+							<span class="minus-percent">-{{questionValue | number:0}}%</span>
+						</div>
+						<span class="item-placed">You placed in: {{item.userFolderName}}
+					</div>
+				</div>
+
+				<div class="extra-section" ng-if="folder.extraItems.length">
+					<div class="extra-header">
+						<span>Extra Items You Placed in this Folder ({{folder.extraItems.length}})</span>
+					</div>
+
+					<div class="folder-row" ng-repeat="item in folder.extraItems">
+						<div class="info">
+						</div>
+						<div class="item extra">
+							<p class="item-text">{{item.text}}</p>
+							<div ng-if="item.image">
+								<img class="item-image" ng-src="{{item.image}}" ng-class="{sized: loaded}">
+							</div>
+							<p class="item-belongs">Belongs in: {{item.correctFolderName}}</p>
+							<div class="overlay">
+								<img ng-class="{'shift-up': !item.image}" src="assets/wrong.png">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

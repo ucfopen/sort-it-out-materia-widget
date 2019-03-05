@@ -1,39 +1,186 @@
-<!DOCTYPE html>
-<!-- INJECTS IE CLASSES ONTO HTML TAG -->
-<!--[if IE 8 ]>    <html class="IE8"> <![endif]-->
-<!--[if IE 9 ]>    <html class="IE9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html class=""> <!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 	<head>
 		<title>Sort It Out! Creator</title>
 		<meta charset='utf-8' />
 
 		<!-- STYLESHEETS -->
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.10/angular-material.min.css">
 		<link rel='stylesheet' type='text/css' href='creator.css'>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons|Lato">
 
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
 		<script src="materia.creatorcore.js"></script>
 
-		<!-- YOUR PREREQUISITES -->
-		<!-- <script src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js'></script> -->
+		<!-- ANGULAR DEPENDENCIES -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-animate.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-aria.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-messages.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-sanitize.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.10/angular-material.min.js"></script>
 
 		<!-- MAIN CREATOR SCRIPT -->
 		<script src="creator.js"></script>
 	</head>
-	<body>
 
-	<!-- sample alternative angular app code below -->
-	<!-- <body ng-app='myWidgetCreatorApp' ng-controller='myWidgetCreatorCtrl'> -->
+	<body ng-app="SortItOutCreator">
 
-		<header>
-			<div>
-				<label>Your Widget Title:</label>
-				<div>
-					<input type='text' id='title' ng-model='title'/>
+		<md-content id="container" ng-controller="SortItOutController">
+
+			<md-toolbar id="creator-header">
+				<div class="md-toolbar-tools">
+					<md-input-container class="md-block widget-title" flex>
+						<label id="widget-title-label">Widget Name</label>
+						<input ng-model="title">
+					</md-input-container>
+				</div>
+			</md-toolbar>
+
+			<div id="content" ng-show="ready">
+				<div id="card-container">
+					<md-card class="md-whiteframe-3dp folder" ng-repeat="(folderIndex, folder) in folders">
+						<md-toolbar class="folder-header">
+							<div class="md-toolbar-tools">
+								<form name="folderNameForm" autocomplete="off">
+									<md-input-container md-no-float class="md-block folder-name-input">
+										<input type="text" ng-model="folder.name" name="name" required spellcheck="true" autocomplete="off" pattern='[^"&]*' md-maxlength="60" placeholder="Folder {{folderIndex + 1 }} Name">
+										<div ng-messages="folderNameForm.name.$error">
+											<div ng-message="required">Name is required.</div>
+											<div ng-message="md-maxlength">Name too long</div>
+											<div ng-message="pattern">Name cannot contain " or &</div>
+										</div>
+									</md-input-container>
+								</form>
+								<span flex></span>
+								<md-button class="folder-delete" ng-if="canDeleteFolder()" ng-click="showConfirmDelete($event, folderIndex)">
+									<i class="material-icons">delete</i>
+									<md-tooltip md-direction="below">Delete Folder</md-tooltip>
+								</md-button>
+							</div>
+						</md-toolbar>
+
+						<div class="folder-items" layout="column">
+							<form name="folderItemsForm" autocomplete="off" ng-repeat="item in folder.items">
+								<md-input-container class="md-inline-block folder-input-container">
+									<label>Item {{$index + 1}}</label>
+									<input type="text" ng-model="item.text" name="item" required spellcheck="true" autocomplete="off" md-maxlength="MAX_ITEM_LENGTH" pattern='[^"&]*'>
+									<div ng-messages="folderItemsForm.item.$error">
+										<div ng-message="required">{{item.image ? "Unique image name required. ex: 'image1'": "Item name is required."}}</div>
+										<div ng-message="md-maxlength">Item name too long</div>
+										<div ng-message="pattern">Item name cannot contain " or &</div>
+									</div>
+								</md-input-container>
+
+								<md-button class="option-controls" ng-click="editImage(folderIndex, $index)">
+									<md-tooltip md-direction="below">{{item.image ? "Change Image" : "Add Image"}}</md-tooltip>
+									<i class="material-icons">add_photo_alternate</i>
+								</md-button>
+
+								<md-button class="option-controls" ng-click="removeItem(folderIndex, $index)" ng-show="folder.items.length > 1">
+									<md-tooltip md-direction="below">Remove Option</md-tooltip>
+									<i class="material-icons">remove_circle_outline</i>
+								</md-button>
+
+								<div ng-if="item.image">
+									<div class="item-image">
+										<img ng-src="{{item.image.url}}">
+										<md-button class="option-controls" ng-click="removeImage(folderIndex, $index)">
+											<md-tooltip md-direction="right">Remove Image</md-tooltip>
+											<i class="material-icons">delete</i>
+										</md-button>
+									</div>
+								</div>
+							</form>
+
+							<md-button class="md-primary md-raised add-item-button" ng-class="{disabled: !validFolder(folderIndex)}" ng-click="addItem(folderIndex)">
+								<i class="material-icons">add</i>
+								Add Item
+							</md-button>
+						</div>
+					</md-card>
+					<div id="add-folder">
+						<md-button id="add-folder-button" class="md-primary md-raised" ng-click="showAddDialog($event)" ng-disabled="!canAddFolder()" aria-label="Add Folder">
+							<span ng-if="canAddFolder()">
+								<i class="material-icons">create_new_folder</i>Add Folder
+							</span>
+							<span ng-if="!canAddFolder()">Max of {{MAX_NUM_FOLDERS}} Folders Allowed</span>
+						</md-button>
+					</div>
+
+					<!-- Preview -->
+					<div id="preview-container">
+						<h1>Preview</h1>
+						<div id="preview" ng-if="backgroundImage" ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
+							<div id="preview-header">
+								{{title}}
+							</div>
+							<div id="dock" layout="row">
+								<div class="preview-folder" ng-repeat="folder in folders">
+									<span ng-class="{ small: folder.name.length > 40 }">{{folder.name}}</span>
+								</div>
+							</div>
+						</div>
+						<span>Items will randomly be spread across the desktop.</span>
+
+						<md-button id="change-background-button" class="md-raised md-primary" ng-click="changeBackgroundImage($event)">
+							Change Background Image
+						</md-button>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Background Image Dialog -->
+			<div style="visibility: hidden">
+				<div class="md-dialog-container" id="background-image-dialog-container">
+					<md-dialog id="background-image-dialog">
+						<h3>Background Image</h3>
+						<md-dialog-content>
+							<div class="md-dialog-content">
+								<div class="image-option" ng-repeat="img in imagePresets" ng-style="{'background-image': 'url(' + img.url + ')'}" ng-click="setBackground(img.url)">
+									<md-tooltip md-direction="bottom">{{img.name}}</md-tooltip>
+								</div>
+								<div class="image-option" ng-click="getCustomBackground()">
+									<md-tooltip md-direction="bottom">Custom</md-tooltip>
+									<i class="material-icons">add_photo_alternate</i>
+								</div>
+							</div>
+						</md-dialog-content>
+					</md-dialog>
 				</div>
 			</div>
-		</header>
-		<section>
-			
-		</section>
+
+			<!-- Create Folder Dialog -->
+			<div style="visibility: hidden">
+				<div class="md-dialog-container" id="create-dialog-container">
+					<md-dialog id="create-dialog">
+						<md-dialog-content>
+							<div class="md-dialog-content" ng-if="showDialog">
+								<form name="folderNameForm" autocomplete="off">
+									<md-input-container class="md-block">
+										<label>Folder Name</label>
+										<input type="text" ng-model="newFolder.name" name="createFolderName" required spellcheck="true" autocomplete="off" pattern='[^"&]*' ng-keyup="checkEnter($event, createFolder)">
+										<div ng-messages="folderNameForm.createFolderName.$error">
+											<div ng-message="required">Name is required.</div>
+											<div ng-message="pattern">Name cannot contain " or &</div>
+										</div>
+									</md-input-container>
+
+									<md-button id="create-folder-cancel" class="md-raised" ng-click="hideDialog()">
+										Cancel
+									</md-button>
+
+									<md-button id="create-folder-save" class="md-primary md-raised" ng-click="createFolder()" ng-disabled="!newFolder.name.length">
+										Create
+									</md-button>
+								</form>
+							</div>
+						</md-dialog-content>
+					</md-dialog>
+				</div>
+			</div>
+
+		</md-content>
 	</body>
 </html>
