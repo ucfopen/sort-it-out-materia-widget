@@ -99,6 +99,18 @@ button.cancel-submit-button {
 	background: #fff;
 	border-radius: 5px;
 	text-align: center;
+
+	button.submit-button-x {
+		position: absolute;
+		top: 2px;
+		right: 0px;
+
+		border: none;
+		font-weight: bold;
+		font-size: 1.1em;
+
+		cursor: pointer;
+	}
 }
 
 #submit-shroud {
