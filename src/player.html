@@ -29,13 +29,19 @@
 			ng-mouseup="mouseUp($event)">
 			<div id="menu-bar">
 				<h1 id="title">{{title}}</h1>
-				<div id="donearrow" ng-show="readyToSubmit()">Click to finish</div>
-				<button ng-click="submitClick()" ng-class="{disabled: !readyToSubmit()}">
+				<div id="donearrow" ng-show="readyToSubmit() && !showSubmitDialog">Click to finish</div>
+				<button ng-click="submitClick()" class="submit-button" ng-show="readyToSubmit() && !showSubmitDialog">
 					Submit Answers
 				</button>
 				<div id="no-submit" ng-class="{hidden: readyToSubmit() || !showNoSubmit}">
 					All items must be placed in a folder before submitting.
 				</div>
+			</div>
+
+			<div id="submit-dialog" ng-show="readyToSubmit() && showSubmitDialog">
+				<p>Looking good! You're ready to submit.</p>
+				<button class="submit-button" ng-click="submitClick()">Submit</button>
+				<button class="cancel-submit-button" ng-click="showSubmitDialog = false">I'm not done yet</button>
 			</div>
 
 			<div id="desktop">
@@ -190,5 +196,6 @@
 			<div id="tutorial-background" class="tutorial" ng-click="hideTutorial()"></div>
 
 		</div>
+		<div id="submit-shroud" ng-show="readyToSubmit() && showSubmitDialog"></div>
 	</body>
 </html>

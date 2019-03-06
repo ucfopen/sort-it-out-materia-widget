@@ -14,6 +14,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 	$scope.tutorialPage = 1
 	$scope.showFolderPreview = false
 	$scope.showNoSubmit = false
+	$scope.showSubmitDialog = true
 	$scope.selectedItem = false
 	$scope.desktopItems = []
 	$scope.folders = []
