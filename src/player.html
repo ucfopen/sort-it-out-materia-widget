@@ -40,8 +40,8 @@
 
 			<div id="submit-dialog" ng-show="readyToSubmit() && showSubmitDialog">
 				<p>Looking good! You're ready to submit.</p>
-				<button class="submit-button" ng-click="submitClick()">Submit</button>
 				<button class="cancel-submit-button" ng-click="showSubmitDialog = false">I'm not done yet</button>
+				<button class="submit-button" ng-click="submitClick()">Submit</button>
 			</div>
 
 			<div id="desktop">
@@ -196,6 +196,6 @@
 			<div id="tutorial-background" class="tutorial" ng-click="hideTutorial()"></div>
 
 		</div>
-		<div id="submit-shroud" ng-show="readyToSubmit() && showSubmitDialog"></div>
+		<div id="submit-shroud" ng-show="readyToSubmit() && showSubmitDialog" ng-click="showSubmitDialog = false"></div>
 	</body>
 </html>
