@@ -57,7 +57,7 @@
     "angular-route": "~1.6.9",
     "angular-sanitize": "~1.6.9",
     "jest": "^23.6.0",
-    "jquery": "1.9.1"
+    "jquery":"^3.3.1"
   },
   "author": "University of Central Florida, Center for Distributed Learning"
 }

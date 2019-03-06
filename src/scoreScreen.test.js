@@ -2,7 +2,7 @@ describe('ScoreScreen Controller', function() {
 	require('angular/angular.js');
 	require('angular-mocks/angular-mocks.js');
 	require('angular-animate/angular-animate.js');
-	require('jquery/jquery.min.js');
+	window.$ = require('jquery/dist/jquery.min.js');
 
 	var $scope
 	var $controller

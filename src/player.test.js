@@ -4,7 +4,7 @@ describe('Player Controller', function() {
 	require('angular-animate/angular-animate.js');
 	require('./hammer.min.js');
 	require('./angular-hammer.js');
-	require('jquery/jquery.min.js');
+	window.$ = require('jquery/dist/jquery.min.js');
 
 	var $scope
 	var $controller
