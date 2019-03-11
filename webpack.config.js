@@ -1,7 +1,9 @@
 const path = require('path')
-const baseConfig = require('materia-widget-development-kit/webpack-widget').getLegacyWidgetBuildConfig()
+// const baseConfig = require('materia-widget-development-kit/webpack-widget').getLegacyWidgetBuildConfig()
+const widgetWebpack = require('materia-widget-development-kit/webpack-widget')
+const rules = widgetWebpack.getDefaultRules()
 
-baseConfig.entry = {
+const entries = {
 	'creator.js': ['core-js/es6/symbol','core-js/es6/promise', './src/creator.js'],
 	'player.js': ['core-js/es6/symbol', 'core-js/es6/promise', './src/player.js'],
 	'scoreScreen.js': ['./src/scoreScreen.js'],
@@ -12,7 +14,7 @@ baseConfig.entry = {
 	'hammer.min.js': ['./src/hammer.min.js']
 }
 
-baseConfig.module.rules.push({
+const JSWithPolyfill = {
 	test: /\.js$/,
 	use: {
 		loader: 'babel-loader',
@@ -25,8 +27,40 @@ baseConfig.module.rules.push({
 				}]
 			]
 		}
-	},
-	exclude: /(node_modules|bower_components)/
-})
+	}
+}
 
-module.exports = baseConfig
+const customRules = [
+	JSWithPolyfill,
+	rules.loadAndPrefixCSS,
+	rules.loadAndPrefixSASS,
+	rules.loadHTMLAndReplaceMateriaScripts,
+	rules.copyImages
+]
+
+const options = {
+	moduleRules: customRules,
+	entries: entries
+}
+
+const config = widgetWebpack.getLegacyWidgetBuildConfig(options)
+
+// baseConfig.module.rules.push({
+// 	test: /\.js$/,
+// 	use: {
+// 		loader: 'babel-loader',
+// 		options: {
+// 			presets: [
+// 				'es2015',
+// 				['env', {
+// 					targets: { browsers: ["last 2 versions", "ie >= 11"]},
+// 					debug: true
+// 				}]
+// 			]
+// 		}
+// 	},
+// 	exclude: /(node_modules|bower_components)/
+// })
+
+
+module.exports = config
