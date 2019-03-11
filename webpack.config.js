@@ -2,8 +2,8 @@ const path = require('path')
 const baseConfig = require('materia-widget-development-kit/webpack-widget').getLegacyWidgetBuildConfig()
 
 baseConfig.entry = {
-	'creator.js': ['./src/creator.js'],
-	'player.js': ['./src/player.js'],
+	'creator.js': ['core-js/es6/symbol','core-js/es6/promise', './src/creator.js'],
+	'player.js': ['core-js/es6/symbol', 'core-js/es6/promise', './src/player.js'],
 	'scoreScreen.js': ['./src/scoreScreen.js'],
 	'creator.css': ['./src/creator.scss', './src/creator.html'],
 	'player.css': ['./src/player.scss', './src/player.html'],
