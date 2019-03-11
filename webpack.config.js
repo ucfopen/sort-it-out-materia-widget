@@ -14,7 +14,16 @@ const entries = {
 		'core-js/web/dom-collections',
 		'./src/creator.js'
 	],
-	'player.js': ['core-js/es6/symbol', 'core-js/es6/promise', './src/player.js'],
+	'player.js': [
+		'core-js/es6/array',
+		'core-js/fn/array/includes',
+		'core-js/es6/symbol',
+		'core-js/es6/promise',
+		'core-js/fn/object/assign',
+		'core-js/fn/string/includes',
+		'core-js/web/dom-collections',
+		'./src/player.js'
+	],
 	'scoreScreen.js': ['./src/scoreScreen.js'],
 	'creator.css': ['./src/creator.scss', './src/creator.html'],
 	'player.css': ['./src/player.scss', './src/player.html'],
