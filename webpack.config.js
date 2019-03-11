@@ -17,10 +17,16 @@ baseConfig.module.rules.push({
 	use: {
 		loader: 'babel-loader',
 		options: {
-			presets: ['babel-preset-env']
+			presets: [
+				'es2015',
+				['env', {
+					targets: { browsers: ["last 2 versions", "ie >= 11"]},
+					debug: true
+				}]
+			]
 		}
 	},
-	exclude: /(node_modules|bower_components)/,
+	exclude: /(node_modules|bower_components)/
 })
 
 module.exports = baseConfig
