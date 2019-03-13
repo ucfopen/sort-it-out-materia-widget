@@ -1,5 +1,4 @@
 const path = require('path')
-// const baseConfig = require('materia-widget-development-kit/webpack-widget').getLegacyWidgetBuildConfig()
 const widgetWebpack = require('materia-widget-development-kit/webpack-widget')
 const rules = widgetWebpack.getDefaultRules()
 
@@ -77,23 +76,5 @@ const options = {
 }
 
 const config = widgetWebpack.getLegacyWidgetBuildConfig(options)
-
-// baseConfig.module.rules.push({
-// 	test: /\.js$/,
-// 	use: {
-// 		loader: 'babel-loader',
-// 		options: {
-// 			presets: [
-// 				'es2015',
-// 				['env', {
-// 					targets: { browsers: ["last 2 versions", "ie >= 11"]},
-// 					debug: true
-// 				}]
-// 			]
-// 		}
-// 	},
-// 	exclude: /(node_modules|bower_components)/
-// })
-
 
 module.exports = config
