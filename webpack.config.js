@@ -1,10 +1,44 @@
 const path = require('path')
-const baseConfig = require('materia-widget-development-kit/webpack-widget').getLegacyWidgetBuildConfig()
+const widgetWebpack = require('materia-widget-development-kit/webpack-widget')
+const rules = widgetWebpack.getDefaultRules()
 
-baseConfig.entry = {
-	'creator.js': ['./src/creator.js'],
-	'player.js': ['./src/player.js'],
-	'scoreScreen.js': ['./src/scoreScreen.js'],
+const entries = {
+	'creator.js': [
+		'core-js/es6/array',
+		'core-js/fn/array/includes',
+		'core-js/fn/array/map',
+		'core-js/es6/symbol',
+		'core-js/es6/promise',
+		'core-js/fn/set',
+		'core-js/fn/object/assign',
+		'core-js/fn/string/includes',
+		'core-js/web/dom-collections',
+		'./src/creator.js'
+	],
+	'player.js': [
+		'core-js/es6/array',
+		'core-js/fn/array/includes',
+		'core-js/fn/array/map',
+		'core-js/es6/symbol',
+		'core-js/es6/promise',
+		'core-js/fn/set',
+		'core-js/fn/object/assign',
+		'core-js/fn/string/includes',
+		'core-js/web/dom-collections',
+		'./src/player.js'
+	],
+	'scoreScreen.js': [
+		'core-js/es6/array',
+		'core-js/fn/array/includes',
+		'core-js/fn/array/map',
+		'core-js/es6/symbol',
+		'core-js/es6/promise',
+		'core-js/fn/set',
+		'core-js/fn/object/assign',
+		'core-js/fn/string/includes',
+		'core-js/web/dom-collections',
+		'./src/scoreScreen.js'
+	],
 	'creator.css': ['./src/creator.scss', './src/creator.html'],
 	'player.css': ['./src/player.scss', './src/player.html'],
 	'scoreScreen.css': ['./src/scoreScreen.scss', './src/scoreScreen.html'],
@@ -12,15 +46,35 @@ baseConfig.entry = {
 	'hammer.min.js': ['./src/hammer.min.js']
 }
 
-baseConfig.module.rules.push({
+const JSWithPolyfill = {
 	test: /\.js$/,
 	use: {
 		loader: 'babel-loader',
 		options: {
-			presets: ['babel-preset-env']
+			presets: [
+				'es2015',
+				['env', {
+					targets: { browsers: ["last 2 versions", "ie >= 11"]},
+					debug: true
+				}]
+			]
 		}
-	},
-	exclude: /(node_modules|bower_components)/,
-})
+	}
+}
 
-module.exports = baseConfig
+const customRules = [
+	JSWithPolyfill,
+	rules.loadAndPrefixCSS,
+	rules.loadAndPrefixSASS,
+	rules.loadHTMLAndReplaceMateriaScripts,
+	rules.copyImages
+]
+
+const options = {
+	moduleRules: customRules,
+	entries: entries
+}
+
+const config = widgetWebpack.getLegacyWidgetBuildConfig(options)
+
+module.exports = config
