@@ -4585,10 +4585,10 @@ materia-server-client-assets@1.2.2:
     angular "1.6.9"
     ngmodal ucfcdl/ngModal#v1.2.2
 
-materia-widget-development-kit@v2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/materia-widget-development-kit/-/materia-widget-development-kit-2.2.0.tgz#aec808e04fc655bef94e055feb5429fbf8baf40d"
-  integrity sha512-ezEo8+43cE1GMXnPgd67qOxf6OA2ddN1aDebq6pK5Ar8/lQC+aycrzcYBKKu/L50S+1abcQEo3gYDOMb24rdPg==
+materia-widget-development-kit@v2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/materia-widget-development-kit/-/materia-widget-development-kit-2.3.0.tgz#2e0c408a5a956c807d9fc0b14070656a3deb81ff"
+  integrity sha512-iNFskFxm5aj7CS1sM94h0ZkKe5sTcyOlBzBQ2OBTdyj8dTNyVcuh98vQYXU3KGEGGxzZRRpTQ3zNozX6mKlsdA==
   dependencies:
     angular-mocks "1.6.9"
     autoprefixer "^7.1.2"
