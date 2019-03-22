@@ -181,6 +181,46 @@
 				</div>
 			</div>
 
+			<!-- Question Import Dialog -->
+			<div style="visibility: hidden">
+				<div class="md-dialog-container" id="question-import-container">
+					<md-dialog id="question-import">
+						<div class="md-dialog-content">
+							<p>For each imported question, you can choose to edit the item text and select its corresponding folder.</p>
+							<form name="questionImportForm" autocomplete="off">
+								<div ng-repeat="item in questionImportQueue">
+									<md-input-container>
+										<label for="questionText">Imported Item Text</label>
+										<input type="text" ng-model="item.questions[0].text" name="questionText{{$index}}" md-maxlength="MAX_ITEM_LENGTH" ng-maxlength="MAX_ITEM_LENGTH" pattern='[^"&]*' />
+										<div ng-messages="questionImportForm['questionText'+$index].$error">
+											<div ng-message="maxlength">Item text too long</div>
+											<div ng-message="pattern">Item text cannot contain " or &</div>
+										</div>
+									</md-input-container>
+									<md-input-container>
+										<label for="question-folder-select">Select a Folder</label>
+										<md-select ng-model="item.selectedFolderForImport" name="questionFolderSelect{{$index}}" required>
+											<md-option
+												ng-repeat="folder in folders"
+												value="{{folder.name}}">
+											{{folder.name}}
+											</md-option>
+										</md-select>
+										<div ng-messages="questionImportForm['questionFolderSelect'+$index].$error">
+											<div ng-message="required">You must select a folder for this item.</div>
+										</div>
+									</md-input-container>
+								</div>
+							</form>
+						</div>
+						<md-dialog-actions>
+							<md-button id="question-import-cancel" class="md-raised" ng-click="cancelImportDialog()">Cancel</md-button>
+							<md-button id="question-import-save" class="md-primary md-raised" ng-click="confirmQuestionImport()" ng-disabled="!questionImportForm.$valid">Import Questions</md-button>
+						</md-dialog-actions>
+					</md-dialog>
+				</div>
+			</div>
+
 		</md-content>
 	</body>
 </html>
