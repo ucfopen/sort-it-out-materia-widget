@@ -389,7 +389,6 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		// add items to queue
 		for (let item of items) {
 			$scope.questionImportQueue.push(item)
-			console.log(item)
 		}
 		// display importer dialog
 		$mdDialog.show({
@@ -420,7 +419,6 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 			// add each item to their specified folder, and import media if necessary
 			for (let [index, folder] of $scope.folders.entries()) {
 				if (folder.name == item.selectedFolderForImport) {
-					console.log("adding item to index: " + index)
 					let itemImage = item.options && item.options.asset ? item.options.asset.id : null
 					$scope.addItem(index, item.questions[0].text, itemImage)
 				}
