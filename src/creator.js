@@ -401,6 +401,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 				for (let control of $scope.questionImportForm.$$controls) {
 					if (control.$viewValue != undefined) control.$setTouched()
 				}
+				console.log($scope.questionImportForm);
 			}
 		})
 		// handler for dialog close

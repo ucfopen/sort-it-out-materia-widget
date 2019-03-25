@@ -301,4 +301,55 @@ describe('Creator Controller', function() {
 		$scope.getCustomBackground();
 		expect($scope.backgroundImage).toBe("media/abc");
 	});
+
+	it('should correctly import questions', function() {
+		expect($scope.ready).toBe(false);
+		$scope.initNewWidget(widgetInfo);
+
+		$scope.newFolder.name = "Other Folder";
+		$scope.createFolder();
+		expect($scope.folders.length).toBe(2);
+
+		var imported = [
+			{
+				"questions": [
+					{
+						"text": "I should go in Sample Folder"
+					}
+				],
+				"answers": [
+					{
+						"text":"Answer text don't matter"
+					}
+				],
+				"id":0
+			},
+			{
+				"questions": [
+					{
+						"text": "I should go in Other Folder"
+					}
+				],
+				"answers": [
+					{
+						"text": "Answer still don't matter"
+					}
+				],
+				"id":1
+			}
+		]
+
+		$scope.onQuestionImportComplete(imported);
+		expect($scope.questionImportQueue.length).toBe(2);
+		$scope.questionImportQueue[0].selectedFolderForImport = "Sample Folder";
+		$scope.questionImportQueue[1].selectedFolderForImport = "Other Folder";
+
+		$scope.confirmQuestionImport();
+
+		expect($scope.folders[0].items.length).toBe(2);
+		expect($scope.folders[0].items[1].text).toBe("I should go in Sample Folder");
+
+		expect($scope.folders[1].items.length).toBe(2);
+		expect($scope.folders[1].items[1].text).toBe("I should go in Other Folder");
+	});
 });
