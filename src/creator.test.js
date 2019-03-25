@@ -302,6 +302,17 @@ describe('Creator Controller', function() {
 		expect($scope.backgroundImage).toBe("media/abc");
 	});
 
+	it('should properly load a qset with a custom image background', function() {
+		expect($scope.ready).toBe(false);
+		var qsetWithCustomBG = qset.data;
+		qsetWithCustomBG.options.backgroundImageId = "abc";
+		qsetWithCustomBG.options.backgroundImageAsset = false;
+		$scope.initExistingWidget('Famous Artists', widgetInfo, qsetWithCustomBG);
+
+		expect($scope.backgroundImage).toBe("media/abc");
+		expect($scope.customBackground).toBe(true);
+	});
+
 	it('should correctly import questions', function() {
 		expect($scope.ready).toBe(false);
 		$scope.initNewWidget(widgetInfo);
