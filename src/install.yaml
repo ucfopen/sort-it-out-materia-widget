@@ -26,7 +26,7 @@ meta_data:
     - Mobile Friendly
     - Media
   supported_data:
-    - Custom
+    - Question/Answer
   about: >
     Sort It Out! provides items randomly
     spread across the screen with folders

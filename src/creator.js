@@ -44,6 +44,7 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 	]
 	$scope.undoInfo = {}
 	$scope.customBackground = false
+	$scope.questionImportQueue = []
 
 	$scope.initNewWidget = widget => {
 		$scope.title = "My Sort-It-Out Widget"
@@ -95,9 +96,18 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		return folders
 	}
 
-	$scope.addItem = folderIndex => {
-		if ($scope.validFolder(folderIndex)) {
-			$scope.folders[folderIndex].items.push( { text: "" } )
+	$scope.addItem = (folderIndex, itemText = "", itemImage = null) => {
+		// if itemText or itemImage is set, assume it's an imported question & skip folder validation check
+		// otherwise perform the validFolder check for newly created items
+		if ((itemText || itemImage) || $scope.validFolder(folderIndex)) {
+			$scope.folders[folderIndex].items.push( { text: itemText } )
+			if (itemImage) {
+				let lastIndex = $scope.folders[folderIndex].items.length-1
+				$scope.folders[folderIndex].items[lastIndex].image = {
+					id: itemImage,
+					url: Materia.CreatorCore.getMediaUrl(itemImage)
+				}
+			}
 		} else {
 			$mdToast.show(
 				$mdToast.simple()
@@ -375,7 +385,53 @@ SortItOut.controller("SortItOutController", ["$scope", "$mdDialog", "$mdToast", 
 		return qset
 	}
 
-	$scope.onQuestionImportComplete = items => true
+	$scope.onQuestionImportComplete = items => {
+		// add items to queue
+		for (let item of items) {
+			$scope.questionImportQueue.push(item)
+		}
+		// display importer dialog
+		$mdDialog.show({
+			contentElement: "#question-import-container",
+			parent: angular.element(document.body),
+			clickOutsideToClose: true,
+			onComplete: () => {
+				// For form validation to work properly, have to manually set $touched of the item text controls to true
+				// doing so ensures the max length and pattern validation is made and disallows users to import > 30 char text
+				for (let control of $scope.questionImportForm.$$controls) {
+					if (control.$viewValue != undefined) control.$setTouched()
+				}
+			}
+		})
+		// handler for dialog close
+		.finally(() => {
+			$scope.cancelImportDialog()
+		})
+	}
+
+	$scope.cancelImportDialog = () => {
+		$mdDialog.hide()
+		$scope.questionImportQueue = []
+	}
+
+	$scope.confirmQuestionImport = () => {
+		for (let item of $scope.questionImportQueue) {
+			// add each item to their specified folder, and import media if necessary
+			for (let [index, folder] of $scope.folders.entries()) {
+				if (folder.name == item.selectedFolderForImport) {
+					let itemImage = item.options && item.options.asset ? item.options.asset.id : null
+					$scope.addItem(index, item.questions[0].text, itemImage)
+				}
+			}
+		}
+		$mdToast.show(
+			$mdToast.simple()
+				.textContent("Successfully imported " + $scope.questionImportQueue.length + " questions!")
+				.position("top left")
+				.hideDelay(10000)
+		)
+		$scope.cancelImportDialog()
+	}
 
 	$scope.onSaveComplete = () => true
 

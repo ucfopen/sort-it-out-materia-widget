@@ -293,6 +293,24 @@ body {
 	}
 }
 
+#question-import {
+
+	.md-dialog-content {
+		padding: 12px 24px;
+
+		p {
+		margin-bottom: 25px;
+		}
+	}
+
+	md-input-container {
+		width: 40%;
+		min-height: 60px;
+
+		margin: 5px 15px 10px 0px;
+	}
+}
+
 .toast-error {
 	top: 60px !important;
 
