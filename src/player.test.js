@@ -1,9 +1,6 @@
 describe('Player Controller', function() {
-	require('angular/angular.js');
-	require('angular-mocks/angular-mocks.js');
-	require('angular-animate/angular-animate.js');
-	require('./hammer.min.js');
-	require('./angular-hammer.js');
+	require('angular/angular');
+	require('angular-mocks/angular-mocks');
 	window.$ = require('jquery/dist/jquery.min.js');
 
 	var $scope
@@ -27,7 +24,10 @@ describe('Player Controller', function() {
 			}
 		}
 
+		angular.module('hmTouchEvents', []) // mock angular-hammer
+		angular.module('ngAnimate', []) // mock angular-animate
 		angular.mock.module('SortItOutEngine')
+
 		require('./player.js')
 
 		// load qset
