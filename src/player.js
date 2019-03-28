@@ -1,4 +1,4 @@
-const SortItOut = angular.module("SortItOutEngine", ["ngAnimate", "hmTouchEvents"])
+const SortItOut = angular.module("SortItOutEngine", ["ngAnimate", "hmTouchEvents", "ngAria"])
 
 // force scope to update when scrolling
 SortItOut.directive("scroll", () => {
@@ -10,7 +10,23 @@ SortItOut.directive("scroll", () => {
 	}
 })
 
-SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelper", function ($scope, $timeout, sanitizeHelper) {
+// catches keyboard shortcuts agnostic of other key event listeners
+// for the assistive keyboard input listeners, check handleAssistiveSelection below
+SortItOut.directive("keyboardShortcuts", ["$document", "$rootScope", ($document, $rootScope) => {
+	return {
+		restrict: "A",
+		link: (scope, element) => {
+			$document.bind("keypress", (event) => {
+				// limit broadcast to only the shortcut keys: 1-6
+				console.log(event.which)
+				if (event.which > 48 && event.which < 55) $rootScope.$broadcast("shortcutKeypress", event, event.which)
+				if (event.which == 9) $rootScope.$broadcast("tabMonitor", event, event.which)
+			})
+		}
+	}
+}])
+
+SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout", "sanitizeHelper", function ($scope, $rootScope, $timeout, sanitizeHelper) {
 	$scope.tutorialPage = 1
 	$scope.showFolderPreview = false
 	$scope.showNoSubmit = false
@@ -33,6 +49,13 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
 	const DOCK_HEIGHT = 125
 
+	$scope.assistiveAlertText = ""
+	// $scope.assistiveOperationText = "Press Spacebar to pick up this item."
+	let _assistiveFolderSelectIndex = -1
+	let _inAssistiveFolderSelectMode = false
+
+	$scope.numSorted = 0
+
 	$scope.start = (instance, qset, version) => {
 		generateQuestionToId(qset)
 		generateBounds()
@@ -47,6 +70,8 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 		} else if (qset.options.backgroundImageAsset) {
 			$scope.backgroundImage = qset.options.backgroundImageAsset
 		}
+		// $scope.assistiveAlertText = "Welcome to the Sort It Out widget. There are " + $scope.desktopItems.length +
+		// 	" items that must be categorized. Cycle through items with the tab key. Categorize each item using the up or down arrow key."
 		$scope.$apply()
 	}
 
@@ -96,11 +121,13 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 	}
 
 	const buildItems = qset => {
-		return qset.items.map( item => {
+		console.log("building items yo")
+		return qset.items.map( (item, index) => {
 			const image = item.options.image
 				? Materia.Engine.getMediaUrl(item.options.image)
 				: false
 			return {
+				desktopIndex: index,
 				text: sanitizeHelper.desanitize(item.questions[0].text),
 				image,
 				position: generateRandomPosition(item.options.image)
@@ -219,7 +246,15 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 					x: e.clientX + $scope.offsetLeft,
 					y: e.clientY + $scope.offsetTop
 				}
-				$scope.desktopItems.push($scope.selectedItem)
+				// $scope.desktopItems.push($scope.selectedItem)
+				// $scope.selectedItem.sorted = false
+				// $scope.desktopItems
+				for (var [index, item] in $scope.desktopItems) {
+					if ($scope.selectedItem == item) {
+						$scope.desktopItems[index].sorted = false
+						$scope.numSorted--
+					}
+				}
 			}
 		}
 
@@ -247,9 +282,8 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 			$scope.folders[index].items.push($scope.selectedItem)
 
 			if (itemSource == SRC_DESKTOP) {
-				$scope.desktopItems = $scope.desktopItems.filter(
-					item => item.text != $scope.selectedItem.text
-				)
+				$scope.desktopItems[$scope.selectedItem.desktopIndex].sorted = true
+				$scope.numSorted++
 			} else {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item.text != $scope.selectedItem.text
@@ -264,7 +298,107 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 			$scope.showFolderPreview = true
 			$scope.folderPreviewIndex = index
 		}
+
+		if ($scope.readyToSubmit()) {
+			$scope.assistiveAlertText = "You are ready to submit this widget. You can press escape or tab to cancel and continue sorting items."
+			document.getElementById("submit-dialog-confirm").focus()
+		}
 	}
+
+	$scope.handleItemFocus = (event, item) => {
+		if ($scope.selectedItem != item) {
+			$scope.selectedItem = item
+			_assistiveFolderSelectIndex = -1
+			_inAssistiveFolderSelectMode = false
+
+			$scope.hidePeek()
+			$scope.assistiveAlertText = item.text + " is selected."
+
+			$scope.hideTutorial()
+		}
+	}
+
+	$scope.handleAssistiveSelection = (event, item) => {
+
+		switch (event.keyCode) {
+			case 32: // space
+				// item has been selected, and a target folder is currently selected
+				if (_inAssistiveFolderSelectMode) {
+					itemSource = SRC_DESKTOP
+					$scope.selectFolder({}, _assistiveFolderSelectIndex)
+					$scope.assistiveAlertText = item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text
+					$scope.hidePeek()
+					_inAssistiveFolderSelectMode = false
+					_assistiveFolderSelectIndex = -1
+				}
+
+				// entry point for assistive folder placement. User has tabbed to an item and hits space to select it
+				// if ($scope.selectedItem != item) {
+				// 	$scope.selectedItem = item
+				// 	$scope.assistiveAlertText = item.text + " is selected. Use left and right arrow keys to select a folder. Press space or escape to cancel."
+				// }
+				// user deselects a desktop item without entering folder selection mode
+				if (!_inAssistiveFolderSelectMode && $scope.selectedItem == item) {
+					$scope.selectedItem = false
+					$scope.assistiveAlertText = item.text + " is deselected."
+				}
+				break
+			case 40: // down arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
+				$scope.hidePeek()
+				if (_assistiveFolderSelectIndex >= $scope.folders.length - 1) _assistiveFolderSelectIndex = 0
+				else _assistiveFolderSelectIndex++
+				$scope.peekFolder(_assistiveFolderSelectIndex)
+				$scope.assistiveAlertText = $scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel."
+				_inAssistiveFolderSelectMode = true
+				break
+			case 38: // up arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
+				$scope.hidePeek()
+				if (_assistiveFolderSelectIndex <= 0) _assistiveFolderSelectIndex = $scope.folders.length - 1
+				else _assistiveFolderSelectIndex--
+				$scope.peekFolder(_assistiveFolderSelectIndex)
+				$scope.assistiveAlertText = $scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel."
+				_inAssistiveFolderSelectMode = true
+				break
+			case 27: // escape key. cancels assistive folder placement
+				$scope.hidePeek()
+				$scope.selectedItem = _inAssistiveFolderSelectMode = false
+				_assistiveFolderSelectIndex = -1
+				$scope.assistiveAlertText = "Item placement cancelled. " + item.text + " is deselected."
+			default:
+				return false
+		}
+	}
+
+	$scope.handleAssistiveRepeat = (event) => {
+		if (event.which == 32) {
+			document.getElementsByClassName("desktop-item")[0].focus()
+		}
+	}
+
+	$rootScope.$on("shortcutKeypress", (type, event, key) => {
+		var target = key - 49
+		if (target < $scope.folders.length) {
+			$scope.$apply(() => {
+				if ($scope.showFolderPreview && $scope.folderPreviewIndex == target) {
+					$scope.hideFolderPreview()
+				}
+				else {
+					$scope.showFolderPreview = true
+					$scope.folderPreviewIndex = target
+
+					document.getElementsByClassName("folder")[target].focus()
+					$scope.assistiveAlertText = $scope.folders[target].text + " folder is selected."
+				}
+			})
+		}
+	})
+
+	$rootScope.$on("tabMonitor", (type, event, key) => {
+		console.log("tab key identified")
+		$scope.$apply(() => {
+			$scope.hideTutorial()
+		})
+	})
 
 	$scope.hideFolderPreview = () => {
 		$scope.showFolderPreview = false
@@ -348,7 +482,16 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 	}
 
 	$scope.readyToSubmit = () => {
-		return $scope.folders.length > 0 && $scope.desktopItems.length == 0
+		// console.log($scope.numSorted)
+		return $scope.numSorted >= $scope.desktopItems.length
+		// // return $scope.folders.length > 0 && $scope.desktopItems.length == 0
+		// if ( !$scope.folders.length) return false
+		// // console.log($scope.desktopItems)
+		// // for (var item in $scope.desktopItems) {
+		// // 	// console.log(item.sorted)
+		// // 	if ( !item.sorted) return false
+		// // }
+		// return true
 	}
 
 	$scope.submitClick = () => {
