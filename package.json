@@ -3,7 +3,7 @@
   "materia": {
     "cleanName": "sort-it-out"
   },
-  "version": "0.0.1",
+  "version": "1.0.0",
   "dependencies": {
     "angular-hammer": "^2.2.0",
     "hammerjs": "^2.0.8",
