@@ -130,6 +130,14 @@ angular-aria@~1.6.9:
   resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.6.10.tgz#472bfff8682c4cfe634d4bfda0524443e07e3501"
   integrity sha512-QO+jSbsnGxLhULD8syFvfH0sQVCKCwDPDCd130ou11HYw4D8vAaU/NG6ufcmnh9XJHTcngAaBe3VVfZefMkiBA==
 
+angular-hammer@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/angular-hammer/-/angular-hammer-2.2.0.tgz#12ffbb3fc2f9719c780ba332c905ac8fca4592e0"
+  integrity sha1-Ev+7P8L5cZx4C6MyyQWsj8pFkuA=
+  dependencies:
+    angular ">=1.2.0"
+    hammerjs ">=2.0.0"
+
 angular-loader@~1.6.9:
   version "1.6.10"
   resolved "https://registry.yarnpkg.com/angular-loader/-/angular-loader-1.6.10.tgz#5ab1995c65dd38640e6d9d738dbd85eddd5ec310"
@@ -169,6 +177,11 @@ angular@1.6.9:
   version "1.6.9"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.6.9.tgz#bc812932e18909038412d594a5990f4bb66c0619"
   integrity sha512-6igWH2GIsxV+J38wNWCh8oyjaZsrIPIDO35twloIUyjlF2Yit6UyLAWujHP05ma/LFxTsx4NtYibRoMNBXPR1A==
+
+angular@>=1.2.0:
+  version "1.7.8"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.8.tgz#b77ede272ce1b261e3be30c1451a0b346905a3c9"
+  integrity sha512-wtef/y4COxM7ZVhddd7JtAAhyYObq9YXKar9tsW7558BImeVYteJiTxCKeJOL45lJ/+7B4wrAC49j8gTFYEthg==
 
 angular@~1.6.9:
   version "1.6.10"
@@ -3104,6 +3117,11 @@ growly@^1.3.0:
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
 
+hammerjs@>=2.0.0, hammerjs@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
+  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
+
 handle-thing@^1.2.5:
   version "1.2.5"
   resolved "http://registry.npmjs.org/handle-thing/-/handle-thing-1.2.5.tgz#fd7aad726bf1a5fd16dfc29b2f7a6601d27139c4"
@@ -4585,7 +4603,7 @@ materia-server-client-assets@1.2.2:
     angular "1.6.9"
     ngmodal ucfcdl/ngModal#v1.2.2
 
-materia-widget-development-kit@v2.3.0:
+materia-widget-development-kit@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/materia-widget-development-kit/-/materia-widget-development-kit-2.3.0.tgz#2e0c408a5a956c807d9fc0b14070656a3deb81ff"
   integrity sha512-iNFskFxm5aj7CS1sM94h0ZkKe5sTcyOlBzBQ2OBTdyj8dTNyVcuh98vQYXU3KGEGGxzZRRpTQ3zNozX6mKlsdA==
