@@ -1,0 +1,28 @@
+language: node_js
+node_js:
+  - '6'
+cache:
+  yarn: true
+  directories:
+    - node_modules
+before_install:
+  - npm config set spin false
+  - npm install -g npm@^5
+script:
+  - yarn test-ci
+  - yarn build
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: "g7kty/Bjv6F+65qIBy5D2bhD0jIJYU7a7NR1EQebR6VJ7meNhOkc3MIwIiYH7ycMOlULJGwr2NyIoR81TlUzWdA1pWxytW/t8uzUygZSWjTDtn+yt2S25pG39SFGPdGD7nvsUkt+14rvVVieIsk+z7FY5Y5XSMW8awU0V7I9pWs61Oc5JzjuvtqqJwHAeBiHQgpX5QIe6LI8k7+ke/N7/iv2qo7QkB9Z4A1QDWNNIiXOmbDD+XKzYkdYdRSUnJiigk5ykTSHmVbxTZc6MEutJajL19iij9DVnS8sNuqKy0iNGvvSS75CWv6gltJHc+YNGIuZzKO/40ioaMLapYej62aMsEp+UpIDHPZ9uEJuCIWYLZxhYV85knigwDBO2qc76Frj/cmXbKDNeP4/k877qpPSRqbsxCklqw7HHmH5GABn0CLFlFHtXu4iC/Hu+CA8gUgZ4pU3VvjOesm7ZxPTKBkLTt9W45pURipAWyAk5ByEZz9dgL7qD0lCgd/QiqHRkrVGTTyIaZFbph3qYyfA15Jgn+jDl6XHn06MlcH4A1+CFBJ+N7zMdNZCG82V6GcBlrJU0AoAyxHo8RlYEpp3KGOXpS08U3GOZR4Uw65C/7ySo23rPrAWPfBrXgdKdwtgzT3+1D4FCWgnGlbet6d/Qi4XHuhnYcBQz1B9hcJT3no="
+  file:
+    - build/_output/sort-it-out.wigt
+    - build/_output/sort-it-out-build-info.yml
+  on:
+    tags: true
+    repo: ucfopen/sort-it-out-materia-widget
+notifications:
+  email: false
+  slack:
+    secure: "lg7JHs/o34SIhs00rYj7WHqW9QZ9cBBuGrnnRA5Ar/1dKN/F8dCuB9fZ/sU0x66IrWRbVno5PnFRo3krWUWgclbSDN+VlArmZY5uLzMh1dZNOsP0eK7/sl7zAVyVvmbANnLy5SCwFel+PHLN3pB/P5f9yXgUg64/1gcqWwU2aW9+nmCCyPHD9Z4Z8gZSEg4WJnDE0/k5ipxW5RUM/pMRqjc8qaUXeKAZQmesVixrG3CMANolPFg7pOHVsU/XJC90MFdBMckv7Zx11jOnCGJw6IjzN4gWM8+J6WFwqD6/ZwuJv8skscT2ZRXjlRCUo4xZAFpKdPrJxcRROrHI4ICQpfZAJ6Fen19T6KhHT9f3Lk15kpVzXdZ0U1ABAqOykniI/lyXHSlTdRsIpgeONmSHOKWQ6581UBxV3uzoIcngoav88q44Y9F9J4Q7KGwvd92322VhjF0aSmVIj83WuLckWxyKIf7HUS9zQ93zVdl+ej07lSwHJt+G/7S6iISRloCxdrCCCg4BiTsrK3JwJ79f3izeKhhqYu8eJw3jyn4rs/KE1d8ySBREUaMqDSvxYLREWYvVGnca75Q0UIv5DvXocUdEhuChVJK0YtXvpvYfywBChBBtkdlyfI83bes5i4+mOdY0oYgXGB6lKoWsqEeBkvOUiM3l3c1jQhf2vT0kKEQ="

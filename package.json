@@ -3,9 +3,11 @@
   "materia": {
     "cleanName": "sort-it-out"
   },
-  "version": "0.0.1",
+  "version": "1.0.0",
   "dependencies": {
-    "materia-widget-development-kit": "v2.3.0"
+    "angular-hammer": "^2.2.0",
+    "hammerjs": "^2.0.8",
+    "materia-widget-development-kit": "^2.3.0"
   },
   "scripts": {
     "start": "webpack-dev-server",
@@ -15,10 +17,18 @@
     "test-ci": "TZ='America/New_York' CI=true jest --ci --useStderr --coverage"
   },
   "jest": {
-    "coverageReporters": ["text-summary", "lcov", "cobertura"],
+    "coverageReporters": [
+      "text-summary",
+      "lcov",
+      "cobertura"
+    ],
     "verbose": false,
-    "moduleFileExtensions": ["js"],
-    "collectCoverageFrom": ["src/{creator,scoreScreen,player}.js"],
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "collectCoverageFrom": [
+      "src/{creator,scoreScreen,player}.js"
+    ],
     "coverageThreshold": {
       "global": {
         "statements": 70,
@@ -52,12 +62,12 @@
     "angular-aria": "~1.6.9",
     "angular-loader": "~1.6.9",
     "angular-material": "~1.1.10",
-    "angular-mocks": "~1.6.9",
     "angular-messages": "~1.6.9",
+    "angular-mocks": "~1.6.9",
     "angular-route": "~1.6.9",
     "angular-sanitize": "~1.6.9",
     "jest": "^23.6.0",
-    "jquery":"^3.3.1"
+    "jquery": "^3.3.1"
   },
   "license": "AGPL-3.0",
   "description": "Students must sort items on a messy computer desktop into their appropriate folders.",

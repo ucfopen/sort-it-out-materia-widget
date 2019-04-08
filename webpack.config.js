@@ -1,6 +1,8 @@
 const path = require('path')
 const widgetWebpack = require('materia-widget-development-kit/webpack-widget')
+const outputPath = path.join(__dirname, 'build')
 const rules = widgetWebpack.getDefaultRules()
+const copy = widgetWebpack.getDefaultCopyList()
 
 const entries = {
 	'creator.js': [
@@ -41,12 +43,21 @@ const entries = {
 	],
 	'creator.css': ['./src/creator.scss', './src/creator.html'],
 	'player.css': ['./src/player.scss', './src/player.html'],
-	'scoreScreen.css': ['./src/scoreScreen.scss', './src/scoreScreen.html'],
-	'angular-hammer.js': ['./src/angular-hammer.js'],
-	'hammer.min.js': ['./src/hammer.min.js']
+	'scoreScreen.css': ['./src/scoreScreen.scss', './src/scoreScreen.html']
 }
 
-const JSWithPolyfill = {
+const customCopy = copy.concat([
+	{
+		from: path.join(__dirname, 'node_modules', 'angular-hammer', 'angular.hammer.min.js'),
+		to: path.join(outputPath, 'vendor'),
+	},
+	{
+		from: path.join(__dirname,'node_modules', 'hammerjs', 'hammer.min.js'),
+		to: path.join(outputPath, 'vendor')
+	}
+])
+
+const babelLoaderWithPolyfillRule = {
 	test: /\.js$/,
 	use: {
 		loader: 'babel-loader',
@@ -63,7 +74,7 @@ const JSWithPolyfill = {
 }
 
 const customRules = [
-	JSWithPolyfill,
+	babelLoaderWithPolyfillRule,
 	rules.loadAndPrefixCSS,
 	rules.loadAndPrefixSASS,
 	rules.loadHTMLAndReplaceMateriaScripts,
@@ -72,9 +83,8 @@ const customRules = [
 
 const options = {
 	moduleRules: customRules,
+	copyList: customCopy,
 	entries: entries
 }
 
-const config = widgetWebpack.getLegacyWidgetBuildConfig(options)
-
-module.exports = config
+module.exports = widgetWebpack.getLegacyWidgetBuildConfig(options)
