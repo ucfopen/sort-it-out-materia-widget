@@ -77,6 +77,12 @@
 					{{item.text}}
 				</div>
 			</div>
+			<div class="assistive-submit-or-return"
+				ng-if="readyToSubmit()"
+				ng-keydown="handleAssistiveSubmit($event)"
+				tabindex="0"
+				role="dialog"
+				aria-label="You have categorized every item in the list. Press space to submit for scoring. Tab to the next item to continue working on the list."></div>
 
 			<div class="assistive-submit-or-return"
 				ng-keydown="handleAssistiveRepeat($event)"

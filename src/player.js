@@ -121,7 +121,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	}
 
 	const buildItems = qset => {
-		console.log("building items yo")
 		return qset.items.map( (item, index) => {
 			const image = item.options.image
 				? Materia.Engine.getMediaUrl(item.options.image)
@@ -130,7 +129,8 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				desktopIndex: index,
 				text: sanitizeHelper.desanitize(item.questions[0].text),
 				image,
-				position: generateRandomPosition(item.options.image)
+				position: generateRandomPosition(item.options.image),
+				folder: SRC_DESKTOP
 			}
 		})
 	}
@@ -150,9 +150,9 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	$scope.hideTutorial = () => $(".tutorial").fadeOut()
 
 	$scope.itemMouseDown = (e, item) => {
-		if ($scope.selectedItem) {
-			return // prevent duplicated calls
-		}
+		// if ($scope.selectedItem) {
+		// 	return // prevent duplicated calls
+		// }
 		$scope.selectedItem = item
 
 		// hammer events store the element differently
@@ -246,12 +246,11 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 					x: e.clientX + $scope.offsetLeft,
 					y: e.clientY + $scope.offsetTop
 				}
-				// $scope.desktopItems.push($scope.selectedItem)
-				// $scope.selectedItem.sorted = false
-				// $scope.desktopItems
-				for (var [index, item] in $scope.desktopItems) {
-					if ($scope.selectedItem == item) {
+
+				for (var [index, item] of Object.entries($scope.desktopItems)) {
+					if ($scope.selectedItem.text == item.text) {
 						$scope.desktopItems[index].sorted = false
+						$scope.desktopItems[index].folder = SRC_DESKTOP
 						$scope.numSorted--
 					}
 				}
@@ -281,8 +280,11 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		if ($scope.selectedItem) {
 			$scope.folders[index].items.push($scope.selectedItem)
 
+			itemSource = $scope.desktopItems[$scope.selectedItem.desktopIndex].folder
+
 			if (itemSource == SRC_DESKTOP) {
 				$scope.desktopItems[$scope.selectedItem.desktopIndex].sorted = true
+				$scope.desktopItems[$scope.selectedItem.desktopIndex].folder = index
 				$scope.numSorted++
 			} else {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
@@ -324,7 +326,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 			case 32: // space
 				// item has been selected, and a target folder is currently selected
 				if (_inAssistiveFolderSelectMode) {
-					itemSource = SRC_DESKTOP
+					// itemSource = item.folder
 					$scope.selectFolder({}, _assistiveFolderSelectIndex)
 					$scope.assistiveAlertText = item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text
 					$scope.hidePeek()
@@ -375,6 +377,17 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		}
 	}
 
+	// available when a user tabs to the hidden assistive element indicating you can submit
+	// they can hit space to submit, tabbing clears the submit window (to prevent unintended interactions)
+	$scope.handleAssistiveSubmit = (event) => {
+		if (event.which == 32) {
+			$scope.submitClick()
+		}
+		else if (event.which == 9) {
+			$scope.showSubmitDialog = false
+		}
+	}
+
 	$rootScope.$on("shortcutKeypress", (type, event, key) => {
 		var target = key - 49
 		if (target < $scope.folders.length) {
@@ -394,7 +407,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	})
 
 	$rootScope.$on("tabMonitor", (type, event, key) => {
-		console.log("tab key identified")
 		$scope.$apply(() => {
 			$scope.hideTutorial()
 		})
@@ -482,16 +494,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	}
 
 	$scope.readyToSubmit = () => {
-		// console.log($scope.numSorted)
 		return $scope.numSorted >= $scope.desktopItems.length
-		// // return $scope.folders.length > 0 && $scope.desktopItems.length == 0
-		// if ( !$scope.folders.length) return false
-		// // console.log($scope.desktopItems)
-		// // for (var item in $scope.desktopItems) {
-		// // 	// console.log(item.sorted)
-		// // 	if ( !item.sorted) return false
-		// // }
-		// return true
 	}
 
 	$scope.submitClick = () => {
