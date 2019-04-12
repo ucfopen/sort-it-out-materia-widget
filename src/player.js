@@ -326,23 +326,11 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 			case 32: // space
 				// item has been selected, and a target folder is currently selected
 				if (_inAssistiveFolderSelectMode) {
-					// itemSource = item.folder
 					$scope.selectFolder({}, _assistiveFolderSelectIndex)
 					$scope.assistiveAlertText = item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text
 					$scope.hidePeek()
 					_inAssistiveFolderSelectMode = false
 					_assistiveFolderSelectIndex = -1
-				}
-
-				// entry point for assistive folder placement. User has tabbed to an item and hits space to select it
-				// if ($scope.selectedItem != item) {
-				// 	$scope.selectedItem = item
-				// 	$scope.assistiveAlertText = item.text + " is selected. Use left and right arrow keys to select a folder. Press space or escape to cancel."
-				// }
-				// user deselects a desktop item without entering folder selection mode
-				if (!_inAssistiveFolderSelectMode && $scope.selectedItem == item) {
-					$scope.selectedItem = false
-					$scope.assistiveAlertText = item.text + " is deselected."
 				}
 				break
 			case 40: // down arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
@@ -361,11 +349,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				$scope.assistiveAlertText = $scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel."
 				_inAssistiveFolderSelectMode = true
 				break
-			case 27: // escape key. cancels assistive folder placement
-				$scope.hidePeek()
-				$scope.selectedItem = _inAssistiveFolderSelectMode = false
-				_assistiveFolderSelectIndex = -1
-				$scope.assistiveAlertText = "Item placement cancelled. " + item.text + " is deselected."
 			default:
 				return false
 		}
