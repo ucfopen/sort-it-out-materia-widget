@@ -18,7 +18,6 @@ SortItOut.directive("keyboardShortcuts", ["$document", "$rootScope", ($document,
 		link: (scope, element) => {
 			$document.bind("keypress", (event) => {
 				// limit broadcast to only the shortcut keys: 1-6
-				console.log(event.which)
 				if (event.which > 48 && event.which < 55) $rootScope.$broadcast("shortcutKeypress", event, event.which)
 				if (event.which == 9) $rootScope.$broadcast("tabMonitor", event, event.which)
 			})
@@ -121,18 +120,17 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	}
 
 	const buildItems = qset => {
-		return qset.items.map( (item, index) => {
+		return shuffle(qset.items.map( (item, index) => {
 			const image = item.options.image
 				? Materia.Engine.getMediaUrl(item.options.image)
 				: false
 			return {
-				desktopIndex: index,
 				text: sanitizeHelper.desanitize(item.questions[0].text),
 				image,
 				position: generateRandomPosition(item.options.image),
 				folder: SRC_DESKTOP
 			}
-		})
+		}))
 	}
 
 	const generateRandomPosition = hasImage => {
@@ -145,6 +143,18 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		const x = ~~(Math.random() * xRange) + pb.x.min
 
 		return { x, y }
+	}
+
+	// fisher-yates shuffle algorithm
+	const shuffle = (a) => {
+		var j, x, i;
+		for (i = a.length - 1; i > 0; i--) {
+			j = Math.floor(Math.random() * (i + 1));
+			x = a[i];
+			a[i] = a[j];
+			a[j] = x;
+		}
+		return a;
 	}
 
 	$scope.hideTutorial = () => $(".tutorial").fadeOut()
@@ -280,11 +290,13 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		if ($scope.selectedItem) {
 			$scope.folders[index].items.push($scope.selectedItem)
 
-			itemSource = $scope.desktopItems[$scope.selectedItem.desktopIndex].folder
+			let desktopIndex = $scope.desktopItems.indexOf($scope.selectedItem)
+
+			itemSource = $scope.desktopItems[desktopIndex].folder
 
 			if (itemSource == SRC_DESKTOP) {
-				$scope.desktopItems[$scope.selectedItem.desktopIndex].sorted = true
-				$scope.desktopItems[$scope.selectedItem.desktopIndex].folder = index
+				$scope.desktopItems[desktopIndex].sorted = true
+				$scope.desktopItems[desktopIndex].folder = index
 				$scope.numSorted++
 			} else {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
