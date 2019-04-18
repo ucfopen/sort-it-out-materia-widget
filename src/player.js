@@ -296,13 +296,13 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 
 			if (itemSource == SRC_DESKTOP) {
 				$scope.desktopItems[desktopIndex].sorted = true
-				$scope.desktopItems[desktopIndex].folder = index
 				$scope.numSorted++
 			} else {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item.text != $scope.selectedItem.text
 				)
 			}
+			$scope.desktopItems[desktopIndex].folder = index
 
 			$(".desktop-item.selected").removeClass("selected")
 			selectedElement = false
@@ -341,11 +341,13 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 					$scope.selectFolder({}, _assistiveFolderSelectIndex)
 					$scope.assistiveAlertText = item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text
 					$scope.hidePeek()
-					_inAssistiveFolderSelectMode = false
-					_assistiveFolderSelectIndex = -1
+					$scope.selectedItem = item // set selectedItem back to the item that was placed, overriding the default behavior
+					// _inAssistiveFolderSelectMode = false
+					// _assistiveFolderSelectIndex = -1
 				}
 				break
 			case 40: // down arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
+				event.preventDefault()
 				$scope.hidePeek()
 				if (_assistiveFolderSelectIndex >= $scope.folders.length - 1) _assistiveFolderSelectIndex = 0
 				else _assistiveFolderSelectIndex++
@@ -354,6 +356,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				_inAssistiveFolderSelectMode = true
 				break
 			case 38: // up arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
+				event.preventDefault()
 				$scope.hidePeek()
 				if (_assistiveFolderSelectIndex <= 0) _assistiveFolderSelectIndex = $scope.folders.length - 1
 				else _assistiveFolderSelectIndex--
