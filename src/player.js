@@ -354,7 +354,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				$timeout( () => {
 					$scope.peekFolder(_assistiveFolderSelectIndex)
 					$scope.assistiveAlertText = $scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel."
-				})
+				},500)
 				_inAssistiveFolderSelectMode = true
 				break
 			case 38: // up arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
@@ -365,7 +365,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				$timeout( () => {
 					$scope.peekFolder(_assistiveFolderSelectIndex)
 					$scope.assistiveAlertText = $scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel."
-				})
+				},500)
 				_inAssistiveFolderSelectMode = true
 				break
 			default:
