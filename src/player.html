@@ -49,8 +49,8 @@
 				<button class="submit-button-x" ng-click="showSubmitDialog = false">&times;</button>
 			</div>
 			<!-- ARIA assistive elements -->
-			<span aria-live=”assertive” class="screenreader-assist">{{assistiveAlertText}}</span>
-			<span id="item-operation" class="screenreader-assist">Use up and down arrow keys to select a category for this item. Press space to confirm your selection or escape to cancel.</span>
+			<span aria-live=”assertive” aria-atomic=”true” class="screenreader-assist">{{assistiveAlertText}}</span>
+			<span id="item-operation" aria-atomic=”true” class="screenreader-assist">Use up and down arrow keys to select a category for this item. Press space to confirm your selection or escape to cancel.</span>
 
 			<div id="desktop" role="list">
 				<div class="desktop-item" ng-class="{'selected': item.text == selectedItem.text, 'no-image': !item.image, 'sorted': item.sorted}"
