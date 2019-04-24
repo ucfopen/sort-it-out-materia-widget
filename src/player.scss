@@ -264,11 +264,19 @@ button.cancel-submit-button {
 	display: flex;
 	justify-content: space-around;
 
+	&:focus {
+		outline: none;
+	}
+
 	.folder {
 		height: 100%;
 		width: 150px;
 		position: relative;
 		user-select: none;
+
+		&:focus {
+			outline: none;
+		}
 
 		.folder-icon {
 			height: 80%;
