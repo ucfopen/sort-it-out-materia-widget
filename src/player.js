@@ -155,7 +155,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	// aria-live regions don't work well with normal angular data binding with scope variables
 	// to overcome this, we gotta go old school and edit the DOM node manually
 	const assistiveAlert = (text) => {
-		document.getElementById("assistive-alert").innerHTML = text
+		if (document.getElementById("assistive-alert")) document.getElementById("assistive-alert").innerHTML = text
 	}
 
 	$scope.hideTutorial = () => $(".tutorial").fadeOut()
