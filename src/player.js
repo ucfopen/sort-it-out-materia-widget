@@ -17,8 +17,7 @@ SortItOut.directive("keyboardShortcuts", ["$document", "$rootScope", ($document,
 		restrict: "A",
 		link: (scope, element) => {
 			$document.bind("keypress", (event) => {
-				// limit broadcast to only the shortcut keys: 1-6
-				if (event.which > 48 && event.which < 55) $rootScope.$broadcast("shortcutKeypress", event, event.which)
+				// only used to listen for tab key currently
 				if (event.which == 9) $rootScope.$broadcast("tabMonitor", event, event.which)
 			})
 		}
@@ -48,8 +47,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
 	const DOCK_HEIGHT = 125
 
-	// assistiveAlert("")
-	// $scope.assistiveOperationText = "Press Spacebar to pick up this item."
 	let _assistiveFolderSelectIndex = -1
 	let _inAssistiveFolderSelectMode = false
 
@@ -69,8 +66,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		} else if (qset.options.backgroundImageAsset) {
 			$scope.backgroundImage = qset.options.backgroundImageAsset
 		}
-		// assistiveAlert("Welcome to the Sort It Out widget. There are " + $scope.desktopItems.length +
-		// 	" items that must be categorized. Cycle through items with the tab key. Categorize each item using the up or down arrow key."
 		$scope.$apply()
 	}
 
@@ -166,9 +161,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	$scope.hideTutorial = () => $(".tutorial").fadeOut()
 
 	$scope.itemMouseDown = (e, item) => {
-		// if ($scope.selectedItem) {
-		// 	return // prevent duplicated calls
-		// }
 		$scope.selectedItem = item
 
 		// hammer events store the element differently
@@ -348,8 +340,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 					assistiveAlert(item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text)
 					$scope.hidePeek()
 					$scope.selectedItem = item // set selectedItem back to the item that was placed, overriding the default behavior
-					// _inAssistiveFolderSelectMode = false
-					// _assistiveFolderSelectIndex = -1
 				}
 				break
 			case 40: // down arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
@@ -358,7 +348,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				if (_assistiveFolderSelectIndex >= $scope.folders.length - 1) _assistiveFolderSelectIndex = 0
 				else _assistiveFolderSelectIndex++
 				$scope.peekFolder(_assistiveFolderSelectIndex)
-				assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel.")
+				assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder.")
 				_inAssistiveFolderSelectMode = true
 				break
 			case 38: // up arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
@@ -367,7 +357,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				if (_assistiveFolderSelectIndex <= 0) _assistiveFolderSelectIndex = $scope.folders.length - 1
 				else _assistiveFolderSelectIndex--
 				$scope.peekFolder(_assistiveFolderSelectIndex)
-				assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel.")
+				assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder.")
 				_inAssistiveFolderSelectMode = true
 				break
 			default:
@@ -391,24 +381,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 			$scope.showSubmitDialog = false
 		}
 	}
-
-	$rootScope.$on("shortcutKeypress", (type, event, key) => {
-		var target = key - 49
-		if (target < $scope.folders.length) {
-			$scope.$apply(() => {
-				if ($scope.showFolderPreview && $scope.folderPreviewIndex == target) {
-					$scope.hideFolderPreview()
-				}
-				else {
-					$scope.showFolderPreview = true
-					$scope.folderPreviewIndex = target
-
-					document.getElementsByClassName("folder")[target].focus()
-					assistiveAlert($scope.folders[target].text + " folder is selected.")
-				}
-			})
-		}
-	})
 
 	$rootScope.$on("tabMonitor", (type, event, key) => {
 		$scope.$apply(() => {
