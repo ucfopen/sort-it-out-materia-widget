@@ -48,7 +48,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
 	const DOCK_HEIGHT = 125
 
-	$scope.assistiveAlertText = ""
+	// assistiveAlert("")
 	// $scope.assistiveOperationText = "Press Spacebar to pick up this item."
 	let _assistiveFolderSelectIndex = -1
 	let _inAssistiveFolderSelectMode = false
@@ -69,7 +69,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		} else if (qset.options.backgroundImageAsset) {
 			$scope.backgroundImage = qset.options.backgroundImageAsset
 		}
-		// $scope.assistiveAlertText = "Welcome to the Sort It Out widget. There are " + $scope.desktopItems.length +
+		// assistiveAlert("Welcome to the Sort It Out widget. There are " + $scope.desktopItems.length +
 		// 	" items that must be categorized. Cycle through items with the tab key. Categorize each item using the up or down arrow key."
 		$scope.$apply()
 	}
@@ -155,6 +155,10 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 			a[j] = x;
 		}
 		return a;
+	}
+
+	const assistiveAlert = (text) => {
+		document.getElementById("assistive-alert").innerHTML = text
 	}
 
 	$scope.hideTutorial = () => $(".tutorial").fadeOut()
@@ -314,7 +318,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		}
 
 		if ($scope.readyToSubmit()) {
-			$scope.assistiveAlertText = "You are ready to submit this widget. You can press escape or tab to cancel and continue sorting items."
+			assistiveAlert("You are ready to submit this widget. You can press escape or tab to cancel and continue sorting items.")
 			document.getElementById("submit-dialog-confirm").focus()
 		}
 	}
@@ -326,7 +330,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 			_inAssistiveFolderSelectMode = false
 
 			$scope.hidePeek()
-			$scope.assistiveAlertText = item.text + " is selected."
+			assistiveAlert(item.text + " is selected.")
 
 			$scope.hideTutorial()
 		}
@@ -339,7 +343,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				// item has been selected, and a target folder is currently selected
 				if (_inAssistiveFolderSelectMode) {
 					$scope.selectFolder({}, _assistiveFolderSelectIndex)
-					$scope.assistiveAlertText = item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text
+					assistiveAlert(item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text)
 					$scope.hidePeek()
 					$scope.selectedItem = item // set selectedItem back to the item that was placed, overriding the default behavior
 					// _inAssistiveFolderSelectMode = false
@@ -351,10 +355,8 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				$scope.hidePeek()
 				if (_assistiveFolderSelectIndex >= $scope.folders.length - 1) _assistiveFolderSelectIndex = 0
 				else _assistiveFolderSelectIndex++
-				$timeout( () => {
-					$scope.peekFolder(_assistiveFolderSelectIndex)
-					$scope.assistiveAlertText = $scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel."
-				},500)
+				$scope.peekFolder(_assistiveFolderSelectIndex)
+				assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel.")
 				_inAssistiveFolderSelectMode = true
 				break
 			case 38: // up arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
@@ -362,10 +364,8 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				$scope.hidePeek()
 				if (_assistiveFolderSelectIndex <= 0) _assistiveFolderSelectIndex = $scope.folders.length - 1
 				else _assistiveFolderSelectIndex--
-				$timeout( () => {
-					$scope.peekFolder(_assistiveFolderSelectIndex)
-					$scope.assistiveAlertText = $scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel."
-				},500)
+				$scope.peekFolder(_assistiveFolderSelectIndex)
+				assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder. Press escape to cancel.")
 				_inAssistiveFolderSelectMode = true
 				break
 			default:
@@ -402,7 +402,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 					$scope.folderPreviewIndex = target
 
 					document.getElementsByClassName("folder")[target].focus()
-					$scope.assistiveAlertText = $scope.folders[target].text + " folder is selected."
+					assistiveAlert($scope.folders[target].text + " folder is selected.")
 				}
 			})
 		}

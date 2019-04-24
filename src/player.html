@@ -49,7 +49,7 @@
 				<button class="submit-button-x" ng-click="showSubmitDialog = false">&times;</button>
 			</div>
 			<!-- ARIA assistive elements -->
-			<span aria-live=”assertive” aria-atomic=”true” class="screenreader-assist">{{assistiveAlertText}}</span>
+			<span aria-live=”assertive” id="assistive-alert" aria-atomic=”true” class="screenreader-assist"></span>
 			<span id="item-operation" aria-atomic=”true” class="screenreader-assist">Use up and down arrow keys to select a category for this item. Press space to confirm your selection or escape to cancel.</span>
 
 			<div id="desktop" role="list">
