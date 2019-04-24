@@ -26,6 +26,7 @@ describe('Player Controller', function() {
 
 		angular.module('hmTouchEvents', []) // mock angular-hammer
 		angular.module('ngAnimate', []) // mock angular-animate
+		angular.module('ngAria', []) // mock ng-aria
 		angular.mock.module('SortItOutEngine')
 
 		require('./player.js')
