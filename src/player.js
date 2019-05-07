@@ -334,6 +334,8 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 
 		switch (event.keyCode) {
 			case 32: // space
+				// prevent unwanted behavior folder selection behavior
+				if ($scope.selectedItem.folder == _assistiveFolderSelectIndex) return
 				// item has been selected, and a target folder is currently selected
 				if (_inAssistiveFolderSelectMode) {
 					$scope.selectFolder({}, _assistiveFolderSelectIndex)
