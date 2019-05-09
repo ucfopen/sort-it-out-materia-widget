@@ -156,12 +156,12 @@
 				</div>
 			</div>
 
-			<div id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
+			<div tabindex="-1" id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
 			</div>
 
-			<div id="back-to-desktop" ng-show="showFolderPreview && selectedItem">Put Back on Desktop</div>
+			<div tabindex="-1" id="back-to-desktop" ng-show="showFolderPreview && selectedItem">Put Back on Desktop</div>
 
-			<div id="enlarged-image" ng-class="{hidden: !enlargeImage.show}" ng-click="enlargeImage.show = false">
+			<div tabindex="-1" id="enlarged-image" ng-class="{hidden: !enlargeImage.show}" ng-click="enlargeImage.show = false">
 				<div>
 					<img ng-if="enlargeImage.show" ng-src="{{enlargeImage.url}}">
 					<i>click anywhere to close</i>
