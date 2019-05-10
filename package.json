@@ -31,10 +31,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "statements": 70,
-        "branches": 60,
-        "functions": 55,
-        "lines": 70
+        "statements": 72,
+        "branches": 56,
+        "functions": 61,
+        "lines": 74
       },
       "src/creator.js": {
         "statements": 86,
@@ -43,10 +43,10 @@
         "lines": 87
       },
       "src/player.js": {
-        "statements": 50,
-        "branches": 30,
-        "functions": 45,
-        "lines": 50
+        "statements": 57,
+        "branches": 33,
+        "functions": 51,
+        "lines": 59
       },
       "src/scoreScreen.js": {
         "statements": 99,

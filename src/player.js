@@ -1,4 +1,4 @@
-const SortItOut = angular.module("SortItOutEngine", ["ngAnimate", "hmTouchEvents"])
+const SortItOut = angular.module("SortItOutEngine", ["ngAnimate", "hmTouchEvents", "ngAria"])
 
 // force scope to update when scrolling
 SortItOut.directive("scroll", () => {
@@ -10,7 +10,21 @@ SortItOut.directive("scroll", () => {
 	}
 })
 
-SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelper", function ($scope, $timeout, sanitizeHelper) {
+// catches keyboard shortcuts agnostic of other key event listeners
+// for the assistive keyboard input listeners, check handleAssistiveSelection below
+SortItOut.directive("keyboardShortcuts", ["$document", "$rootScope", ($document, $rootScope) => {
+	return {
+		restrict: "A",
+		link: (scope, element) => {
+			$document.bind("keypress", (event) => {
+				// only used to listen for tab key currently
+				if (event.which == 9) $rootScope.$broadcast("tabMonitor", event, event.which)
+			})
+		}
+	}
+}])
+
+SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout", "sanitizeHelper", function ($scope, $rootScope, $timeout, sanitizeHelper) {
 	$scope.tutorialPage = 1
 	$scope.showFolderPreview = false
 	$scope.showNoSubmit = false
@@ -32,6 +46,11 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 	const SRC_DESKTOP = -1 // indicates drag started on desktop, otherwise itemSource is folderIndex
 	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
 	const DOCK_HEIGHT = 125
+
+	let _assistiveFolderSelectIndex = -1
+	let _inAssistiveFolderSelectMode = false
+
+	$scope.numSorted = 0
 
 	$scope.start = (instance, qset, version) => {
 		generateQuestionToId(qset)
@@ -96,16 +115,17 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 	}
 
 	const buildItems = qset => {
-		return qset.items.map( item => {
+		return shuffle(qset.items.map( (item, index) => {
 			const image = item.options.image
 				? Materia.Engine.getMediaUrl(item.options.image)
 				: false
 			return {
 				text: sanitizeHelper.desanitize(item.questions[0].text),
 				image,
-				position: generateRandomPosition(item.options.image)
+				position: generateRandomPosition(item.options.image),
+				folder: SRC_DESKTOP
 			}
-		})
+		}))
 	}
 
 	const generateRandomPosition = hasImage => {
@@ -120,12 +140,27 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 		return { x, y }
 	}
 
+	// fisher-yates shuffle algorithm
+	const shuffle = (a) => {
+		var j, x, i;
+		for (i = a.length - 1; i > 0; i--) {
+			j = Math.floor(Math.random() * (i + 1));
+			x = a[i];
+			a[i] = a[j];
+			a[j] = x;
+		}
+		return a;
+	}
+
+	// aria-live regions don't work well with normal angular data binding with scope variables
+	// to overcome this, we gotta go old school and edit the DOM node manually
+	const assistiveAlert = (text) => {
+		if (document.getElementById("assistive-alert")) document.getElementById("assistive-alert").innerHTML = text
+	}
+
 	$scope.hideTutorial = () => $(".tutorial").fadeOut()
 
 	$scope.itemMouseDown = (e, item) => {
-		if ($scope.selectedItem) {
-			return // prevent duplicated calls
-		}
 		$scope.selectedItem = item
 
 		// hammer events store the element differently
@@ -219,7 +254,14 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 					x: e.clientX + $scope.offsetLeft,
 					y: e.clientY + $scope.offsetTop
 				}
-				$scope.desktopItems.push($scope.selectedItem)
+
+				for (var [index, item] of Object.entries($scope.desktopItems)) {
+					if ($scope.selectedItem.text == item.text) {
+						$scope.desktopItems[index].sorted = false
+						$scope.desktopItems[index].folder = SRC_DESKTOP
+						$scope.numSorted--
+					}
+				}
 			}
 		}
 
@@ -246,15 +288,19 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 		if ($scope.selectedItem) {
 			$scope.folders[index].items.push($scope.selectedItem)
 
+			let desktopIndex = $scope.desktopItems.indexOf($scope.selectedItem)
+
+			itemSource = $scope.desktopItems[desktopIndex].folder
+
 			if (itemSource == SRC_DESKTOP) {
-				$scope.desktopItems = $scope.desktopItems.filter(
-					item => item.text != $scope.selectedItem.text
-				)
+				$scope.desktopItems[desktopIndex].sorted = true
+				$scope.numSorted++
 			} else {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item.text != $scope.selectedItem.text
 				)
 			}
+			$scope.desktopItems[desktopIndex].folder = index
 
 			$(".desktop-item.selected").removeClass("selected")
 			selectedElement = false
@@ -264,7 +310,85 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 			$scope.showFolderPreview = true
 			$scope.folderPreviewIndex = index
 		}
+
+		if ($scope.readyToSubmit()) {
+			assistiveAlert("You are ready to submit this widget. You can press escape or tab to cancel and continue sorting items.")
+			document.getElementById("submit-dialog-confirm").focus()
+		}
 	}
+
+	$scope.handleItemFocus = (event, item) => {
+		if ($scope.selectedItem != item) {
+			$scope.selectedItem = item
+			_assistiveFolderSelectIndex = -1
+			_inAssistiveFolderSelectMode = false
+
+			$scope.hidePeek()
+			assistiveAlert(item.text + " is selected.")
+
+			$scope.hideTutorial()
+		}
+	}
+
+	$scope.handleAssistiveSelection = (event, item) => {
+
+		switch (event.keyCode) {
+			case 32: // space
+				// prevent unwanted behavior folder selection behavior
+				if ($scope.selectedItem.folder == _assistiveFolderSelectIndex) return
+				// item has been selected, and a target folder is currently selected
+				if (_inAssistiveFolderSelectMode) {
+					$scope.selectFolder({}, _assistiveFolderSelectIndex)
+					assistiveAlert(item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text)
+					$scope.hidePeek()
+					$scope.selectedItem = item // set selectedItem back to the item that was placed, overriding the default behavior
+				}
+				break
+			case 40: // down arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
+				event.preventDefault()
+				$scope.hidePeek()
+				if (_assistiveFolderSelectIndex >= $scope.folders.length - 1) _assistiveFolderSelectIndex = 0
+				else _assistiveFolderSelectIndex++
+				$scope.peekFolder(_assistiveFolderSelectIndex)
+				assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder.")
+				_inAssistiveFolderSelectMode = true
+				break
+			case 38: // up arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
+				event.preventDefault()
+				$scope.hidePeek()
+				if (_assistiveFolderSelectIndex <= 0) _assistiveFolderSelectIndex = $scope.folders.length - 1
+				else _assistiveFolderSelectIndex--
+				$scope.peekFolder(_assistiveFolderSelectIndex)
+				assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder.")
+				_inAssistiveFolderSelectMode = true
+				break
+			default:
+				return false
+		}
+	}
+
+	$scope.handleAssistiveRepeat = (event) => {
+		if (event.which == 32) {
+			document.getElementsByClassName("desktop-item")[0].focus()
+		}
+	}
+
+	// available when a user tabs to the hidden assistive element indicating you can submit
+	// they can hit space to submit, tabbing clears the submit window (to prevent unintended interactions)
+	$scope.handleAssistiveSubmit = (event) => {
+		if (event.which == 32) {
+			$scope.submitClick()
+		}
+		else if (event.which == 9) {
+			$scope.showSubmitDialog = false
+		}
+	}
+
+	$rootScope.$on("tabMonitor", (type, event, key) => {
+		$scope.$apply(() => {
+			$scope.hideTutorial()
+		})
+	})
 
 	$scope.hideFolderPreview = () => {
 		$scope.showFolderPreview = false
@@ -348,7 +472,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$timeout", "sanitizeHelp
 	}
 
 	$scope.readyToSubmit = () => {
-		return $scope.folders.length > 0 && $scope.desktopItems.length == 0
+		return $scope.numSorted >= $scope.desktopItems.length
 	}
 
 	$scope.submitClick = () => {

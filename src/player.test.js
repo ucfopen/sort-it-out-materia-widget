@@ -26,6 +26,7 @@ describe('Player Controller', function() {
 
 		angular.module('hmTouchEvents', []) // mock angular-hammer
 		angular.module('ngAnimate', []) // mock angular-animate
+		angular.module('ngAria', []) // mock ng-aria
 		angular.mock.module('SortItOutEngine')
 
 		require('./player.js')
@@ -223,4 +224,43 @@ describe('Player Controller', function() {
 			"param"
 		);
 	});
+
+	it('should set focus target as the selected item', function() {
+		$scope.start(widgetInfo, qset.data);
+		var item = $scope.desktopItems[0];
+		$scope.handleItemFocus({},item);
+
+		expect($scope.selectedItem).toBe(item);
+	})
+
+	it('should apply sorted properties to desktop items once categorized', function() {
+		$scope.start(widgetInfo, qset.data);
+		var item = $scope.desktopItems[0];
+		$scope.handleItemFocus({},item);
+
+		expect($scope.selectedItem).toBe(item);
+
+		$scope.selectFolder({},0);
+
+		expect($scope.desktopItems[0].sorted).toBe(true)
+		expect($scope.desktopItems[0].folder).toBe(0)
+	})
+
+	it('should select a folder using the arrow keys and spacebar', function() {
+		$scope.start(widgetInfo, qset.data);
+		var item = $scope.desktopItems[0];
+		var arrowEvent = new KeyboardEvent('keydown', {'keyCode': 40});
+		var spaceEvent = new KeyboardEvent('keydown', {'keyCode': 32});
+
+		$scope.handleItemFocus({},item);
+
+		$scope.handleAssistiveSelection(arrowEvent,item);
+
+		expect($scope.desktopItems[0].folder).toBe(-1)
+
+		$scope.handleAssistiveSelection(spaceEvent,item);
+
+		expect($scope.desktopItems[0].sorted).toBe(true)
+		expect($scope.desktopItems[0].folder).toBe(0)		
+	})
 });

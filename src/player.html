@@ -16,6 +16,7 @@
 		<!-- WIDGET DEPENDENCIES -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-animate.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-aria.min.js"></script>
 		<script src="vendor/hammer.min.js"></script>
 		<script src="vendor/angular.hammer.min.js"></script>
 
@@ -26,7 +27,10 @@
 		<div id="content"
 			hm-panmove="standardizeEvent($event, false, panMove)"
 			hm-panend="standardizeEvent($event, false, mouseUp)"
-			ng-mouseup="mouseUp($event)">
+			ng-mouseup="mouseUp($event)"
+			keyboard-shortcuts
+			role="application">
+
 			<div id="menu-bar">
 				<h1 id="title">{{title}}</h1>
 				<div id="donearrow" ng-show="readyToSubmit() && !showSubmitDialog">Click to finish</div>
@@ -41,36 +45,68 @@
 			<div id="submit-dialog" ng-show="readyToSubmit() && showSubmitDialog">
 				<p>Looking good! You're ready to submit.</p>
 				<button class="cancel-submit-button" ng-click="showSubmitDialog = false">I'm not done yet</button>
-				<button class="submit-button" ng-click="submitClick()">Submit</button>
+				<button class="submit-button" id="submit-dialog-confirm" ng-click="submitClick()">Submit</button>
 				<button class="submit-button-x" ng-click="showSubmitDialog = false">&times;</button>
 			</div>
+			<!-- ARIA assistive elements -->
+			<span aria-live=”assertive” id="assistive-alert" aria-atomic=”true” class="screenreader-assist"></span>
+			<span id="item-operation" aria-atomic=”true” class="screenreader-assist">Use up and down arrow keys to select a category for this item. Press space to confirm the selection.</span>
 
-			<div id="desktop">
-				<div class="desktop-item" ng-class="{'selected': item.text == selectedItem.text, 'no-image': !item.image}"
+			<div class="assistive-hidden-element"
+				tabindex="0"
+				role="dialog"
+				aria-label="Instructions: use tab to traverse the following {{desktopItems.length}} items. Each item must be categorized to complete this widget. Use up or down arrow keys to select a category for each item, and space to confirm your selection."></div>
+
+			<div id="desktop" role="list">
+				<div class="desktop-item" ng-class="{'selected': item.text == selectedItem.text, 'no-image': !item.image, 'sorted': item.sorted}"
 					ng-style="{ 'top': item.position.y, 'left': item.position.x }"
 					ng-repeat="item in desktopItems"
 					ng-mousedown="itemMouseDown($event, item)"
-					hm-panstart="standardizeEvent($event, item, itemMouseDown)">
+					hm-panstart="standardizeEvent($event, item, itemMouseDown)"
+					role="listitem"
+					aria-label="{{item.folder != -1 ? item.text + ' is in folder ' + folders[item.folder].text : item.text}}"
+					aria-describedby="item-operation"
+					ng-focus="handleItemFocus($event, item)"
+					ng-keydown="handleAssistiveSelection($event, item)"
+					tabindex="0">
 
 					<img ng-if="item.image"
 						ng-src="{{item.image}}"
-						ng-mousedown="preventDefault($event, false)">
+						ng-mousedown="preventDefault($event, false)"
+						aria-hidden="true">
 					<i ng-if="item.image"
 						class="material-icons img-zoom"
 						ng-mousedown="preventDefault($event, true)"
-						ng-click="enlargeImage(item.image, $event)">zoom_in</i>
+						ng-click="enlargeImage(item.image, $event)"
+						aria-hidden="true"
+						tabindex="-1">zoom_in</i>
 					{{item.text}}
 				</div>
 			</div>
+			<div class="assistive-hidden-element"
+				ng-if="readyToSubmit()"
+				ng-keydown="handleAssistiveSubmit($event)"
+				tabindex="0"
+				role="dialog"
+				aria-label="You have categorized every item in the list. Press space to submit for scoring. Tab to the next item to continue working on the list."></div>
 
-			<div id="dock-main" class="dock" ng-click="hideFolderPreview()">
+			<div class="assistive-hidden-element"
+				ng-keydown="handleAssistiveRepeat($event)"
+				tabindex="0"
+				role="dialog"
+				aria-label="You have reached the end of the list. Press space to return to the beginning of the list.
+				You have sorted {{numSorted}} items out of {{desktopItems.length}}."></div>
+
+			<div id="dock-main" class="dock" ng-click="hideFolderPreview()" tabindex="-1">
 				<div class="folder"
 					ng-class="{opened: folderPreviewIndex == $index}"
 					ng-repeat="folder in folders"
 					ng-click="selectFolder($event, $index)"
 					ng-mouseenter="peekFolder($index)"
 					ng-mouseleave="hidePeek()"
-					data-index="{{$index}}">
+					data-index="{{$index}}"
+					role="listitem"
+					tabindex="-1">
 					<div class="folder-icon">
 						<div class="folder-name">
 							<span ng-class="{ small: folder.text.length > 40}">{{folder.text}}</span>
@@ -79,8 +115,12 @@
 				</div>
 			</div>
 
-			<div id="dock-back" class="dock" ng-class="{above: showFolderPreview}">
-				<div class="folder" ng-repeat="folder in folders" data-index="{{$index}}" ng-class="{opened: folderPreviewIndex == $index}">
+			<div id="dock-back" class="dock" ng-class="{above: showFolderPreview}" tabindex="-1">
+				<div class="folder"
+					ng-repeat="folder in folders"
+					data-index="{{$index}}"
+					ng-class="{opened: folderPreviewIndex == $index}"
+					tabindex="-1">
 					<div class="folder-icon">
 						<div class="peek-items-container">
 							<div class="peek-item" ng-repeat="item in folder.items.slice().reverse() | limitTo:3">{{item.text}}</div>
@@ -107,7 +147,7 @@
 						{{item.text}}
 					</div>
 				</div>
-				<i class="material-icons" id="preview-close" ng-click="hideFolderPreview()">close</i>
+				<i  tabindex="-1" class="material-icons" id="preview-close" ng-click="hideFolderPreview()">close</i>
 				<button id="preview-scroll-up" ng-if="showFolderPreview" ng-show="canScrollUp()" ng-click="scrollUp()">&uarr;</button>
 				<button id="preview-scroll-down" ng-if="showFolderPreview" ng-show="canScrollDown()" ng-click="scrollDown()">&darr;</button>
 				<div id="preview-selected-item" ng-show="showFolderPreview && selectedItem.text">
@@ -116,12 +156,12 @@
 				</div>
 			</div>
 
-			<div id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
+			<div tabindex="-1" id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
 			</div>
 
-			<div id="back-to-desktop" ng-show="showFolderPreview && selectedItem">Put Back on Desktop</div>
+			<div tabindex="-1" id="back-to-desktop" ng-show="showFolderPreview && selectedItem">Put Back on Desktop</div>
 
-			<div id="enlarged-image" ng-class="{hidden: !enlargeImage.show}" ng-click="enlargeImage.show = false">
+			<div tabindex="-1" id="enlarged-image" ng-class="{hidden: !enlargeImage.show}" ng-click="enlargeImage.show = false">
 				<div>
 					<img ng-if="enlargeImage.show" ng-src="{{enlargeImage.url}}">
 					<i>click anywhere to close</i>

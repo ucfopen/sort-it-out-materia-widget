@@ -9,6 +9,17 @@ body {
 	font-family: "Lato";
 }
 
+.screenreader-assist {
+	position: absolute;
+	margin: -1px;
+	border: 0;
+	padding: 0;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+}
+
 button.submit-button {
 	font-size: 14px;
 	border: none;
@@ -94,7 +105,7 @@ button.cancel-submit-button {
 	margin-left: -150px;
 	padding: 25px 0px;
 
-	z-index: 100;
+	z-index: 80;
 
 	background: #fff;
 	border-radius: 5px;
@@ -115,7 +126,7 @@ button.cancel-submit-button {
 
 #submit-shroud {
 	position: absolute;
-	z-index: 90;
+	z-index: 70;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -131,6 +142,7 @@ button.cancel-submit-button {
 	right: 0;
 	padding-top: 40px;
 	z-index: 2;
+	overflow: hidden;
 
 	.desktop-item {
 		font-size: 18px;
@@ -177,6 +189,11 @@ button.cancel-submit-button {
 			transition: opacity ease 0.3s;
 		}
 
+		&:focus {
+			background-color: rgb(223, 249, 255);
+			border: solid 2px #BBF3FF;
+		}
+
 		&:hover::after {
 			opacity: 1;
 		}
@@ -220,7 +237,22 @@ button.cancel-submit-button {
 			-webkit-user-drag: none;
 			margin-bottom: 10px;
 		}
+
+		&.sorted {
+			// display: none !important;
+			top: -999px !important;
+			right: -999px !important;
+			opacity: 0;
+		}
 	}
+}
+
+.assistive-hidden-element {
+	position: absolute !important;
+	height: 1px; width: 1px;
+	overflow: hidden;
+  	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+	clip: rect(1px, 1px, 1px, 1px);
 }
 
 .dock {
@@ -232,11 +264,19 @@ button.cancel-submit-button {
 	display: flex;
 	justify-content: space-around;
 
+	&:focus {
+		outline: none;
+	}
+
 	.folder {
 		height: 100%;
 		width: 150px;
 		position: relative;
 		user-select: none;
+
+		&:focus {
+			outline: none;
+		}
 
 		.folder-icon {
 			height: 80%;
@@ -696,7 +736,7 @@ button.cancel-submit-button {
 	border-radius: 3px;
 	padding: 0 10px;
 	text-align: center;
-	z-index: 9;
+	z-index: 90;
 	overflow: hidden;
 
 	h3 {
@@ -896,7 +936,7 @@ button.cancel-submit-button {
 	left: 0;
 	right: 0;
 	background-color: rgba(gray, 0.8);
-	z-index: 8;
+	z-index: 80;
 }
 
 @keyframes cursor1 {
