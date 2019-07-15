@@ -1,7 +1,6 @@
 ---
 general:
   name: Sort It Out!
-  group: Materia
   height: 650
   width: 960
   in_catalog: Yes
