@@ -63,11 +63,18 @@ const babelLoaderWithPolyfillRule = {
 		loader: 'babel-loader',
 		options: {
 			presets: [
-				'es2015',
-				['env', {
-					targets: { browsers: ["last 2 versions", "ie >= 11"]},
-					debug: true
-				}]
+				[
+				'@babel/preset-env',
+				{
+					targets: {
+					browsers: [
+						">0.25%",
+						"not ie 10",
+						"not op_mini all"
+					]
+					},
+				}
+				]
 			]
 		}
 	}
