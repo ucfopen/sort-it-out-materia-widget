@@ -7,7 +7,7 @@
   "dependencies": {
     "angular-hammer": "^2.2.0",
     "hammerjs": "^2.0.8",
-    "materia-widget-development-kit": "^2.3.0"
+    "materia-widget-development-kit": "^2.5.0-alpha3"
   },
   "scripts": {
     "start": "webpack-dev-server",

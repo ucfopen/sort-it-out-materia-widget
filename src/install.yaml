@@ -1,7 +1,6 @@
 ---
 general:
   name: Sort It Out!
-  group: Materia
   height: 650
   width: 960
   in_catalog: Yes
@@ -14,6 +13,8 @@ general:
 files:
   creator: creator.html
   player: player.html
+  creator_guide: guides/creator.html
+  player_guide: guides/player.html
   flash_version: 0
 score:
   is_scorable: Yes
