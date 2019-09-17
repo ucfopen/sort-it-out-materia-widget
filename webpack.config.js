@@ -70,7 +70,7 @@ const babelLoaderWithPolyfillRule = {
 		options: {
 			presets: [
 				['@babel/preset-env', {
-					targets: { browsers: ["last 2 versions", "ie >= 11"]},
+					targets: { browsers: [">0.25%, ie > 11, not op_mini all"]},
 					debug: true
 				}]
 			]
