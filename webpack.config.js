@@ -43,7 +43,9 @@ const entries = {
 	],
 	'creator.css': ['./src/creator.scss', './src/creator.html'],
 	'player.css': ['./src/player.scss', './src/player.html'],
-	'scoreScreen.css': ['./src/scoreScreen.scss', './src/scoreScreen.html']
+	'scoreScreen.css': ['./src/scoreScreen.scss', './src/scoreScreen.html'],
+	'guides/player.temp.html': [ './src/_guides/player.md'],
+	'guides/creator.temp.html': [ './src/_guides/creator.md']
 }
 
 const customCopy = copy.concat([
@@ -54,6 +56,10 @@ const customCopy = copy.concat([
 	{
 		from: path.join(__dirname,'node_modules', 'hammerjs', 'hammer.min.js'),
 		to: path.join(outputPath, 'vendor')
+	},
+	{
+		from: path.join(__dirname, 'src', '_guides', 'assets'),
+		to: path.join(outputPath, 'guides', 'assets')
 	}
 ])
 
@@ -63,9 +69,8 @@ const babelLoaderWithPolyfillRule = {
 		loader: 'babel-loader',
 		options: {
 			presets: [
-				'es2015',
-				['env', {
-					targets: { browsers: ["last 2 versions", "ie >= 11"]},
+				['@babel/preset-env', {
+					targets: { browsers: [">0.25%, ie > 11, not op_mini all"]},
 					debug: true
 				}]
 			]
@@ -78,7 +83,8 @@ const customRules = [
 	rules.loadAndPrefixCSS,
 	rules.loadAndPrefixSASS,
 	rules.loadHTMLAndReplaceMateriaScripts,
-	rules.copyImages
+	rules.copyImages,
+	rules.loadAndCompileMarkdown
 ]
 
 const options = {
