@@ -1,3 +1,5 @@
+# Creator Guide #
+
 ## Overview ##
 
 Sort It Out! tasks students with sorting a pile of items into their respective categories. The widget is thematically inspired by sorting icons into folders on a messy computer desktop.
