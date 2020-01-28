@@ -77,11 +77,12 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 			hash = ((hash << 5) - hash) + char
 			hash |= 0
 		}
+		return Math.abs(hash)
 	}
 
 	const generateQuestionToId = qset => {
 		for (let item of qset.items) {
-			questionToId.set(hash(item.questions[0].text), item.id)
+			questionToId.set(hash(sanitizeHelper.desanitize(item.questions[0].text)), item.id)
 		}
 	}
 
@@ -495,6 +496,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 
 		$scope.folders.forEach( ({text, items}) => {
 			items.forEach( item => {
+				console.log(item.text)
 				const id = questionToId.get(hash(item.text))
 				Materia.Score.submitQuestionForScoring(id, text)
 			})

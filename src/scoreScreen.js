@@ -1,6 +1,6 @@
 const SortItOut = angular.module("SortItOutScore", [])
 
-SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", function ($scope, $timeout) {
+SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", "sanitizeHelper", function ($scope, $timeout, sanitizeHelper) {
 	$scope.loaded = false
 	$scope.zoomIndex = {
 		folder: -1,
@@ -65,7 +65,7 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", function ($sco
 			folders[userFolderIndex].placeCount++
 
 			const item = {
-				text,
+				text: sanitizeHelper.desanitize(text),
 				correct,
 				userFolderName,
 				image: imageMap[text] || false
@@ -107,4 +107,37 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", function ($sco
 
 	Materia.ScoreCore.hideResultsTable()
 	Materia.ScoreCore.start($scope)
+}])
+
+SortItOut.service('sanitizeHelper', [ function() {
+	const SANITIZE_CHARACTERS = {
+		'&' : '&amp;',
+		'>' : '&gt;',
+		'<' : '&lt;',
+		'"' : '&#34;'
+	}
+
+	const sanitize = (input) => {
+		if (!input) return;
+		for (var k in SANITIZE_CHARACTERS) {
+			let v = SANITIZE_CHARACTERS[k]
+			let re = new RegExp(k, "g")
+			input = input.replace(re, v)
+		}
+		return input
+	}
+
+	const desanitize = (input) => {
+		if (!input) return;
+		for (var k in SANITIZE_CHARACTERS) {
+			let v = SANITIZE_CHARACTERS[k]
+			let re = new RegExp(v, "g")
+			input = input.replace(re, k)
+		}
+		return input
+	}
+	return {
+		sanitize: sanitize,
+		desanitize: desanitize
+	}
 }])
