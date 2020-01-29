@@ -43,7 +43,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/q29nk.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/q29nk.jpg'%>"
 					},
 					"assets": []
 				},
@@ -65,7 +65,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/JE4mG.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/JE4mG.jpg'%>"
 					},
 					"assets": []
 				},
@@ -87,7 +87,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/Shm4W.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/Shm4W.jpg'%>"
 					},
 					"assets": []
 				},
@@ -129,7 +129,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/GXtSa.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/GXtSa.jpg'%>"
 					},
 					"assets": []
 				},
@@ -151,7 +151,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/V9DsG.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/V9DsG.jpg'%>"
 					},
 					"assets": []
 				},
@@ -193,7 +193,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/HcSB6.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/HcSB6.jpg'%>"
 					},
 					"assets": []
 				},
@@ -215,7 +215,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/WrQTw.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/WrQTw.jpg'%>"
 					},
 					"assets": []
 				},
@@ -257,7 +257,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/PbP0q.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/PbP0q.jpg'%>"
 					},
 					"assets": []
 				},
@@ -279,7 +279,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/5QcWe.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/5QcWe.jpg'%>"
 					},
 					"assets": []
 				},
@@ -321,7 +321,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/Wdf0K.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/Wdf0K.jpg'%>"
 					},
 					"assets": []
 				},
@@ -343,7 +343,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/a41gm.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/a41gm.jpg'%>"
 					},
 					"assets": []
 				},
@@ -365,7 +365,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/BYC92.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/BYC92.jpg'%>"
 					},
 					"assets": []
 				}
