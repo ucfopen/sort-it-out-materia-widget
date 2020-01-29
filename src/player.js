@@ -496,7 +496,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 
 		$scope.folders.forEach( ({text, items}) => {
 			items.forEach( item => {
-				console.log(item.text)
 				const id = questionToId.get(hash(item.text))
 				Materia.Score.submitQuestionForScoring(id, text)
 			})
