@@ -41,7 +41,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	let selectedElement    // element that is being dragged
 	let pickupCount = 1    // every new item picked up will go to the top (z-index)
 	let itemSource         // to track where the dragged item came from
-	let questionToId       // used for scoring
+	let questionToId = new Map() // used for scoring
 
 	const SRC_DESKTOP = -1 // indicates drag started on desktop, otherwise itemSource is folderIndex
 	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
@@ -69,10 +69,21 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		$scope.$apply()
 	}
 
+	// hash function to be used in conjunction with questionToId
+	const hash = (str) => {
+		let hash = 0, i, char
+		if (str.length == 0) return hash
+		for (i = 0; i < str.length; i++) {
+			char = str.charCodeAt(i)
+			hash = ((hash << 5) - hash) + char
+			hash |= 0
+		}
+		return Math.abs(hash)
+	}
+
 	const generateQuestionToId = qset => {
-		questionToId = {}
 		for (let item of qset.items) {
-			questionToId[item.questions[0].text] = item.id
+			questionToId.set(hash(sanitizeHelper.desanitize(item.questions[0].text)), item.id)
 		}
 	}
 
@@ -486,7 +497,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 
 		$scope.folders.forEach( ({text, items}) => {
 			items.forEach( item => {
-				const id = questionToId[item.text]
+				const id = questionToId.get(hash(item.text))
 				Materia.Score.submitQuestionForScoring(id, text)
 			})
 		})
