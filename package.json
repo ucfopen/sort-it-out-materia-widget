@@ -49,8 +49,8 @@
         "lines": 59
       },
       "src/scoreScreen.js": {
-        "statements": 99,
-        "branches": 99,
+        "statements": 97,
+        "branches": 89,
         "functions": 99,
         "lines": 99
       }
