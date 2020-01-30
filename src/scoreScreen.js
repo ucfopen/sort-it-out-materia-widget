@@ -79,7 +79,7 @@ SortItOut.controller("SortItOutScoreCtrl", ["$scope", "$timeout", "sanitizeHelpe
 			else {
 				folders[correctFolderIndex].items.push(item)
 				folders[userFolderIndex].extraItems.push({
-					text,
+					text: sanitizeHelper.desanitize(text),
 					image: imageMap[text] || false,
 					correctFolderName
 				})

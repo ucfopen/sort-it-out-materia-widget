@@ -69,6 +69,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		$scope.$apply()
 	}
 
+	// hash function to be used in conjunction with questionToId
 	const hash = (str) => {
 		let hash = 0, i, char
 		if (str.length == 0) return hash
