@@ -43,7 +43,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/q29nk.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/the-starry-night.jpg'%>"
 					},
 					"assets": []
 				},
@@ -65,7 +65,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/JE4mG.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/sunflowers.jpg'%>"
 					},
 					"assets": []
 				},
@@ -87,7 +87,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/Shm4W.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/cafe-terrace-at-night.jpg'%>"
 					},
 					"assets": []
 				},
@@ -129,7 +129,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/GXtSa.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/guernica.jpg'%>"
 					},
 					"assets": []
 				},
@@ -151,7 +151,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/V9DsG.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/the-weeping-woman.jpg'%>"
 					},
 					"assets": []
 				},
@@ -193,7 +193,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/HcSB6.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/rouen-cathedral.jpg'%>"
 					},
 					"assets": []
 				},
@@ -215,7 +215,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/WrQTw.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/the-water-lily-pond.jpg'%>"
 					},
 					"assets": []
 				},
@@ -257,7 +257,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/PbP0q.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/mona-lisa.jpg'%>"
 					},
 					"assets": []
 				},
@@ -279,7 +279,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/5QcWe.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/the-last-supper.jpg'%>"
 					},
 					"assets": []
 				},
@@ -321,7 +321,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/Wdf0K.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/the-persistence-of-memory.jpg'%>"
 					},
 					"assets": []
 				},
@@ -343,7 +343,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/a41gm.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/the-burning-giraffe.jpg'%>"
 					},
 					"assets": []
 				},
@@ -365,7 +365,7 @@
 						}
 					],
 					"options": {
-						"image": "<%MEDIA='assets/demo-assets/BYC92.jpeg'%>"
+						"image": "<%MEDIA='assets/demo-assets/lobster-telephone.jpg'%>"
 					},
 					"assets": []
 				}
