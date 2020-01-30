@@ -36,10 +36,11 @@ describe('ScoreScreen Controller', function() {
 		qsets = generateQsets()
 
 		// initialize the angular controller
-		inject(function(_$controller_, _$timeout_){
+		inject(function(_$controller_, _$timeout_, _sanitizeHelper_){
 			// instantiate the controller
 			$controller = _$controller_('SortItOutScoreCtrl', { $scope: $scope });
 			$timeout = _$timeout_;
+			$sanitizeHelper = _sanitizeHelper_;
 		})
 	})
 
@@ -215,6 +216,20 @@ describe('ScoreScreen Controller', function() {
 		expect($scope.zoomIndex.folder).toBe(1);
 		expect($scope.zoomIndex.item).toBe(1);
 	});
+
+	it('should correctly sanitize item text', function() {
+		let text = '<p>This is a paragraph tag</p>';
+		let sanitized = $sanitizeHelper.sanitize(text);
+
+		expect(sanitized).toBe('&lt;p&gt;This is a paragraph tag&lt;/p&gt;');
+	});
+
+	it('should correctly desanitize item text', function() {
+		let text = '&lt;p&gt;This is a paragraph tag&lt;/p&gt;';
+		let desanitize = $sanitizeHelper.desanitize(text);
+
+		expect(desanitize).toBe('<p>This is a paragraph tag</p>');
+	})
 
 	var generateScoreTables = () => {
 		// the 100% correct score tables that match each qset
