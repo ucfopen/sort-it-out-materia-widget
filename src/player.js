@@ -69,21 +69,10 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		$scope.$apply()
 	}
 
-	// hash function to be used in conjunction with questionToId
-	const hash = (str) => {
-		let hash = 0, i, char
-		if (str.length == 0) return hash
-		for (i = 0; i < str.length; i++) {
-			char = str.charCodeAt(i)
-			hash = ((hash << 5) - hash) + char
-			hash |= 0
-		}
-		return Math.abs(hash)
-	}
-
 	const generateQuestionToId = qset => {
 		for (let item of qset.items) {
-			questionToId.set(hash(sanitizeHelper.desanitize(item.questions[0].text)), item.id)
+			// btoa encodes question text as a base64 string to prevent failure from special characters
+			questionToId.set(btoa(sanitizeHelper.desanitize(item.questions[0].text)), item.id)
 		}
 	}
 
@@ -497,7 +486,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 
 		$scope.folders.forEach( ({text, items}) => {
 			items.forEach( item => {
-				const id = questionToId.get(hash(item.text))
+				const id = questionToId.get(btoa(item.text))
 				Materia.Score.submitQuestionForScoring(id, text)
 			})
 		})
