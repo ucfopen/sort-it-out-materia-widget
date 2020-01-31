@@ -15,7 +15,6 @@
 
 		<!-- WIDGET DEPENDENCIES -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-animate.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-aria.min.js"></script>
 		<script src="vendor/hammer.min.js"></script>
 		<script src="vendor/angular.hammer.min.js"></script>
@@ -59,7 +58,7 @@
 
 			<div id="desktop" role="list">
 				<div class="desktop-item" ng-class="{'selected': item.text == selectedItem.text, 'no-image': !item.image, 'sorted': item.sorted}"
-					ng-style="{ 'top': item.position.y, 'left': item.position.x }"
+					ng-style="item.position"
 					ng-repeat="item in desktopItems"
 					ng-mousedown="itemMouseDown($event, item)"
 					hm-panstart="standardizeEvent($event, item, itemMouseDown)"
@@ -130,12 +129,12 @@
 				</div>
 			</div>
 
-			<div id="desktop-zone-container" class="desktop-zone" ng-show="showFolderPreview && selectedItem">
+<!-- 			<div id="desktop-zone-container" class="desktop-zone" ng-show="showFolderPreview && selectedItem">
 				<div id="desktop-zone1" class="desktop-zone"></div>
 				<div id="desktop-zone2" class="desktop-zone"></div>
-			</div>
+			</div> -->
 
-			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
+<!-- 			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
 				<h1 ng-class="{ small: folders[folderPreviewIndex].text.length > 40}">{{folders[folderPreviewIndex].text}}</h1>
 				<p id="empty-preview" ng-if="folders[folderPreviewIndex].items.length == 0">This folder is empty</p>
 				<div id="preview-scroll-container" scroll>
@@ -154,16 +153,16 @@
 					<img ng-if="selectedItem.image" ng-src="{{selectedItem.image}}">
 					{{selectedItem.text}}
 				</div>
-			</div>
+			</div> -->
 
 			<div tabindex="-1" id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
 			</div>
 
 			<div tabindex="-1" id="back-to-desktop" ng-show="showFolderPreview && selectedItem">Put Back on Desktop</div>
 
-			<div tabindex="-1" id="enlarged-image" ng-class="{hidden: !enlargeImage.show}" ng-click="enlargeImage.show = false">
+			<div tabindex="-1" id="enlarged-image" ng-class="{hidden: !enlargedImage.show}" ng-click="enlargedImage.show = false">
 				<div>
-					<img ng-if="enlargeImage.show" ng-src="{{enlargeImage.url}}">
+					<img ng-if="enlargedImage.show" ng-src="{{enlargedImage.url}}">
 					<i>click anywhere to close</i>
 				</div>
 			</div>

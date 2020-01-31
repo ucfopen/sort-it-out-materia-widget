@@ -1,4 +1,4 @@
-const SortItOut = angular.module("SortItOutEngine", ["ngAnimate", "hmTouchEvents", "ngAria"])
+const SortItOut = angular.module("SortItOutEngine", ["hmTouchEvents", "ngAria"])
 
 // force scope to update when scrolling
 SortItOut.directive("scroll", () => {
@@ -44,15 +44,16 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	$scope.selectedItem = false
 	$scope.desktopItems = []
 	$scope.folders = []
-	$scope.enlargeImage = {
+	$scope.enlargedImage = {
 		show: false,
 		url: ""
 	}
 
 	const generateBounds = () => {
-		const width = $("#desktop").width()
-		const height = $("#desktop").height()
-		const menuBarHeight = $("#menu-bar").outerHeight()
+		const desktopEl = document.getElementById('desktop')
+		const width = parseFloat(getComputedStyle(desktopEl, null).width.replace("px", ""))
+		const height = parseFloat(getComputedStyle(desktopEl, null).height.replace("px", ""))
+		const menuBarHeight = document.getElementById('menu-bar').offsetHeight
 
 		$scope.placementBounds = {
 			x: {
@@ -111,7 +112,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		const xRange = pb.x.max - pb.x.min
 		const x = ~~(Math.random() * xRange) + pb.x.min
 
-		return { x, y }
+		return { left: x, top: y }
 	}
 
 	// fisher-yates shuffle algorithm
@@ -126,10 +127,32 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		return array
 	}
 
+	const setItemPos = (el, top, left) => {
+		el.style.top = `${top}px`
+		el.style.left = `${left}px`
+	}
+
 	// aria-live regions don't work well with normal angular data binding with scope variables
 	// to overcome this, we gotta go old school and edit the DOM node manually
 	const assistiveAlert = (text) => {
 		if (document.getElementById("assistive-alert")) document.getElementById("assistive-alert").innerHTML = text
+	}
+
+	const removeClassShrink = () => {
+		const shrunk = document.getElementsByClassName('shrink')
+		Array.from(shrunk).forEach(el => el.classList.remove('shrink'))
+	}
+
+	const removeClassPeek = () => {
+		const peeked = document.getElementsByClassName('peeked')
+		Array.from(peeked).forEach(el => el.classList.remove('peeked'))
+	}
+
+	const isOutOfBounds = e => {
+		const db = $scope.dragBounds
+		const outOfBoundsX = e.clientX < db.x.min || e.clientX > db.x.max
+		const outOfBoundsY = e.clientY < db.y.min || e.clientY > db.y.max
+		return outOfBoundsX || outOfBoundsY
 	}
 
 	$scope.start = (instance, qset, version) => {
@@ -137,6 +160,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		$scope.title = instance.name
 		$scope.folders = makeFoldersFromQset(qset)
 		$scope.desktopItems = shuffle(makeItemsFromQset(qset))
+
 		$scope.backgroundImage = "assets/desktop.jpg"
 		if (qset.options.backgroundImageId) {
 			$scope.backgroundImage = Materia.Engine.getMediaUrl(
@@ -148,30 +172,37 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		$scope.$apply()
 	}
 
-	$scope.hideTutorial = () => $(".tutorial").fadeOut()
+	$scope.hideTutorial = () => {
+		const tutorialEl = document.getElementById('tutorial')
+		const tutorialBgEl = document.getElementById('tutorial-background')
+		tutorialEl.classList.add('hide');
+		tutorialEl.classList.remove('show');
+		tutorialBgEl.classList.add('hide')
+		tutorialBgEl.classList.remove('show')
+		setTimeout(() => {
+			tutorialEl.classList.add('hidden')
+			tutorialBgEl.classList.add('hidden')
+		}, 400)
+	}
 
 	$scope.itemMouseDown = (e, item) => {
 		$scope.selectedItem = item
 
 		// hammer events store the element differently
 		selectedElement = e.element ? e.element[0] : e.currentTarget
-
-		const left = parseInt($(selectedElement).css("left"), 10)
-		const top = parseInt($(selectedElement).css("top"), 10)
+		const computedStyle = getComputedStyle(selectedElement)
+		const left = parseInt(computedStyle.left, 10)
+		const top = parseInt(computedStyle.top, 10)
 
 		$scope.offsetLeft = left - e.clientX
 		$scope.offsetTop = top - e.clientY
+		pickupCount++
 
-		$(selectedElement).css({ top, left, "z-index": pickupCount++ })
+		setItemPos(selectedElement, top, left)
+		selectedElement.style.zIndex = pickupCount
+
 		prevPosition = { top, left }
 		itemSource = SRC_DESKTOP
-	}
-
-	$scope.isOutOfBounds = e => {
-		const db = $scope.dragBounds
-		const outOfBoundsX = e.clientX < db.x.min || e.clientX > db.x.max
-		const outOfBoundsY = e.clientY < db.y.min || e.clientY > db.y.max
-		return outOfBoundsX || outOfBoundsY
 	}
 
 	// hammer event properties are different from native, this changes the event
@@ -188,52 +219,49 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	}
 
 	$scope.panMove = e => {
-		const underElem = $(document.elementFromPoint(e.clientX, e.clientY))
-		const folderElem = underElem.closest(".folder")
-		if (folderElem.length) {
-			const index = folderElem.data("index")
-			$(`.folder[data-index=${index}]`).addClass("peeked")
-			$(selectedElement).addClass("shrink")
+		const underElem = document.elementFromPoint(e.clientX, e.clientY)
+		const folderElem = underElem.closest('.folder')
+		if (folderElem) {
+			const index = folderElem.dataset.index
+			$scope.peekFolder(index)
+			if (selectedElement) selectedElement.classList.add('shrink')
 		} else {
-			$(".shrink").removeClass("shrink")
-			$(".peeked").removeClass("peeked")
+			removeClassPeek()
+			removeClassShrink()
 		}
 
 		if (selectedElement) {
-			if ($scope.isOutOfBounds(e)) {
+			if (isOutOfBounds(e)) {
 				return $scope.mouseUp(e)
 			}
 			const left = e.clientX + $scope.offsetLeft
 			const top = e.clientY + $scope.offsetTop
-			$(selectedElement).css({ top, left })
+			setItemPos(selectedElement, top, left)
 		}
 	}
 
 	$scope.mouseUp = e => {
-		$(".peeked").removeClass("peeked")
+		removeClassPeek()
 		if (!selectedElement) {
 			return
 		}
+
 		if (e.stopPropagation) {
 			e.stopPropagation()
 		}
 
-		const underElem = $(document.elementFromPoint(e.clientX, e.clientY))
-		const underElemId = underElem.attr("id")
+		const underElemId = document.elementFromPoint(e.clientX, e.clientY).id
 
 		// put it back if it's out of bounds or over the dock but not a folder
-		if ($scope.isOutOfBounds(e) || underElemId == "dock-main") {
-			$(".shrink").removeClass("shrink")
-			$(selectedElement).animate({
-				left: prevPosition.left,
-				top: Math.min(prevPosition.top, $scope.placementBounds.y.max)
-			}, 300)
+		if (isOutOfBounds(e) || underElemId == "dock-main") {
+			removeClassShrink()
+			setItemPos(selectedElement, Math.min(prevPosition.top, $scope.placementBounds.y.max), prevPosition.left)
 		} else {
-
+			const underElem = document.elementFromPoint(e.clientX, e.clientY)
 			// dragged item INTO a folder
 			const folderElem = underElem.closest(".folder")
-			if (folderElem.length) {
-				$scope.mouseUpOverFolder(folderElem.data("index"))
+			if (folderElem) {
+				$scope.mouseUpOverFolder(folderElem.dataset.index)
 			}
 
 			// draged item OUT of a folder
@@ -262,6 +290,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	}
 
 	$scope.mouseUpOverFolder = targetFolderIndex => {
+		console.log($scope.desktopItems)
 		// item dropped to where it already is
 		if (targetFolderIndex == itemSource) {
 			return
@@ -303,9 +332,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		// update what folder this item is in
 		$scope.desktopItems[desktopIndex].folder = targetFolderIndex
 
-		// @TODO: use angular to update the class
-		$(".desktop-item.selected").removeClass("selected")
-
 		// reset our dragging state
 		selectedElement = false
 		$scope.selectedItem = false
@@ -323,7 +349,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 			_assistiveFolderSelectIndex = -1
 			_inAssistiveFolderSelectMode = false
 
-			$scope.hidePeek()
+			removeClassPeek()
 			assistiveAlert(item.text + " is selected.")
 
 			$scope.hideTutorial()
@@ -340,14 +366,14 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				if (_inAssistiveFolderSelectMode) {
 					$scope.mouseUpOverFolder(_assistiveFolderSelectIndex)
 					assistiveAlert(item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text)
-					$scope.hidePeek()
+					removeClassPeek()
 					$scope.selectedItem = item // set selectedItem back to the item that was placed, overriding the default behavior
 				}
 				break
 
 			case 40: // down arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
 				event.preventDefault()
-				$scope.hidePeek()
+				removeClassPeek()
 				if (_assistiveFolderSelectIndex >= $scope.folders.length - 1) _assistiveFolderSelectIndex = 0
 				else _assistiveFolderSelectIndex++
 				$scope.peekFolder(_assistiveFolderSelectIndex)
@@ -357,7 +383,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 
 			case 38: // up arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
 				event.preventDefault()
-				$scope.hidePeek()
+				removeClassPeek()
 				if (_assistiveFolderSelectIndex <= 0) _assistiveFolderSelectIndex = $scope.folders.length - 1
 				else _assistiveFolderSelectIndex--
 				$scope.peekFolder(_assistiveFolderSelectIndex)
@@ -373,7 +399,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 
 	$scope.handleAssistiveRepeat = (event) => {
 		if (event.which == 32) {
-			document.getElementsByClassName("desktop-item")[0].focus()
+			document.getElementsByClassName('desktop-item')[0].focus()
 		}
 	}
 
@@ -394,10 +420,12 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	}
 
 	$scope.previewMouseDown = (e, item) => {
-		selectedElement = $("#preview-selected-item")[0]
+		selectedElement = document.getElementById('preview-selected-item')
 		$scope.selectedItem = item
 
-		let { left, top } = $(e.currentTarget).offset()
+		const rect = e.currentTarget.getBoundingClientRect();
+		let top = rect.top + document.body.scrollTop
+		let left = rect.left + document.body.scrollLeft
 
 		// slight shift to keep things looking good
 		left -= 10
@@ -416,24 +444,21 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		$scope.offsetLeft = left - e.clientX
 		$scope.offsetTop = top - e.clientY
 
-		$(selectedElement).css({ top, left })
+		setItemPos(selectedElement, top, left)
 		itemSource = $scope.folderPreviewIndex
 	}
 
 	$scope.peekFolder = index => {
-		$(`.folder[data-index=${index}]`).addClass("peeked")
-	}
-
-	$scope.hidePeek = () => {
-		$(".peeked").removeClass("peeked")
+		const folders = document.querySelectorAll(`.folder[data-index="${index}"]`)
+		folders.forEach(f => f.classList.add('peeked'))
 	}
 
 	$scope.enlargeImage = (url, e) => {
 		if (e.stopPropagation) {
 			e.stopPropagation()
 		}
-		$scope.enlargeImage.url = url
-		$scope.enlargeImage.show = true
+		$scope.enlargedImage.url = url
+		$scope.enlargedImage.show = true
 	}
 
 	// this is used to prevent dragging of the images on macOS
@@ -446,28 +471,35 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		}
 	}
 
-	$scope.canScrollUp = () => $("#preview-scroll-container").scrollTop() > 0
+	// $scope.canScrollUp = () => {
+	// 	const el = document.getElementById('preview-scroll-container')
+	// 	const rect = el.getBoundingClientRect()
+	// 	return (rect.top + document.body.scrollTop) > 0
+	// }
 
-	$scope.canScrollDown = () => {
-		const e = $("#preview-scroll-container")
-		const scrollBottom = e.scrollTop() + e.height()
-		const containerBottom = e[0].scrollHeight - MARGIN_SIZE
-		return scrollBottom < containerBottom
-	}
+	// $scope.canScrollDown = () => {
+	// 	const el = document.getElementById('preview-scroll-container')
+	// 	const rect = el.getBoundingClientRect()
+	// 	const elScrollTop = rect.top + document.body.scrollTop
+	// 	const height = parseFloat(getComputedStyle(el, null).height.replace("px", ""))
+	// 	const scrollBottom = elScrollTop + height
+	// 	const containerBottom = e[0].scrollHeight - MARGIN_SIZE
+	// 	return scrollBottom < containerBottom
+	// }
 
-	$scope.scrollUp = () => {
-		const currTop = $("#preview-scroll-container").scrollTop()
-		$("#preview-scroll-container").animate({
-			scrollTop: currTop - 100
-		}, 300, () => $scope.$apply())
-	}
+	// $scope.scrollUp = () => {
+	// 	const currTop = $("#preview-scroll-container").scrollTop()
+	// 	$("#preview-scroll-container").animate({
+	// 		scrollTop: currTop - 100
+	// 	}, 300, () => $scope.$apply())
+	// }
 
-	$scope.scrollDown = () => {
-		const currTop = $("#preview-scroll-container").scrollTop()
-		$("#preview-scroll-container").animate({
-			scrollTop: currTop + 100
-		}, 300, () => $scope.$apply())
-	}
+	// $scope.scrollDown = () => {
+	// 	const currTop = $("#preview-scroll-container").scrollTop()
+	// 	$("#preview-scroll-container").animate({
+	// 		scrollTop: currTop + 100
+	// 	}, 300, () => $scope.$apply())
+	// }
 
 	$scope.readyToSubmit = () => {
 		return $scope.numSorted >= $scope.desktopItems.length

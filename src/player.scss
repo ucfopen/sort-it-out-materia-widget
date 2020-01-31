@@ -739,11 +739,23 @@ button.cancel-submit-button {
 	z-index: 90;
 	overflow: hidden;
 
+	&.show {
+		opacity: 1;
+	}
+
+	&.hide {
+		opacity: 0;
+		transition: opacity 400ms;
+	}
+
+	&.hidden{
+		display: none;
+	}
+
 	h3 {
 		font-size: 18px;
 		font-weight: normal;
 	}
-
 	#tutorial-board-container {
 		width: 850px;
 		position: relative;
@@ -937,6 +949,19 @@ button.cancel-submit-button {
 	right: 0;
 	background-color: rgba(gray, 0.8);
 	z-index: 80;
+
+	&.show {
+		opacity: 1;
+	}
+
+	&.hide {
+		opacity: 0;
+		transition: opacity 400ms;
+	}
+
+	&.hidden{
+		display: none;
+	}
 }
 
 @keyframes cursor1 {
