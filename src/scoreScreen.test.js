@@ -224,12 +224,26 @@ describe('ScoreScreen Controller', function() {
 		expect(sanitized).toBe('&lt;p&gt;This is a paragraph tag&lt;/p&gt;');
 	});
 
+	it('should react properly when trying to sanitize nothing', function() {
+		let text = '';
+		let sanitized = $sanitizeHelper.sanitize(text);
+
+		expect(sanitized).toBe(undefined);
+	});
+
 	it('should correctly desanitize item text', function() {
 		let text = '&lt;p&gt;This is a paragraph tag&lt;/p&gt;';
 		let desanitize = $sanitizeHelper.desanitize(text);
 
 		expect(desanitize).toBe('<p>This is a paragraph tag</p>');
-	})
+	});
+
+	it('should react properly when trying to desanitize nothing', function() {
+		let text = '';
+		let sanitized = $sanitizeHelper.desanitize(text);
+
+		expect(sanitized).toBe(undefined);
+	});
 
 	var generateScoreTables = () => {
 		// the 100% correct score tables that match each qset
