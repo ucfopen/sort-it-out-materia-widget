@@ -10,7 +10,6 @@
 		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="materia.enginecore.js"></script>
 
 		<!-- WIDGET DEPENDENCIES -->
@@ -96,11 +95,13 @@
 				aria-label="You have reached the end of the list. Press space to return to the beginning of the list.
 				You have sorted {{numSorted}} items out of {{desktopItems.length}}."></div>
 
-			<div id="dock-main" class="dock" ng-click="hideFolderPreview()" tabindex="-1">
+			<div id="dock-main" class="dock" tabindex="-1">
+				<!-- little bit of a hack to enable clicking anywhere in the dock to close the currently open folder -->
+				<div id='dock-main-background' class='dock' ng-click="hideFolderPreview()"></div>
 				<div class="folder"
 					ng-class="{opened: folderPreviewIndex == $index}"
 					ng-repeat="folder in folders"
-					ng-click="selectFolder($event, $index)"
+					ng-click="mouseUpOverFolder($index)"
 					ng-mouseenter="peekFolder($index)"
 					ng-mouseleave="hidePeek()"
 					data-index="{{$index}}"
@@ -129,12 +130,12 @@
 				</div>
 			</div>
 
-<!-- 			<div id="desktop-zone-container" class="desktop-zone" ng-show="showFolderPreview && selectedItem">
+			<div id="desktop-zone-container" class="desktop-zone" ng-show="showFolderPreview && selectedItem">
 				<div id="desktop-zone1" class="desktop-zone"></div>
 				<div id="desktop-zone2" class="desktop-zone"></div>
-			</div> -->
+			</div>
 
-<!-- 			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
+			<div id="folder-preview" ng-class="{hidden: !showFolderPreview}">
 				<h1 ng-class="{ small: folders[folderPreviewIndex].text.length > 40}">{{folders[folderPreviewIndex].text}}</h1>
 				<p id="empty-preview" ng-if="folders[folderPreviewIndex].items.length == 0">This folder is empty</p>
 				<div id="preview-scroll-container" scroll>
@@ -153,7 +154,7 @@
 					<img ng-if="selectedItem.image" ng-src="{{selectedItem.image}}">
 					{{selectedItem.text}}
 				</div>
-			</div> -->
+			</div>
 
 			<div tabindex="-1" id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
 			</div>
