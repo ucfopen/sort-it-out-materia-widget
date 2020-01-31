@@ -112,7 +112,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		const xRange = pb.x.max - pb.x.min
 		const x = ~~(Math.random() * xRange) + pb.x.min
 
-		return { left: x, top: y }
+		return { left: `${x}px`, top: `${y}px` }
 	}
 
 	// fisher-yates shuffle algorithm
@@ -220,7 +220,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 
 	$scope.panMove = e => {
 		const underElem = document.elementFromPoint(e.clientX, e.clientY)
-		const folderElem = underElem.closest('.folder')
+		const folderElem = underElem ? underElem.closest('.folder') : null
 		if (folderElem) {
 			const index = folderElem.dataset.index
 			$scope.peekFolder(index)
@@ -259,19 +259,20 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		} else {
 			const underElem = document.elementFromPoint(e.clientX, e.clientY)
 			// dragged item INTO a folder
-			const folderElem = underElem.closest(".folder")
+			const folderElem = underElem ? underElem.closest('.folder') : null
 			if (folderElem) {
 				$scope.mouseUpOverFolder(folderElem.dataset.index)
 			}
 
 			// draged item OUT of a folder
-			if (itemSource != SRC_DESKTOP && underElem.hasClass("desktop-zone")) {
+			if (itemSource != SRC_DESKTOP && underElem.classList.contains('desktop-zone')) {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item.text != $scope.selectedItem.text
 				)
+
 				$scope.selectedItem.position = {
-					x: e.clientX + $scope.offsetLeft,
-					y: e.clientY + $scope.offsetTop
+					top: `${e.clientY + $scope.offsetTop}px`,
+					left: `${e.clientX + $scope.offsetLeft}px`
 				}
 
 				for (const [index, item] of Object.entries($scope.desktopItems)) {
@@ -290,7 +291,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	}
 
 	$scope.mouseUpOverFolder = targetFolderIndex => {
-		console.log($scope.desktopItems)
 		// item dropped to where it already is
 		if (targetFolderIndex == itemSource) {
 			return
