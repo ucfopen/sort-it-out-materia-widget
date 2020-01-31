@@ -25,6 +25,18 @@ SortItOut.directive("keyboardShortcuts", ["$document", "$rootScope", ($document,
 }])
 
 SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout", "sanitizeHelper", function ($scope, $rootScope, $timeout, sanitizeHelper) {
+	const SRC_DESKTOP = -1 // indicates drag started on desktop, otherwise itemSource is folderIndex
+	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
+	const DOCK_HEIGHT = 125
+
+	let prevPosition       // start position of drag
+	let selectedElement    // element that is being dragged
+	let pickupCount = 1    // every new item picked up will go to the top (z-index)
+	let itemSource         // to track where the dragged item came from
+	let _assistiveFolderSelectIndex = -1
+	let _inAssistiveFolderSelectMode = false
+
+	$scope.numSorted = 0
 	$scope.tutorialPage = 1
 	$scope.showFolderPreview = false
 	$scope.showNoSubmit = false
@@ -35,36 +47,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	$scope.enlargeImage = {
 		show: false,
 		url: ""
-	}
-
-	let prevPosition       // start position of drag
-	let selectedElement    // element that is being dragged
-	let pickupCount = 1    // every new item picked up will go to the top (z-index)
-	let itemSource         // to track where the dragged item came from
-
-	const SRC_DESKTOP = -1 // indicates drag started on desktop, otherwise itemSource is folderIndex
-	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
-	const DOCK_HEIGHT = 125
-
-	let _assistiveFolderSelectIndex = -1
-	let _inAssistiveFolderSelectMode = false
-
-	$scope.numSorted = 0
-
-	$scope.start = (instance, qset, version) => {
-		generateBounds()
-		$scope.title = instance.name
-		$scope.folders = buildFolders(qset)
-		$scope.desktopItems = buildItems(qset)
-		$scope.backgroundImage = "assets/desktop.jpg"
-		if (qset.options.backgroundImageId) {
-			$scope.backgroundImage = Materia.Engine.getMediaUrl(
-				qset.options.backgroundImageId
-			)
-		} else if (qset.options.backgroundImageAsset) {
-			$scope.backgroundImage = qset.options.backgroundImageAsset
-		}
-		$scope.$apply()
 	}
 
 	const generateBounds = () => {
@@ -95,29 +77,29 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		}
 	}
 
-	const buildFolders = qset => {
-		let folderNames = new Set
+	const makeFoldersFromQset = qset => {
+		const folderNames = new Set
 		qset.items.forEach( item => {
 			folderNames.add(sanitizeHelper.desanitize(item.answers[0].text))
 		})
-		return Array.from(folderNames).map( text => {
-			return { text, items: [] }
-		})
+
+		return Array.from(folderNames).map( text => ({ text, items: [] }))
 	}
 
-	const buildItems = qset => {
-		return shuffle(qset.items.map( (item, index) => {
+	const makeItemsFromQset = qset => {
+		return qset.items.map( item => {
 			const image = item.options.image
 				? Materia.Engine.getMediaUrl(item.options.image)
 				: false
+
 			return {
 				id: item.id,
 				text: sanitizeHelper.desanitize(item.questions[0].text),
 				image,
-				position: generateRandomPosition(item.options.image),
+				position: generateRandomPosition(Boolean(item.options.image)),
 				folder: SRC_DESKTOP
 			}
-		}))
+		})
 	}
 
 	const generateRandomPosition = hasImage => {
@@ -133,21 +115,37 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	}
 
 	// fisher-yates shuffle algorithm
-	const shuffle = (a) => {
-		var j, x, i;
-		for (i = a.length - 1; i > 0; i--) {
-			j = Math.floor(Math.random() * (i + 1));
-			x = a[i];
-			a[i] = a[j];
-			a[j] = x;
+	const shuffle = array => {
+		for (let i = array.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1))
+			const x = array[i]
+			array[i] = array[j]
+			array[j] = x
 		}
-		return a;
+
+		return array
 	}
 
 	// aria-live regions don't work well with normal angular data binding with scope variables
 	// to overcome this, we gotta go old school and edit the DOM node manually
 	const assistiveAlert = (text) => {
 		if (document.getElementById("assistive-alert")) document.getElementById("assistive-alert").innerHTML = text
+	}
+
+	$scope.start = (instance, qset, version) => {
+		generateBounds()
+		$scope.title = instance.name
+		$scope.folders = makeFoldersFromQset(qset)
+		$scope.desktopItems = shuffle(makeItemsFromQset(qset))
+		$scope.backgroundImage = "assets/desktop.jpg"
+		if (qset.options.backgroundImageId) {
+			$scope.backgroundImage = Materia.Engine.getMediaUrl(
+				qset.options.backgroundImageId
+			)
+		} else if (qset.options.backgroundImageAsset) {
+			$scope.backgroundImage = qset.options.backgroundImageAsset
+		}
+		$scope.$apply()
 	}
 
 	$scope.hideTutorial = () => $(".tutorial").fadeOut()
@@ -231,13 +229,14 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				top: Math.min(prevPosition.top, $scope.placementBounds.y.max)
 			}, 300)
 		} else {
-			// if dragged on a folder, put it in
+
+			// dragged item INTO a folder
 			const folderElem = underElem.closest(".folder")
 			if (folderElem.length) {
-				$scope.selectFolder(e, folderElem.data("index"))
+				$scope.mouseUpOverFolder(folderElem.data("index"))
 			}
 
-			// source is a folder, destination is back-to-desktop
+			// draged item OUT of a folder
 			if (itemSource != SRC_DESKTOP && underElem.hasClass("desktop-zone")) {
 				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
 					item => item.text != $scope.selectedItem.text
@@ -247,7 +246,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 					y: e.clientY + $scope.offsetTop
 				}
 
-				for (var [index, item] of Object.entries($scope.desktopItems)) {
+				for (const [index, item] of Object.entries($scope.desktopItems)) {
 					if ($scope.selectedItem.text == item.text) {
 						$scope.desktopItems[index].sorted = false
 						$scope.desktopItems[index].folder = SRC_DESKTOP
@@ -262,46 +261,55 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		itemSource = SRC_DESKTOP
 	}
 
-	$scope.selectFolder = (e, index) => {
-		if (e.stopPropagation) {
-			e.stopPropagation()
+	$scope.mouseUpOverFolder = targetFolderIndex => {
+		// item dropped to where it already is
+		if (targetFolderIndex == itemSource) {
+			return
 		}
 
-		if (index == itemSource) {
-			return // if dragged to where it already is
-		}
-
-		// if currently-opened folder is clicked, close that folder
-		if (index == $scope.folderPreviewIndex) {
+		// clicked on an open folder, close it
+		if (targetFolderIndex == $scope.folderPreviewIndex) {
 			$scope.hideFolderPreview()
 			return
 		}
 
-		if ($scope.selectedItem) {
-			$scope.folders[index].items.push($scope.selectedItem)
-
-			let desktopIndex = $scope.desktopItems.indexOf($scope.selectedItem)
-
-			itemSource = $scope.desktopItems[desktopIndex].folder
-
-			if (itemSource == SRC_DESKTOP) {
-				$scope.desktopItems[desktopIndex].sorted = true
-				$scope.numSorted++
-			} else {
-				$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
-					item => item.text != $scope.selectedItem.text
-				)
-			}
-			$scope.desktopItems[desktopIndex].folder = index
-
-			$(".desktop-item.selected").removeClass("selected")
-			selectedElement = false
-			$scope.selectedItem = false
-			itemSource = SRC_DESKTOP
-		} else {
+		// clicked on a folder that wasn't open, open it
+		if (!$scope.selectedItem) {
 			$scope.showFolderPreview = true
-			$scope.folderPreviewIndex = index
+			$scope.folderPreviewIndex = targetFolderIndex
+			return
 		}
+
+		// add selected item to this folder's items
+		$scope.folders[targetFolderIndex].items.push($scope.selectedItem)
+
+		const desktopIndex = $scope.desktopItems.indexOf($scope.selectedItem)
+
+		itemSource = $scope.desktopItems[desktopIndex].folder
+
+		if (itemSource == SRC_DESKTOP) {
+			// item is moving from the desktop
+			$scope.desktopItems[desktopIndex].sorted = true
+			$scope.numSorted++
+		} else {
+			// item moving from another folder
+			// remove it from the folder's items
+			const previousFolder = $scope.folders[itemSource]
+			previousFolder.items = previousFolder.items.filter(
+				item => item.text != $scope.selectedItem.text
+			)
+		}
+
+		// update what folder this item is in
+		$scope.desktopItems[desktopIndex].folder = targetFolderIndex
+
+		// @TODO: use angular to update the class
+		$(".desktop-item.selected").removeClass("selected")
+
+		// reset our dragging state
+		selectedElement = false
+		$scope.selectedItem = false
+		itemSource = SRC_DESKTOP
 
 		if ($scope.readyToSubmit()) {
 			assistiveAlert("You are ready to submit this widget. You can press escape or tab to cancel and continue sorting items.")
@@ -330,12 +338,13 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				if ($scope.selectedItem.folder == _assistiveFolderSelectIndex) return
 				// item has been selected, and a target folder is currently selected
 				if (_inAssistiveFolderSelectMode) {
-					$scope.selectFolder({}, _assistiveFolderSelectIndex)
+					$scope.mouseUpOverFolder(_assistiveFolderSelectIndex)
 					assistiveAlert(item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text)
 					$scope.hidePeek()
 					$scope.selectedItem = item // set selectedItem back to the item that was placed, overriding the default behavior
 				}
 				break
+
 			case 40: // down arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
 				event.preventDefault()
 				$scope.hidePeek()
@@ -345,6 +354,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder.")
 				_inAssistiveFolderSelectMode = true
 				break
+
 			case 38: // up arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
 				event.preventDefault()
 				$scope.hidePeek()
@@ -354,8 +364,10 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder.")
 				_inAssistiveFolderSelectMode = true
 				break
+
 			default:
 				return false
+
 		}
 	}
 
@@ -375,12 +387,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 			$scope.showSubmitDialog = false
 		}
 	}
-
-	$rootScope.$on("tabMonitor", (type, event, key) => {
-		$scope.$apply(() => {
-			$scope.hideTutorial()
-		})
-	})
 
 	$scope.hideFolderPreview = () => {
 		$scope.showFolderPreview = false
@@ -476,13 +482,21 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 			return
 		}
 
-		$scope.folders.forEach( ({text, items}) => {
+		// submit which folder each item is in
+		$scope.folders.forEach( ({text: folderText, items}) => {
 			items.forEach( item => {
-				Materia.Score.submitQuestionForScoring(item.id, text)
+				Materia.Score.submitQuestionForScoring(item.id, folderText)
 			})
 		})
+
 		Materia.Engine.end()
 	}
+
+	$rootScope.$on("tabMonitor", (type, event, key) => {
+		$scope.$apply(() => {
+			$scope.hideTutorial()
+		})
+	})
 
 	Materia.Engine.start($scope)
 }])
@@ -495,25 +509,26 @@ SortItOut.service('sanitizeHelper', [ function() {
 		'"' : '&#34;'
 	}
 
-	const sanitize = (input) => {
-		if (!input) return;
-		for (var k in SANITIZE_CHARACTERS) {
-			let v = SANITIZE_CHARACTERS[k]
-			let re = new RegExp(k, "g")
-			input = input.replace(re, v)
+	const sanitize = input => {
+		if (!input) return
+
+		for (const k in SANITIZE_CHARACTERS) {
+			input = input.replace(SANITIZE_CHARACTERS[k], v)
 		}
+
 		return input
 	}
 
 	const desanitize = (input) => {
-		if (!input) return;
-		for (var k in SANITIZE_CHARACTERS) {
-			let v = SANITIZE_CHARACTERS[k]
-			let re = new RegExp(v, "g")
-			input = input.replace(re, k)
+		if (!input) return
+
+		for (const k in SANITIZE_CHARACTERS) {
+			input = input.replace(SANITIZE_CHARACTERS[k], k)
 		}
+
 		return input
 	}
+
 	return {
 		sanitize: sanitize,
 		desanitize: desanitize
