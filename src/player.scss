@@ -572,14 +572,16 @@ button.cancel-submit-button {
 }
 
 #back-to-desktop {
+	$width: 800px;
+
 	position: fixed;
 	z-index: 3;
 	top: 50px;
-	left: calc(50% - 400px);
-	width: 800px;
+	left: calc(50% - (#{$width/2}));
+	width: $width;
 	height: 140px;
-	background: rgba(0, 225, 0, 0.3);
-	border: 4px dashed green;
+	background: rgba(255, 225, 255, 0.3);
+	border: 3px dashed black;
 	border-radius: 10px;
 	font-size: 32px;
 	line-height: 130px;

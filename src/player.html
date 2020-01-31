@@ -96,8 +96,7 @@
 				You have sorted {{numSorted}} items out of {{desktopItems.length}}."></div>
 
 			<div id="dock-main" class="dock" tabindex="-1">
-				<!-- little bit of a hack to enable clicking anywhere in the dock to close the currently open folder -->
-				<div id='dock-main-background' class='dock' ng-click="hideFolderPreview()"></div>
+				<div id="dock-main-background" class="dock" ng-click="hideFolderPreview()"></div>
 				<div class="folder"
 					ng-class="{opened: folderPreviewIndex == $index}"
 					ng-repeat="folder in folders"
@@ -147,9 +146,9 @@
 						{{item.text}}
 					</div>
 				</div>
-				<i  tabindex="-1" class="material-icons" id="preview-close" ng-click="hideFolderPreview()">close</i>
-				<button id="preview-scroll-up" ng-if="showFolderPreview" ng-show="canScrollUp()" ng-click="scrollUp()">&uarr;</button>
-				<button id="preview-scroll-down" ng-if="showFolderPreview" ng-show="canScrollDown()" ng-click="scrollDown()">&darr;</button>
+				<i tabindex="-1" class="material-icons" id="preview-close" ng-click="hideFolderPreview()">close</i>
+				<button id="preview-scroll-up" ng-if="showFolderPreview" ng-show="canScroll()" ng-click="scrollUp()">&uarr;</button>
+				<button id="preview-scroll-down" ng-if="showFolderPreview" ng-show="canScroll()" ng-click="scrollDown()">&darr;</button>
 				<div id="preview-selected-item" ng-show="showFolderPreview && selectedItem.text">
 					<img ng-if="selectedItem.image" ng-src="{{selectedItem.image}}">
 					{{selectedItem.text}}
@@ -159,7 +158,7 @@
 			<div tabindex="-1" id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
 			</div>
 
-			<div tabindex="-1" id="back-to-desktop" ng-show="showFolderPreview && selectedItem">Put Back on Desktop</div>
+			<div tabindex="-1" id="back-to-desktop" ng-show="showFolderPreview">Drop here to remove from folder</div>
 
 			<div tabindex="-1" id="enlarged-image" ng-class="{hidden: !enlargedImage.show}" ng-click="enlargedImage.show = false">
 				<div>

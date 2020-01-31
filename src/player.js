@@ -28,6 +28,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	const SRC_DESKTOP = -1 // indicates drag started on desktop, otherwise itemSource is folderIndex
 	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
 	const DOCK_HEIGHT = 125
+	const previewScrollContainerEl = document.getElementById('preview-scroll-container')
 
 	let prevPosition       // start position of drag
 	let selectedElement    // element that is being dragged
@@ -471,35 +472,17 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 		}
 	}
 
-	// $scope.canScrollUp = () => {
-	// 	const el = document.getElementById('preview-scroll-container')
-	// 	const rect = el.getBoundingClientRect()
-	// 	return (rect.top + document.body.scrollTop) > 0
-	// }
+	$scope.canScroll = () => {
+		return previewScrollContainerEl.scrollHeight > previewScrollContainerEl.clientHeight;
+	}
 
-	// $scope.canScrollDown = () => {
-	// 	const el = document.getElementById('preview-scroll-container')
-	// 	const rect = el.getBoundingClientRect()
-	// 	const elScrollTop = rect.top + document.body.scrollTop
-	// 	const height = parseFloat(getComputedStyle(el, null).height.replace("px", ""))
-	// 	const scrollBottom = elScrollTop + height
-	// 	const containerBottom = e[0].scrollHeight - MARGIN_SIZE
-	// 	return scrollBottom < containerBottom
-	// }
+	$scope.scrollUp = () => {
+		previewScrollContainerEl.scrollTop -= 100
+	}
 
-	// $scope.scrollUp = () => {
-	// 	const currTop = $("#preview-scroll-container").scrollTop()
-	// 	$("#preview-scroll-container").animate({
-	// 		scrollTop: currTop - 100
-	// 	}, 300, () => $scope.$apply())
-	// }
-
-	// $scope.scrollDown = () => {
-	// 	const currTop = $("#preview-scroll-container").scrollTop()
-	// 	$("#preview-scroll-container").animate({
-	// 		scrollTop: currTop + 100
-	// 	}, 300, () => $scope.$apply())
-	// }
+	$scope.scrollDown = () => {
+		previewScrollContainerEl.scrollTop += 100
+	}
 
 	$scope.readyToSubmit = () => {
 		return $scope.numSorted >= $scope.desktopItems.length
