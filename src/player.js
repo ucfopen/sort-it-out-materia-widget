@@ -41,7 +41,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	let selectedElement    // element that is being dragged
 	let pickupCount = 1    // every new item picked up will go to the top (z-index)
 	let itemSource         // to track where the dragged item came from
-	let questionToId = new Map() // used for scoring
 
 	const SRC_DESKTOP = -1 // indicates drag started on desktop, otherwise itemSource is folderIndex
 	const MARGIN_SIZE = 20 // #preview-scroll-container margin size
@@ -53,7 +52,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 	$scope.numSorted = 0
 
 	$scope.start = (instance, qset, version) => {
-		generateQuestionToId(qset)
 		generateBounds()
 		$scope.title = instance.name
 		$scope.folders = buildFolders(qset)
@@ -67,13 +65,6 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 			$scope.backgroundImage = qset.options.backgroundImageAsset
 		}
 		$scope.$apply()
-	}
-
-	const generateQuestionToId = qset => {
-		for (let item of qset.items) {
-			// btoa encodes question text as a base64 string to prevent failure from special characters
-			questionToId.set(btoa(sanitizeHelper.desanitize(item.questions[0].text)), item.id)
-		}
 	}
 
 	const generateBounds = () => {
@@ -120,6 +111,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 				? Materia.Engine.getMediaUrl(item.options.image)
 				: false
 			return {
+				id: item.id,
 				text: sanitizeHelper.desanitize(item.questions[0].text),
 				image,
 				position: generateRandomPosition(item.options.image),
@@ -486,8 +478,7 @@ SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout",
 
 		$scope.folders.forEach( ({text, items}) => {
 			items.forEach( item => {
-				const id = questionToId.get(btoa(item.text))
-				Materia.Score.submitQuestionForScoring(id, text)
+				Materia.Score.submitQuestionForScoring(item.id, text)
 			})
 		})
 		Materia.Engine.end()
