@@ -25,6 +25,7 @@ const preventDefault = (e, stopPropagation) => {
 }
 
 const handleAssistiveRepeat = event => {
+	// spacebar?
 	if (event.which == 32) {
 		document.getElementsByClassName('desktop-item')[0].focus()
 	}
@@ -37,8 +38,9 @@ const setItemPos = (el, top, left) => {
 
 const generateBounds = () => {
 	const desktopEl = document.getElementById('desktop')
-	const width = parseFloat(getComputedStyle(desktopEl, null).width.replace("px", ""))
-	const height = parseFloat(getComputedStyle(desktopEl, null).height.replace("px", ""))
+	const style = getComputedStyle(desktopEl, null)
+	const width = parseFloat(style.width.replace("px", ""))
+	const height = parseFloat(style.height.replace("px", ""))
 	const menuBarHeight = document.getElementById('menu-bar').offsetHeight
 
 	const placementBounds = {
@@ -116,14 +118,14 @@ const makeItemsFromQset = (qset, placementBounds)  => {
 	})
 }
 
-const hideTutorial = () => {
+const hideTutorial = $timeout => {
 	const tutorialEl = document.getElementById('tutorial')
 	const tutorialBgEl = document.getElementById('tutorial-background')
 	tutorialEl.classList.add('hide');
 	tutorialEl.classList.remove('show');
 	tutorialBgEl.classList.add('hide')
 	tutorialBgEl.classList.remove('show')
-	setTimeout(() => {
+	$timeout(() => {
 		tutorialEl.classList.add('hidden')
 		tutorialBgEl.classList.add('hidden')
 	}, 400)
@@ -160,9 +162,11 @@ const SANITIZE_CHARACTERS = {
 
 const sanitize = input => {
 	if (!input) return
+	console.log(input)
 
 	for (const k in SANITIZE_CHARACTERS) {
-		input = input.replace(SANITIZE_CHARACTERS[k], v)
+		const reg = new RegExp(SANITIZE_CHARACTERS[k], 'g')
+		input = input.replace(reg, v)
 	}
 
 	return input
@@ -172,7 +176,8 @@ const desanitize = input => {
 	if (!input) return
 
 	for (const k in SANITIZE_CHARACTERS) {
-		input = input.replace(SANITIZE_CHARACTERS[k], k)
+		const reg = new RegExp(SANITIZE_CHARACTERS[k], 'g')
+		input = input.replace(reg, k)
 	}
 
 	return input
@@ -219,7 +224,7 @@ const handleItemFocus = ($scope, event, item) => {
 
 		removeClassPeek()
 		assistiveAlert(item.text + " is selected.")
-		hideTutorial()
+		$scope.hideTutorial()
 	}
 }
 
@@ -524,7 +529,6 @@ const sortItOutEngineCtrl = ($scope, $rootScope, $timeout) => {
 	// set up scope functions
 	// NOTE: these don't need te be bound because they don't use $scope internally
 	// therefore, they can be called directly
-	$scope.hideTutorial = hideTutorial
 	$scope.standardizeEvent = standardizeEvent
 	$scope.handleAssistiveRepeat = handleAssistiveRepeat
 	$scope.peekFolder = peekFolder
@@ -532,6 +536,7 @@ const sortItOutEngineCtrl = ($scope, $rootScope, $timeout) => {
 
 	// set up scope functions with dependencies
 	// NOTE: if you need to call any of these methods, call them
+	$scope.hideTutorial = hideTutorial.bind(null, $timeout)
 	$scope.handleItemFocus = handleItemFocus.bind(null, $scope)
 	$scope.handleItemFocus = handleItemFocus.bind(null, $scope)
 	$scope.handleAssistiveSelection = handleAssistiveSelection.bind(null, $scope)
@@ -552,7 +557,7 @@ const sortItOutEngineCtrl = ($scope, $rootScope, $timeout) => {
 	// setup listeners
 	$rootScope.$on('tabMonitor', () => {
 		$scope.$apply(() => {
-			hideTutorial()
+			$scope.hideTutorial()
 		})
 	})
 
@@ -586,6 +591,7 @@ module.exports = {
 	mouseUpOverFolder,
 	onMateriaStart,
 	panMove,
+	peekFolder,
 	preventDefault,
 	previewMouseDown,
 	readyToSubmit,
