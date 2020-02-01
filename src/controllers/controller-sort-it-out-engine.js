@@ -1,0 +1,602 @@
+const SRC_DESKTOP = -1 // indicates drag started on desktop, otherwise itemSource is folderIndex
+const DEFAULT_BG_IMAGE = 'assets/desktop.jpg'
+
+let previewScrollContainerEl
+let prevPosition       // start position of drag
+let selectedElement    // element that is being dragged
+let pickupCount = 1    // every new item picked up will go to the top (z-index)
+let itemSource         // to track where the dragged item came from
+let _assistiveFolderSelectIndex = -1
+let _inAssistiveFolderSelectMode = false
+
+const peekFolder = index => {
+	const folders = document.querySelectorAll(`.folder[data-index="${index}"]`)
+	folders.forEach(f => f.classList.add('peeked'))
+}
+
+// this is used to prevent dragging of the images on macOS
+const preventDefault = (e, stopPropagation) => {
+	if (e.preventDefault) {
+		e.preventDefault()
+	}
+	if (stopPropagation && e.stopPropagation) {
+		e.stopPropagation()
+	}
+}
+
+const handleAssistiveRepeat = event => {
+	if (event.which == 32) {
+		document.getElementsByClassName('desktop-item')[0].focus()
+	}
+}
+
+const setItemPos = (el, top, left) => {
+	el.style.top = `${top}px`
+	el.style.left = `${left}px`
+}
+
+const generateBounds = () => {
+	const desktopEl = document.getElementById('desktop')
+	const width = parseFloat(getComputedStyle(desktopEl, null).width.replace("px", ""))
+	const height = parseFloat(getComputedStyle(desktopEl, null).height.replace("px", ""))
+	const menuBarHeight = document.getElementById('menu-bar').offsetHeight
+
+	const placementBounds = {
+		x: {
+			min: 15,
+			max: width - 150
+		},
+		y: {
+			min: menuBarHeight + 5,
+			max: height - 15
+		}
+	}
+
+	const dragBounds = {
+		x: {
+			min: 15,
+			max: width - 15
+		},
+		y: {
+			min: menuBarHeight + 5,
+			max: menuBarHeight + height - 15
+		}
+	}
+
+	return { placementBounds, dragBounds }
+}
+
+// fisher-yates shuffle algorithm
+const shuffleArray = array => {
+	for (let i = array.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1))
+		const x = array[i]
+		array[i] = array[j]
+		array[j] = x
+	}
+
+	return array
+}
+
+const makeFoldersFromQset = qset => {
+	const folderNames = new Set
+	qset.items.forEach( item => {
+		folderNames.add(desanitize(item.answers[0].text))
+	})
+
+	return Array.from(folderNames).map( text => ({ text, items: [] }))
+}
+
+const generateRandomPosition = (placementBounds, hasImage) => {
+	const DOCK_HEIGHT = 125
+	const pb = placementBounds
+
+	const yRange = pb.y.max - pb.y.min - DOCK_HEIGHT - (hasImage ? 150 : 0)
+	const y = ~~(Math.random() * yRange) + pb.y.min
+
+	const xRange = pb.x.max - pb.x.min
+	const x = ~~(Math.random() * xRange) + pb.x.min
+
+	return { left: `${x}px`, top: `${y}px` }
+}
+
+const makeItemsFromQset = (qset, placementBounds)  => {
+	return qset.items.map( item => {
+		const image = item.options.image
+			? Materia.Engine.getMediaUrl(item.options.image)
+			: false
+
+		return {
+			id: item.id,
+			text: desanitize(item.questions[0].text),
+			image,
+			position: generateRandomPosition(placementBounds, Boolean(item.options.image)),
+			folder: SRC_DESKTOP
+		}
+	})
+}
+
+const hideTutorial = () => {
+	const tutorialEl = document.getElementById('tutorial')
+	const tutorialBgEl = document.getElementById('tutorial-background')
+	tutorialEl.classList.add('hide');
+	tutorialEl.classList.remove('show');
+	tutorialBgEl.classList.add('hide')
+	tutorialBgEl.classList.remove('show')
+	setTimeout(() => {
+		tutorialEl.classList.add('hidden')
+		tutorialBgEl.classList.add('hidden')
+	}, 400)
+}
+
+// aria-live regions don't work well with normal angular data binding with scope variables
+// to overcome this, we gotta go old school and edit the DOM node manually
+const assistiveAlert = text => {
+	if (document.getElementById("assistive-alert")) document.getElementById("assistive-alert").innerHTML = text
+}
+
+const removeClassShrink = () => {
+	const shrunk = document.getElementsByClassName('shrink')
+	Array.from(shrunk).forEach(el => el.classList.remove('shrink'))
+}
+
+const removeClassPeek = () => {
+	const peeked = document.getElementsByClassName('peeked')
+	Array.from(peeked).forEach(el => el.classList.remove('peeked'))
+}
+
+const isOutOfBounds = (x, y, dragBounds) => {
+	const outOfBoundsX = x < dragBounds.x.min || x > dragBounds.x.max
+	const outOfBoundsY = y < dragBounds.y.min || y > dragBounds.y.max
+	return outOfBoundsX || outOfBoundsY
+}
+
+const SANITIZE_CHARACTERS = {
+	'&' : '&amp;',
+	'>' : '&gt;',
+	'<' : '&lt;',
+	'"' : '&#34;'
+}
+
+const sanitize = input => {
+	if (!input) return
+
+	for (const k in SANITIZE_CHARACTERS) {
+		input = input.replace(SANITIZE_CHARACTERS[k], v)
+	}
+
+	return input
+}
+
+const desanitize = input => {
+	if (!input) return
+
+	for (const k in SANITIZE_CHARACTERS) {
+		input = input.replace(SANITIZE_CHARACTERS[k], k)
+	}
+
+	return input
+}
+
+// hammer event properties are different from native, this changes the event
+// and will call the regular function after
+const standardizeEvent = (hammerEvent, param2, cb) => {
+	hammerEvent.clientX = hammerEvent.center.x
+	hammerEvent.clientY = hammerEvent.center.y
+	hammerEvent.currentTarget = hammerEvent.target
+	if (param2) {
+		cb(hammerEvent, param2)
+	} else {
+		cb(hammerEvent)
+	}
+}
+
+const onMateriaStart = ($scope, instance, qset, version) => {
+	const {placementBounds, dragBounds} = generateBounds()
+	$scope.placementBounds = placementBounds
+	$scope.dragBounds = dragBounds
+	$scope.title = instance.name
+	$scope.folders = makeFoldersFromQset(qset)
+	$scope.desktopItems = shuffleArray(makeItemsFromQset(qset, placementBounds))
+
+	$scope.backgroundImage = DEFAULT_BG_IMAGE
+	if (qset.options.backgroundImageId) {
+		$scope.backgroundImage = Materia.Engine.getMediaUrl(
+			qset.options.backgroundImageId
+		)
+	} else if (qset.options.backgroundImageAsset) {
+		$scope.backgroundImage = qset.options.backgroundImageAsset
+	}
+
+	$scope.$apply()
+}
+
+const handleItemFocus = ($scope, event, item) => {
+	if ($scope.selectedItem != item) {
+		$scope.selectedItem = item
+		_assistiveFolderSelectIndex = -1
+		_inAssistiveFolderSelectMode = false
+
+		removeClassPeek()
+		assistiveAlert(item.text + " is selected.")
+		hideTutorial()
+	}
+}
+
+const handleAssistiveSelection = ($scope, event, item) => {
+
+	switch (event.keyCode) {
+		case 32: // space
+			// prevent unwanted behavior folder selection behavior
+			if ($scope.selectedItem.folder == _assistiveFolderSelectIndex) return
+			// item has been selected, and a target folder is currently selected
+			if (_inAssistiveFolderSelectMode) {
+				$scope.mouseUpOverFolder(_assistiveFolderSelectIndex)
+				assistiveAlert(item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text)
+				removeClassPeek()
+				$scope.selectedItem = item // set selectedItem back to the item that was placed, overriding the default behavior
+			}
+			break
+
+		case 40: // down arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
+			event.preventDefault()
+			removeClassPeek()
+			if (_assistiveFolderSelectIndex >= $scope.folders.length - 1) _assistiveFolderSelectIndex = 0
+			else _assistiveFolderSelectIndex++
+			peekFolder(_assistiveFolderSelectIndex)
+			assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder.")
+			_inAssistiveFolderSelectMode = true
+			break
+
+		case 38: // up arrow. inits assistive folder selection mode. Folder element is NOT focused but we peek it to provide a visual indicator of selection
+			event.preventDefault()
+			removeClassPeek()
+			if (_assistiveFolderSelectIndex <= 0) _assistiveFolderSelectIndex = $scope.folders.length - 1
+			else _assistiveFolderSelectIndex--
+			peekFolder(_assistiveFolderSelectIndex)
+			assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder.")
+			_inAssistiveFolderSelectMode = true
+			break
+
+		default:
+			return false
+
+	}
+}
+
+// available when a user tabs to the hidden assistive element indicating you can submit
+// they can hit space to submit, tabbing clears the submit window (to prevent unintended interactions)
+const handleAssistiveSubmit = ($scope, event) => {
+	if (event.which == 32) {
+		$scope.submitClick()
+	}
+	else if (event.which == 9) {
+		$scope.showSubmitDialog = false
+	}
+}
+
+const hideFolderPreview = $scope => {
+	$scope.showFolderPreview = false
+	$scope.folderPreviewIndex = -1
+}
+
+const itemMouseDown = ($scope, e, item) => {
+	$scope.selectedItem = item
+
+	// hammer events store the element differently
+	selectedElement = e.element ? e.element[0] : e.currentTarget
+	const computedStyle = getComputedStyle(selectedElement)
+	const left = parseInt(computedStyle.left, 10)
+	const top = parseInt(computedStyle.top, 10)
+
+	$scope.offsetLeft = left - e.clientX
+	$scope.offsetTop = top - e.clientY
+	pickupCount++
+
+	setItemPos(selectedElement, top, left)
+	selectedElement.style.zIndex = pickupCount
+
+	prevPosition = { top, left }
+	itemSource = SRC_DESKTOP
+}
+
+const panMove = ($scope, e) => {
+	const underElem = document.elementFromPoint(e.clientX, e.clientY)
+	const folderElem = underElem ? underElem.closest('.folder') : null
+	if (folderElem) {
+		const index = folderElem.dataset.index
+		peekFolder(index)
+		if (selectedElement) selectedElement.classList.add('shrink')
+	} else {
+		removeClassPeek()
+		removeClassShrink()
+	}
+
+	if (selectedElement) {
+		if (isOutOfBounds(e.clientX, e.clientY, $scope.dragBounds)) {
+			return $scope.mouseUp(e)
+		}
+		const left = e.clientX + $scope.offsetLeft
+		const top = e.clientY + $scope.offsetTop
+		setItemPos(selectedElement, top, left)
+	}
+}
+
+const mouseUp = ($scope, e) => {
+	removeClassPeek()
+	if (!selectedElement) {
+		return
+	}
+
+	if (e.stopPropagation) {
+		e.stopPropagation()
+	}
+
+	const underElemId = document.elementFromPoint(e.clientX, e.clientY).id
+
+	// put it back if it's out of bounds or over the dock but not a folder
+	if (isOutOfBounds(e.clientX, e.clientY, $scope.dragBounds) || underElemId == "dock-main") {
+		removeClassShrink()
+		setItemPos(selectedElement, Math.min(prevPosition.top, $scope.placementBounds.y.max), prevPosition.left)
+	} else {
+		const underElem = document.elementFromPoint(e.clientX, e.clientY)
+		// dragged item INTO a folder
+		const folderElem = underElem ? underElem.closest('.folder') : null
+		if (folderElem) {
+			$scope.mouseUpOverFolder(folderElem.dataset.index)
+		}
+
+		// draged item OUT of a folder
+		if (itemSource != SRC_DESKTOP && underElem.classList.contains('desktop-zone')) {
+			$scope.folders[itemSource].items = $scope.folders[itemSource].items.filter(
+				item => item.text != $scope.selectedItem.text
+			)
+
+			$scope.selectedItem.position = {
+				top: `${e.clientY + $scope.offsetTop}px`,
+				left: `${e.clientX + $scope.offsetLeft}px`
+			}
+
+			for (const [index, item] of Object.entries($scope.desktopItems)) {
+				if ($scope.selectedItem.text == item.text) {
+					$scope.desktopItems[index].sorted = false
+					$scope.desktopItems[index].folder = SRC_DESKTOP
+					$scope.numSorted--
+				}
+			}
+		}
+	}
+
+	selectedElement = false
+	$scope.selectedItem = false
+	itemSource = SRC_DESKTOP
+}
+
+const mouseUpOverFolder = ($scope, targetFolderIndex) => {
+	// item dropped to where it already is
+	if (targetFolderIndex == itemSource) {
+		return
+	}
+
+	// clicked on an open folder, close it
+	if (targetFolderIndex == $scope.folderPreviewIndex) {
+		$scope.hideFolderPreview()
+		return
+	}
+
+	// clicked on a folder that wasn't open, open it
+	if (!$scope.selectedItem) {
+		$scope.showFolderPreview = true
+		$scope.folderPreviewIndex = targetFolderIndex
+		return
+	}
+
+	// add selected item to this folder's items
+	$scope.folders[targetFolderIndex].items.push($scope.selectedItem)
+
+	const desktopIndex = $scope.desktopItems.indexOf($scope.selectedItem)
+
+	itemSource = $scope.desktopItems[desktopIndex].folder
+
+	if (itemSource == SRC_DESKTOP) {
+		// item is moving from the desktop
+		$scope.desktopItems[desktopIndex].sorted = true
+		$scope.numSorted++
+	} else {
+		// item moving from another folder
+		// remove it from the folder's items
+		const previousFolder = $scope.folders[itemSource]
+		previousFolder.items = previousFolder.items.filter(
+			item => item.text != $scope.selectedItem.text
+		)
+	}
+
+	// update what folder this item is in
+	$scope.desktopItems[desktopIndex].folder = targetFolderIndex
+
+	// reset our dragging state
+	selectedElement = false
+	$scope.selectedItem = false
+	itemSource = SRC_DESKTOP
+
+	if ($scope.readyToSubmit()) {
+		assistiveAlert("You are ready to submit this widget. You can press escape or tab to cancel and continue sorting items.")
+		document.getElementById("submit-dialog-confirm").focus()
+	}
+}
+
+const previewMouseDown = ($scope, e, item) => {
+	selectedElement = document.getElementById('preview-selected-item')
+	$scope.selectedItem = item
+
+	const rect = e.currentTarget.getBoundingClientRect();
+	let top = rect.top + document.body.scrollTop
+	let left = rect.left + document.body.scrollLeft
+
+	// slight shift to keep things looking good
+	left -= 10
+	top -= 10
+
+	// if there's an image, move it down so it seems more centered
+	if (item.image) {
+		top -= 25
+	}
+
+	// if preview item is long, shift drag item to match
+	if (e.clientX - left > 150) {
+		left += (e.clientX - left) / 2
+	}
+
+	$scope.offsetLeft = left - e.clientX
+	$scope.offsetTop = top - e.clientY
+
+	setItemPos(selectedElement, top, left)
+	itemSource = $scope.folderPreviewIndex
+}
+
+const enlargeImage = ($scope, url, e) => {
+	if (e.stopPropagation) {
+		e.stopPropagation()
+	}
+	$scope.enlargedImage.url = url
+	$scope.enlargedImage.show = true
+}
+
+const canScroll = $scope => {
+	return previewScrollContainerEl.scrollHeight > previewScrollContainerEl.clientHeight;
+}
+
+const scrollUp = $scope => {
+	previewScrollContainerEl.scrollTop -= 100
+}
+
+const scrollDown = $scope => {
+	previewScrollContainerEl.scrollTop += 100
+}
+
+const readyToSubmit = $scope => {
+	return $scope.numSorted >= $scope.desktopItems.length
+}
+
+const submitClick = ($scope, $timeout) => {
+	if (!$scope.readyToSubmit()) {
+		$scope.showNoSubmit = true
+		$timeout( () => {
+			$scope.showNoSubmit = false
+		}, 5000)
+		return
+	}
+
+	// submit which folder each item is in
+	$scope.folders.forEach( ({text: folderText, items}) => {
+		items.forEach( item => {
+			Materia.Score.submitQuestionForScoring(item.id, folderText)
+		})
+	})
+
+	Materia.Engine.end()
+}
+
+const sortItOutEngineCtrl = ($scope, $rootScope, $timeout) => {
+	// initialize 'globals'
+	previewScrollContainerEl = document.getElementById('preview-scroll-container')
+	prevPosition = null    // start position of drag
+	selectedElement = null // element that is being dragged
+	pickupCount = 1        // every new item picked up will go to the top (z-index)
+	itemSource = null      // to track where the dragged item came from
+	_assistiveFolderSelectIndex = -1
+	_inAssistiveFolderSelectMode = false
+
+	// set up scope vars
+	$scope.numSorted = 0
+	$scope.tutorialPage = 1
+	$scope.showFolderPreview = false
+	$scope.showNoSubmit = false
+	$scope.showSubmitDialog = true
+	$scope.selectedItem = false
+	$scope.desktopItems = []
+	$scope.folders = []
+	$scope.enlargedImage = {
+		show: false,
+		url: ""
+	}
+
+	// set up scope functions
+	// NOTE: these don't need te be bound because they don't use $scope internally
+	// therefore, they can be called directly
+	$scope.hideTutorial = hideTutorial
+	$scope.standardizeEvent = standardizeEvent
+	$scope.handleAssistiveRepeat = handleAssistiveRepeat
+	$scope.peekFolder = peekFolder
+	$scope.preventDefault = preventDefault
+
+	// set up scope functions with dependencies
+	// NOTE: if you need to call any of these methods, call them
+	$scope.handleItemFocus = handleItemFocus.bind(null, $scope)
+	$scope.handleItemFocus = handleItemFocus.bind(null, $scope)
+	$scope.handleAssistiveSelection = handleAssistiveSelection.bind(null, $scope)
+	$scope.handleAssistiveSubmit = handleAssistiveSubmit.bind(null, $scope)
+	$scope.hideFolderPreview = hideFolderPreview.bind(null, $scope)
+	$scope.itemMouseDown = itemMouseDown.bind(null, $scope)
+	$scope.panMove = panMove.bind(null, $scope)
+	$scope.mouseUp = mouseUp.bind(null, $scope)
+	$scope.mouseUpOverFolder = mouseUpOverFolder.bind(null, $scope)
+	$scope.previewMouseDown = previewMouseDown.bind(null, $scope)
+	$scope.enlargeImage = enlargeImage.bind(null, $scope)
+	$scope.canScroll = canScroll.bind(null, $scope)
+	$scope.scrollUp = scrollUp.bind(null, $scope)
+	$scope.scrollDown = scrollDown.bind(null, $scope)
+	$scope.readyToSubmit = readyToSubmit.bind(null, $scope)
+	$scope.submitClick = submitClick.bind(null, $scope, $timeout)
+
+	// setup listeners
+	$rootScope.$on('tabMonitor', () => {
+		$scope.$apply(() => {
+			hideTutorial()
+		})
+	})
+
+	// Tell Materia we're ready to start w/ callback
+	Materia.Engine.start({start: onMateriaStart.bind(null, $scope)})
+}
+
+// Register the controller with Angular
+const SortItOut = angular.module("SortItOutEngine")
+SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout", sortItOutEngineCtrl])
+
+module.exports = {
+	assistiveAlert,
+	canScroll,
+	desanitize,
+	enlargeImage,
+	generateBounds,
+	generateRandomPosition,
+	handleAssistiveRepeat,
+	handleAssistiveSelection,
+	handleAssistiveSubmit,
+	handleItemFocus,
+	hideFolderPreview,
+	hideTutorial,
+	isOutOfBounds,
+	itemMouseDown,
+	itemMouseDown,
+	makeFoldersFromQset,
+	makeItemsFromQset,
+	mouseUp,
+	mouseUpOverFolder,
+	onMateriaStart,
+	panMove,
+	preventDefault,
+	previewMouseDown,
+	readyToSubmit,
+	removeClassPeek,
+	removeClassShrink,
+	sanitize,
+	scrollDown,
+	scrollUp,
+	setItemPos,
+	shuffleArray,
+	sortItOutEngineCtrl,
+	standardizeEvent,
+	submitClick
+}
