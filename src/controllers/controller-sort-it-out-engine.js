@@ -162,11 +162,10 @@ const SANITIZE_CHARACTERS = {
 
 const sanitize = input => {
 	if (!input) return
-	console.log(input)
 
 	for (const k in SANITIZE_CHARACTERS) {
-		const reg = new RegExp(SANITIZE_CHARACTERS[k], 'g')
-		input = input.replace(reg, v)
+		const reg = new RegExp(k, 'g')
+		input = input.replace(reg, SANITIZE_CHARACTERS[k])
 	}
 
 	return input

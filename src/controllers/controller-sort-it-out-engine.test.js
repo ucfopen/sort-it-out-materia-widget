@@ -285,4 +285,27 @@ describe('Controller SortItOutEngine',  () => {
 		expect(isOutOfBounds(20, 20, dragBounds)).toBe(true)
 	})
 
+	test('sanitize works', () => {
+		const { sanitize } = require('./controller-sort-it-out-engine')
+
+		expect(sanitize()).toBe(undefined)
+		expect(sanitize('test')).toBe('test')
+		expect(sanitize('<test>')).toBe('&lt;test&gt;')
+		expect(sanitize('<<<<test>>>>')).toBe('&lt;&lt;&lt;&lt;test&gt;&gt;&gt;&gt;')
+		expect(sanitize('t"e"st')).toBe('t&#34;e&#34;st')
+		expect(sanitize('test&&test')).toBe('test&amp;&amp;test')
+	})
+
+	test('desanitize works', () => {
+		const { desanitize } = require('./controller-sort-it-out-engine')
+
+		expect(desanitize()).toBe(undefined)
+		expect(desanitize('test')).toBe('test')
+		expect(desanitize('&lt;test&gt;')).toBe('<test>')
+		expect(desanitize('&lt;&lt;&lt;&lt;test&gt;&gt;&gt;&gt;')).toBe('<<<<test>>>>')
+		expect(desanitize('t&#34;e&#34;st')).toBe('t"e"st')
+		expect(desanitize('test&amp;&amp;test')).toBe('test&&test')
+	})
+
+
 })
