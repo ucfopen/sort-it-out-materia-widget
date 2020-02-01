@@ -2,8 +2,9 @@
 // make sure that scrolling and touchmove update the dom
 const scroll = () => ({
 	link: (scope, element) => {
-		element.bind("wheel", () => scope.$apply())
-		element.bind("touchmove", () => scope.$apply())
+		const cb = () => scope.$apply()
+		element.bind("wheel", cb)
+		element.bind("touchmove", cb)
 	}
 })
 

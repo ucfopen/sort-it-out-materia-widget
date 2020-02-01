@@ -2,7 +2,7 @@
 // for the assistive keyboard input listeners, check handleAssistiveSelection below
 const keyboardShortcuts = ($document, $rootScope) => ({
 	restrict: "A",
-	link: (scope, element) => {
+	link: () => {
 		$document.bind("keypress", (event) => {
 			// only used to listen for tab key currently
 			if (event.which == 9){
