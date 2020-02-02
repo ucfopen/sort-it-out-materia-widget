@@ -6,39 +6,12 @@ const copy = widgetWebpack.getDefaultCopyList()
 
 const entries = {
 	'creator.js': [
-		'core-js/es6/array',
-		'core-js/fn/array/includes',
-		'core-js/fn/array/map',
-		'core-js/es6/symbol',
-		'core-js/es6/promise',
-		'core-js/fn/set',
-		'core-js/fn/object/assign',
-		'core-js/fn/string/includes',
-		'core-js/web/dom-collections',
 		'./src/creator.js'
 	],
 	'player.js': [
-		'core-js/es6/array',
-		'core-js/fn/array/includes',
-		'core-js/fn/array/map',
-		'core-js/es6/symbol',
-		'core-js/es6/promise',
-		'core-js/fn/set',
-		'core-js/fn/object/assign',
-		'core-js/fn/string/includes',
-		'core-js/web/dom-collections',
 		'./src/player.js'
 	],
 	'scoreScreen.js': [
-		'core-js/es6/array',
-		'core-js/fn/array/includes',
-		'core-js/fn/array/map',
-		'core-js/es6/symbol',
-		'core-js/es6/promise',
-		'core-js/fn/set',
-		'core-js/fn/object/assign',
-		'core-js/fn/string/includes',
-		'core-js/web/dom-collections',
 		'./src/scoreScreen.js'
 	],
 	'creator.css': ['./src/creator.scss', './src/creator.html'],
@@ -63,18 +36,12 @@ const customCopy = copy.concat([
 	}
 ])
 
+// uses options from babel.config.js
+// placed there so that jest and webpack find it
 const babelLoaderWithPolyfillRule = {
 	test: /\.js$/,
 	use: {
-		loader: 'babel-loader',
-		options: {
-			presets: [
-				['@babel/preset-env', {
-					targets: { browsers: [">0.25%, ie > 11, not op_mini all"]},
-					debug: true
-				}]
-			]
-		}
+		loader: 'babel-loader'
 	}
 }
 

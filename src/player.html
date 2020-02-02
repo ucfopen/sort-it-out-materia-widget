@@ -7,16 +7,14 @@
 		<!-- STYLESHEETS -->
 		<link rel="stylesheet" type="text/css" href="player.css">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="materia.enginecore.js"></script>
 
 		<!-- WIDGET DEPENDENCIES -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-animate.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-aria.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-aria.min.js"></script>
 		<script src="vendor/hammer.min.js"></script>
 		<script src="vendor/angular.hammer.min.js"></script>
 
@@ -25,8 +23,8 @@
 	</head>
 	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
 		<div id="content"
-			hm-panmove="standardizeEvent($event, false, panMove)"
-			hm-panend="standardizeEvent($event, false, mouseUp)"
+			hm-panmove="panMove(standardizeEvent($event), false)"
+			hm-panend="mouseUp(standardizeEvent($event), false)"
 			ng-mouseup="mouseUp($event)"
 			keyboard-shortcuts
 			role="application">
@@ -59,10 +57,10 @@
 
 			<div id="desktop" role="list">
 				<div class="desktop-item" ng-class="{'selected': item.text == selectedItem.text, 'no-image': !item.image, 'sorted': item.sorted}"
-					ng-style="{ 'top': item.position.y, 'left': item.position.x }"
+					ng-style="item.position"
 					ng-repeat="item in desktopItems"
 					ng-mousedown="itemMouseDown($event, item)"
-					hm-panstart="standardizeEvent($event, item, itemMouseDown)"
+					hm-panstart="itemMouseDown(standardizeEvent($event), item)"
 					role="listitem"
 					aria-label="{{item.folder != -1 ? item.text + ' is in folder ' + folders[item.folder].text : item.text}}"
 					aria-describedby="item-operation"
@@ -97,11 +95,12 @@
 				aria-label="You have reached the end of the list. Press space to return to the beginning of the list.
 				You have sorted {{numSorted}} items out of {{desktopItems.length}}."></div>
 
-			<div id="dock-main" class="dock" ng-click="hideFolderPreview()" tabindex="-1">
+			<div id="dock-main" class="dock" tabindex="-1">
+				<div id="dock-main-background" class="dock" ng-click="hideFolderPreview()"></div>
 				<div class="folder"
 					ng-class="{opened: folderPreviewIndex == $index}"
 					ng-repeat="folder in folders"
-					ng-click="selectFolder($event, $index)"
+					ng-click="mouseUpOverFolder($index)"
 					ng-mouseenter="peekFolder($index)"
 					ng-mouseleave="hidePeek()"
 					data-index="{{$index}}"
@@ -142,14 +141,14 @@
 					<div class="preview-item" ng-class="{selected: item.text == selectedItem.text}"
 						ng-repeat="item in folders[folderPreviewIndex].items"
 						ng-mousedown="previewMouseDown($event, item)"
-						hm-panstart="standardizeEvent($event, item, previewMouseDown)">
+						hm-panstart="previewMouseDown(standardizeEvent($event), item)">
 						<img ng-if="item.image" ng-src="{{item.image}}">
 						{{item.text}}
 					</div>
 				</div>
-				<i  tabindex="-1" class="material-icons" id="preview-close" ng-click="hideFolderPreview()">close</i>
-				<button id="preview-scroll-up" ng-if="showFolderPreview" ng-show="canScrollUp()" ng-click="scrollUp()">&uarr;</button>
-				<button id="preview-scroll-down" ng-if="showFolderPreview" ng-show="canScrollDown()" ng-click="scrollDown()">&darr;</button>
+				<i tabindex="-1" class="material-icons" id="preview-close" ng-click="hideFolderPreview()">close</i>
+				<button id="preview-scroll-up" ng-if="showFolderPreview" ng-show="canScroll()" ng-click="scrollUp()">&uarr;</button>
+				<button id="preview-scroll-down" ng-if="showFolderPreview" ng-show="canScroll()" ng-click="scrollDown()">&darr;</button>
 				<div id="preview-selected-item" ng-show="showFolderPreview && selectedItem.text">
 					<img ng-if="selectedItem.image" ng-src="{{selectedItem.image}}">
 					{{selectedItem.text}}
@@ -159,11 +158,11 @@
 			<div tabindex="-1" id="preview-background" ng-class="{hidden: !showFolderPreview}" ng-click="hideFolderPreview()">
 			</div>
 
-			<div tabindex="-1" id="back-to-desktop" ng-show="showFolderPreview && selectedItem">Put Back on Desktop</div>
+			<div tabindex="-1" id="back-to-desktop" ng-show="showFolderPreview">Drop here to remove from folder</div>
 
-			<div tabindex="-1" id="enlarged-image" ng-class="{hidden: !enlargeImage.show}" ng-click="enlargeImage.show = false">
+			<div tabindex="-1" id="enlarged-image" ng-class="{hidden: !enlargedImage.show}" ng-click="enlargedImage.show = false">
 				<div>
-					<img ng-if="enlargeImage.show" ng-src="{{enlargeImage.url}}">
+					<img ng-if="enlargedImage.show" ng-src="{{enlargedImage.url}}">
 					<i>click anywhere to close</i>
 				</div>
 			</div>

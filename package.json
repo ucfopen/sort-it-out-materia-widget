@@ -1,18 +1,15 @@
 {
-  "name": "@ucfcdl/sort-it-out",
+  "name": "@ucfopen/sort-it-out",
   "materia": {
     "cleanName": "sort-it-out"
   },
   "version": "1.0.4",
-  "dependencies": {
-    "angular-hammer": "^2.2.0",
-    "hammerjs": "^2.0.8",
-    "materia-widget-development-kit": "2.5.0"
-  },
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack -p",
     "build-dev": "webpack",
+    "prettier-write": "prettier --write ./src/**/*.js",
+    "prettier-check": "prettier -c ./src/**/*.js",
     "test": "TZ='America/New_York' jest --verbose",
     "test-ci": "TZ='America/New_York' CI=true jest --ci --useStderr --coverage"
   },
@@ -27,47 +24,36 @@
       "js"
     ],
     "collectCoverageFrom": [
-      "src/{creator,scoreScreen,player}.js"
+      "src/*.js",
+      "src/directives/*",
+      "src/controllers/*"
     ],
     "coverageThreshold": {
       "global": {
-        "statements": 72,
-        "branches": 56,
-        "functions": 61,
-        "lines": 74
-      },
-      "src/creator.js": {
-        "statements": 86,
-        "branches": 75,
-        "functions": 67,
-        "lines": 87
-      },
-      "src/player.js": {
-        "statements": 57,
-        "branches": 33,
-        "functions": 51,
-        "lines": 59
-      },
-      "src/scoreScreen.js": {
-        "statements": 97,
-        "branches": 89,
-        "functions": 99,
-        "lines": 99
+        "statements": 65,
+        "branches": 55,
+        "functions": 65,
+        "lines": 64
       }
     }
   },
+  "dependencies": {
+    "angular-hammer": "^2.2.0",
+    "hammerjs": "^2.0.8",
+    "materia-widget-development-kit": "2.5.0"
+  },
   "devDependencies": {
-    "angular": "~1.6.9",
-    "angular-animate": "~1.6.9",
-    "angular-aria": "~1.6.9",
-    "angular-loader": "~1.6.9",
+    "angular": "~1.7.8",
+    "angular-animate": "~1.7.8",
+    "angular-aria": "~1.7.8",
+    "angular-loader": "~1.7.8",
     "angular-material": "~1.1.10",
-    "angular-messages": "~1.6.9",
-    "angular-mocks": "~1.6.9",
-    "angular-route": "~1.6.9",
-    "angular-sanitize": "~1.6.9",
-    "jest": "^23.6.0",
-    "jquery": "^3.3.1"
+    "angular-messages": "~1.7.8",
+    "angular-mocks": "~1.7.8",
+    "angular-sanitize": "~1.7.8",
+    "core-js": "^2.5.0",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1"
   },
   "license": "AGPL-3.0",
   "description": "Students must sort items on a messy computer desktop into their appropriate folders.",
