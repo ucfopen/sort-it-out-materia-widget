@@ -1,3 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px">
-    <rect class="cls-1" width="30" height="30" fill="#e1e1e1" /><polygon class="cls-2" points="30 30 0 30 30 0 30 30" fill="#fff"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path class="cls-1" fill="#e1e1e1" d="M0 0h30v30H0z"/><path class="cls-2" fill="#fff" d="M30 30H0L30 0v30z"/></svg>
