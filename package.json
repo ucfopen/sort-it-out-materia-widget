@@ -8,6 +8,8 @@
     "start": "webpack-dev-server",
     "build": "webpack -p",
     "build-dev": "webpack",
+    "prettier-write": "prettier --write ./src/**/*.js",
+    "prettier-check": "prettier -c ./src/**/*.js",
     "test": "TZ='America/New_York' jest --verbose",
     "test-ci": "TZ='America/New_York' CI=true jest --ci --useStderr --coverage"
   },
@@ -22,34 +24,16 @@
       "js"
     ],
     "collectCoverageFrom": [
-      "src/{creator,scoreScreen,player}.js",
+      "src/*.js",
       "src/directives/*",
       "src/controllers/*"
     ],
     "coverageThreshold": {
       "global": {
-        "statements": 72,
-        "branches": 56,
-        "functions": 61,
-        "lines": 74
-      },
-      "src/creator.js": {
-        "statements": 86,
-        "branches": 75,
-        "functions": 67,
-        "lines": 87
-      },
-      "src/player.js": {
-        "statements": 57,
-        "branches": 33,
-        "functions": 51,
-        "lines": 59
-      },
-      "src/scoreScreen.js": {
-        "statements": 97,
-        "branches": 89,
-        "functions": 99,
-        "lines": 99
+        "statements": 65,
+        "branches": 55,
+        "functions": 65,
+        "lines": 64
       }
     }
   },
@@ -67,7 +51,9 @@
     "angular-messages": "~1.6.9",
     "angular-mocks": "~1.6.9",
     "angular-sanitize": "~1.6.9",
-    "jest": "^25.1.0"
+    "core-js": "^2.5.0",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1"
   },
   "license": "AGPL-3.0",
   "description": "Students must sort items on a messy computer desktop into their appropriate folders.",

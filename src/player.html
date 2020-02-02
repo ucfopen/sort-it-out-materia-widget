@@ -23,8 +23,8 @@
 	</head>
 	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
 		<div id="content"
-			hm-panmove="standardizeEvent($event, false, panMove)"
-			hm-panend="standardizeEvent($event, false, mouseUp)"
+			hm-panmove="panMove(standardizeEvent($event), false)"
+			hm-panend="mouseUp(standardizeEvent($event), false)"
 			ng-mouseup="mouseUp($event)"
 			keyboard-shortcuts
 			role="application">
@@ -60,7 +60,7 @@
 					ng-style="item.position"
 					ng-repeat="item in desktopItems"
 					ng-mousedown="itemMouseDown($event, item)"
-					hm-panstart="standardizeEvent($event, item, itemMouseDown)"
+					hm-panstart="itemMouseDown(standardizeEvent($event), item)"
 					role="listitem"
 					aria-label="{{item.folder != -1 ? item.text + ' is in folder ' + folders[item.folder].text : item.text}}"
 					aria-describedby="item-operation"
@@ -141,7 +141,7 @@
 					<div class="preview-item" ng-class="{selected: item.text == selectedItem.text}"
 						ng-repeat="item in folders[folderPreviewIndex].items"
 						ng-mousedown="previewMouseDown($event, item)"
-						hm-panstart="standardizeEvent($event, item, previewMouseDown)">
+						hm-panstart="previewMouseDown(standardizeEvent($event), item)">
 						<img ng-if="item.image" ng-src="{{item.image}}">
 						{{item.text}}
 					</div>

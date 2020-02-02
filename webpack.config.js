@@ -36,20 +36,12 @@ const customCopy = copy.concat([
 	}
 ])
 
+// uses options from babel.config.js
+// placed there so that jest and webpack find it
 const babelLoaderWithPolyfillRule = {
 	test: /\.js$/,
 	use: {
-		loader: 'babel-loader',
-		options: {
-			ignore:['node_modules'],
-			presets: [
-				['@babel/preset-env', {
-					targets: { browsers: [">0.25%, not ie 11, not op_mini all"]},
-					useBuiltIns: 'usage',
-					debug: true
-				}]
-			]
-		}
+		loader: 'babel-loader'
 	}
 }
 

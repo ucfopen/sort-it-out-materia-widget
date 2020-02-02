@@ -2,20 +2,20 @@ const SRC_DESKTOP = -1 // indicates drag started on desktop, otherwise itemSourc
 const DEFAULT_BG_IMAGE = 'assets/desktop.jpg'
 
 let previewScrollContainerEl
-let prevPosition       // start position of drag
-let selectedElement    // element that is being dragged
-let pickupCount = 1    // every new item picked up will go to the top (z-index)
-let itemSource         // to track where the dragged item came from
+let prevPosition // start position of drag
+let selectedElement // element that is being dragged
+let pickupCount = 1 // every new item picked up will go to the top (z-index)
+let itemSource // to track where the dragged item came from
 let _assistiveFolderSelectIndex = -1
 let _inAssistiveFolderSelectMode = false
 
-const peekFolder = index => {
+export const peekFolder = index => {
 	const folders = document.querySelectorAll(`.folder[data-index="${index}"]`)
 	folders.forEach(f => f.classList.add('peeked'))
 }
 
 // this is used to prevent dragging of the images on macOS
-const preventDefault = (e, stopPropagation) => {
+export const preventDefault = (e, stopPropagation) => {
 	if (e.preventDefault) {
 		e.preventDefault()
 	}
@@ -24,23 +24,23 @@ const preventDefault = (e, stopPropagation) => {
 	}
 }
 
-const handleAssistiveRepeat = event => {
+export const handleAssistiveRepeat = event => {
 	// spacebar?
 	if (event.which == 32) {
 		document.getElementsByClassName('desktop-item')[0].focus()
 	}
 }
 
-const setItemPos = (el, top, left) => {
+export const setItemPos = (el, top, left) => {
 	el.style.top = `${top}px`
 	el.style.left = `${left}px`
 }
 
-const generateBounds = () => {
+export const generateBounds = () => {
 	const desktopEl = document.getElementById('desktop')
 	const style = getComputedStyle(desktopEl, null)
-	const width = parseFloat(style.width.replace("px", ""))
-	const height = parseFloat(style.height.replace("px", ""))
+	const width = parseFloat(style.width.replace('px', ''))
+	const height = parseFloat(style.height.replace('px', ''))
 	const menuBarHeight = document.getElementById('menu-bar').offsetHeight
 
 	const placementBounds = {
@@ -69,7 +69,7 @@ const generateBounds = () => {
 }
 
 // fisher-yates shuffle algorithm
-const shuffleArray = array => {
+export const shuffleArray = array => {
 	for (let i = array.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1))
 		const x = array[i]
@@ -80,16 +80,16 @@ const shuffleArray = array => {
 	return array
 }
 
-const makeFoldersFromQset = qset => {
-	const folderNames = new Set
-	qset.items.forEach( item => {
+export const makeFoldersFromQset = qset => {
+	const folderNames = new Set()
+	qset.items.forEach(item => {
 		folderNames.add(desanitize(item.answers[0].text))
 	})
 
-	return Array.from(folderNames).map( text => ({ text, items: [] }))
+	return Array.from(folderNames).map(text => ({ text, items: [] }))
 }
 
-const generateRandomPosition = (placementBounds, hasImage) => {
+export const generateRandomPosition = (placementBounds, hasImage) => {
 	const DOCK_HEIGHT = 125
 	const pb = placementBounds
 
@@ -102,11 +102,9 @@ const generateRandomPosition = (placementBounds, hasImage) => {
 	return { left: `${x}px`, top: `${y}px` }
 }
 
-const makeItemsFromQset = (qset, placementBounds)  => {
-	return qset.items.map( item => {
-		const image = item.options.image
-			? Materia.Engine.getMediaUrl(item.options.image)
-			: false
+export const makeItemsFromQset = (qset, placementBounds) => {
+	return qset.items.map(item => {
+		const image = item.options.image ? Materia.Engine.getMediaUrl(item.options.image) : false
 
 		return {
 			id: item.id,
@@ -118,11 +116,11 @@ const makeItemsFromQset = (qset, placementBounds)  => {
 	})
 }
 
-const hideTutorial = $timeout => {
+export const hideTutorial = $timeout => {
 	const tutorialEl = document.getElementById('tutorial')
 	const tutorialBgEl = document.getElementById('tutorial-background')
-	tutorialEl.classList.add('hide');
-	tutorialEl.classList.remove('show');
+	tutorialEl.classList.add('hide')
+	tutorialEl.classList.remove('show')
 	tutorialBgEl.classList.add('hide')
 	tutorialBgEl.classList.remove('show')
 	$timeout(() => {
@@ -133,34 +131,35 @@ const hideTutorial = $timeout => {
 
 // aria-live regions don't work well with normal angular data binding with scope variables
 // to overcome this, we gotta go old school and edit the DOM node manually
-const assistiveAlert = text => {
-	if (document.getElementById("assistive-alert")) document.getElementById("assistive-alert").innerHTML = text
+export const assistiveAlert = text => {
+	if (document.getElementById('assistive-alert'))
+		document.getElementById('assistive-alert').innerHTML = text
 }
 
-const removeClassShrink = () => {
+export const removeClassShrink = () => {
 	const shrunk = document.getElementsByClassName('shrink')
 	Array.from(shrunk).forEach(el => el.classList.remove('shrink'))
 }
 
-const removeClassPeek = () => {
+export const removeClassPeek = () => {
 	const peeked = document.getElementsByClassName('peeked')
 	Array.from(peeked).forEach(el => el.classList.remove('peeked'))
 }
 
-const isOutOfBounds = (x, y, dragBounds) => {
+export const isOutOfBounds = (x, y, dragBounds) => {
 	const outOfBoundsX = x < dragBounds.x.min || x > dragBounds.x.max
 	const outOfBoundsY = y < dragBounds.y.min || y > dragBounds.y.max
 	return outOfBoundsX || outOfBoundsY
 }
 
-const SANITIZE_CHARACTERS = {
-	'&' : '&amp;',
-	'>' : '&gt;',
-	'<' : '&lt;',
-	'"' : '&#34;'
+export const SANITIZE_CHARACTERS = {
+	'&': '&amp;',
+	'>': '&gt;',
+	'<': '&lt;',
+	'"': '&#34;'
 }
 
-const sanitize = input => {
+export const sanitize = input => {
 	if (!input) return
 
 	for (const k in SANITIZE_CHARACTERS) {
@@ -171,7 +170,7 @@ const sanitize = input => {
 	return input
 }
 
-const desanitize = input => {
+export const desanitize = input => {
 	if (!input) return
 
 	for (const k in SANITIZE_CHARACTERS) {
@@ -182,21 +181,16 @@ const desanitize = input => {
 	return input
 }
 
-// hammer event properties are different from native, this changes the event
-// and will call the regular function after
-const standardizeEvent = (hammerEvent, param2, cb) => {
+// hammer event properties are different from native
+export const standardizeEvent = hammerEvent => {
 	hammerEvent.clientX = hammerEvent.center.x
 	hammerEvent.clientY = hammerEvent.center.y
 	hammerEvent.currentTarget = hammerEvent.target
-	if (param2) {
-		cb(hammerEvent, param2)
-	} else {
-		cb(hammerEvent)
-	}
+	return hammerEvent
 }
 
-const onMateriaStart = ($scope, instance, qset, version) => {
-	const {placementBounds, dragBounds} = generateBounds()
+export const onMateriaStart = ($scope, instance, qset, version) => {
+	const { placementBounds, dragBounds } = generateBounds()
 	$scope.placementBounds = placementBounds
 	$scope.dragBounds = dragBounds
 	$scope.title = instance.name
@@ -205,9 +199,7 @@ const onMateriaStart = ($scope, instance, qset, version) => {
 
 	$scope.backgroundImage = DEFAULT_BG_IMAGE
 	if (qset.options.backgroundImageId) {
-		$scope.backgroundImage = Materia.Engine.getMediaUrl(
-			qset.options.backgroundImageId
-		)
+		$scope.backgroundImage = Materia.Engine.getMediaUrl(qset.options.backgroundImageId)
 	} else if (qset.options.backgroundImageAsset) {
 		$scope.backgroundImage = qset.options.backgroundImageAsset
 	}
@@ -215,20 +207,19 @@ const onMateriaStart = ($scope, instance, qset, version) => {
 	$scope.$apply()
 }
 
-const handleItemFocus = ($scope, event, item) => {
+export const handleItemFocus = ($scope, event, item) => {
 	if ($scope.selectedItem != item) {
 		$scope.selectedItem = item
 		_assistiveFolderSelectIndex = -1
 		_inAssistiveFolderSelectMode = false
 
 		removeClassPeek()
-		assistiveAlert(item.text + " is selected.")
+		assistiveAlert(item.text + ' is selected.')
 		$scope.hideTutorial()
 	}
 }
 
-const handleAssistiveSelection = ($scope, event, item) => {
-
+export const handleAssistiveSelection = ($scope, event, item) => {
 	switch (event.keyCode) {
 		case 32: // space
 			// prevent unwanted behavior folder selection behavior
@@ -236,7 +227,9 @@ const handleAssistiveSelection = ($scope, event, item) => {
 			// item has been selected, and a target folder is currently selected
 			if (_inAssistiveFolderSelectMode) {
 				$scope.mouseUpOverFolder(_assistiveFolderSelectIndex)
-				assistiveAlert(item.text + " has been placed in " + $scope.folders[_assistiveFolderSelectIndex].text)
+				assistiveAlert(
+					item.text + ' has been placed in ' + $scope.folders[_assistiveFolderSelectIndex].text
+				)
 				removeClassPeek()
 				$scope.selectedItem = item // set selectedItem back to the item that was placed, overriding the default behavior
 			}
@@ -248,7 +241,10 @@ const handleAssistiveSelection = ($scope, event, item) => {
 			if (_assistiveFolderSelectIndex >= $scope.folders.length - 1) _assistiveFolderSelectIndex = 0
 			else _assistiveFolderSelectIndex++
 			peekFolder(_assistiveFolderSelectIndex)
-			assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder.")
+			assistiveAlert(
+				$scope.folders[_assistiveFolderSelectIndex].text +
+					' folder selected. Press space to place this item in the folder.'
+			)
 			_inAssistiveFolderSelectMode = true
 			break
 
@@ -258,33 +254,34 @@ const handleAssistiveSelection = ($scope, event, item) => {
 			if (_assistiveFolderSelectIndex <= 0) _assistiveFolderSelectIndex = $scope.folders.length - 1
 			else _assistiveFolderSelectIndex--
 			peekFolder(_assistiveFolderSelectIndex)
-			assistiveAlert($scope.folders[_assistiveFolderSelectIndex].text + " folder selected. Press space to place this item in the folder.")
+			assistiveAlert(
+				$scope.folders[_assistiveFolderSelectIndex].text +
+					' folder selected. Press space to place this item in the folder.'
+			)
 			_inAssistiveFolderSelectMode = true
 			break
 
 		default:
 			return false
-
 	}
 }
 
 // available when a user tabs to the hidden assistive element indicating you can submit
 // they can hit space to submit, tabbing clears the submit window (to prevent unintended interactions)
-const handleAssistiveSubmit = ($scope, event) => {
+export const handleAssistiveSubmit = ($scope, event) => {
 	if (event.which == 32) {
 		$scope.submitClick()
-	}
-	else if (event.which == 9) {
+	} else if (event.which == 9) {
 		$scope.showSubmitDialog = false
 	}
 }
 
-const hideFolderPreview = $scope => {
+export const hideFolderPreview = $scope => {
 	$scope.showFolderPreview = false
 	$scope.folderPreviewIndex = -1
 }
 
-const itemMouseDown = ($scope, e, item) => {
+export const itemMouseDown = ($scope, e, item) => {
 	$scope.selectedItem = item
 
 	// hammer events store the element differently
@@ -304,7 +301,7 @@ const itemMouseDown = ($scope, e, item) => {
 	itemSource = SRC_DESKTOP
 }
 
-const panMove = ($scope, e) => {
+export const panMove = ($scope, e) => {
 	const underElem = document.elementFromPoint(e.clientX, e.clientY)
 	const folderElem = underElem ? underElem.closest('.folder') : null
 	if (folderElem) {
@@ -326,7 +323,7 @@ const panMove = ($scope, e) => {
 	}
 }
 
-const mouseUp = ($scope, e) => {
+export const mouseUp = ($scope, e) => {
 	removeClassPeek()
 	if (!selectedElement) {
 		return
@@ -339,9 +336,13 @@ const mouseUp = ($scope, e) => {
 	const underElemId = document.elementFromPoint(e.clientX, e.clientY).id
 
 	// put it back if it's out of bounds or over the dock but not a folder
-	if (isOutOfBounds(e.clientX, e.clientY, $scope.dragBounds) || underElemId == "dock-main") {
+	if (isOutOfBounds(e.clientX, e.clientY, $scope.dragBounds) || underElemId == 'dock-main') {
 		removeClassShrink()
-		setItemPos(selectedElement, Math.min(prevPosition.top, $scope.placementBounds.y.max), prevPosition.left)
+		setItemPos(
+			selectedElement,
+			Math.min(prevPosition.top, $scope.placementBounds.y.max),
+			prevPosition.left
+		)
 	} else {
 		const underElem = document.elementFromPoint(e.clientX, e.clientY)
 		// dragged item INTO a folder
@@ -376,7 +377,7 @@ const mouseUp = ($scope, e) => {
 	itemSource = SRC_DESKTOP
 }
 
-const mouseUpOverFolder = ($scope, targetFolderIndex) => {
+export const mouseUpOverFolder = ($scope, targetFolderIndex) => {
 	// item dropped to where it already is
 	if (targetFolderIndex == itemSource) {
 		return
@@ -424,16 +425,18 @@ const mouseUpOverFolder = ($scope, targetFolderIndex) => {
 	itemSource = SRC_DESKTOP
 
 	if ($scope.readyToSubmit()) {
-		assistiveAlert("You are ready to submit this widget. You can press escape or tab to cancel and continue sorting items.")
-		document.getElementById("submit-dialog-confirm").focus()
+		assistiveAlert(
+			'You are ready to submit this widget. You can press escape or tab to cancel and continue sorting items.'
+		)
+		document.getElementById('submit-dialog-confirm').focus()
 	}
 }
 
-const previewMouseDown = ($scope, e, item) => {
+export const previewMouseDown = ($scope, e, item) => {
 	selectedElement = document.getElementById('preview-selected-item')
 	$scope.selectedItem = item
 
-	const rect = e.currentTarget.getBoundingClientRect();
+	const rect = e.currentTarget.getBoundingClientRect()
 	let top = rect.top + document.body.scrollTop
 	let left = rect.left + document.body.scrollLeft
 
@@ -458,7 +461,7 @@ const previewMouseDown = ($scope, e, item) => {
 	itemSource = $scope.folderPreviewIndex
 }
 
-const enlargeImage = ($scope, url, e) => {
+export const enlargeImage = ($scope, url, e) => {
 	if (e.stopPropagation) {
 		e.stopPropagation()
 	}
@@ -466,34 +469,34 @@ const enlargeImage = ($scope, url, e) => {
 	$scope.enlargedImage.show = true
 }
 
-const canScroll = $scope => {
-	return previewScrollContainerEl.scrollHeight > previewScrollContainerEl.clientHeight;
+export const canScroll = $scope => {
+	return previewScrollContainerEl.scrollHeight > previewScrollContainerEl.clientHeight
 }
 
-const scrollUp = $scope => {
+export const scrollUp = $scope => {
 	previewScrollContainerEl.scrollTop -= 100
 }
 
-const scrollDown = $scope => {
+export const scrollDown = $scope => {
 	previewScrollContainerEl.scrollTop += 100
 }
 
-const readyToSubmit = $scope => {
+export const readyToSubmit = $scope => {
 	return $scope.numSorted >= $scope.desktopItems.length
 }
 
-const submitClick = ($scope, $timeout) => {
+export const submitClick = ($scope, $timeout) => {
 	if (!$scope.readyToSubmit()) {
 		$scope.showNoSubmit = true
-		$timeout( () => {
+		$timeout(() => {
 			$scope.showNoSubmit = false
 		}, 5000)
 		return
 	}
 
 	// submit which folder each item is in
-	$scope.folders.forEach( ({text: folderText, items}) => {
-		items.forEach( item => {
+	$scope.folders.forEach(({ text: folderText, items }) => {
+		items.forEach(item => {
 			Materia.Score.submitQuestionForScoring(item.id, folderText)
 		})
 	})
@@ -501,13 +504,13 @@ const submitClick = ($scope, $timeout) => {
 	Materia.Engine.end()
 }
 
-const sortItOutEngineCtrl = ($scope, $rootScope, $timeout) => {
+export const ControllerSortItOutPlayer = ($scope, $rootScope, $timeout) => {
 	// initialize 'globals'
 	previewScrollContainerEl = document.getElementById('preview-scroll-container')
-	prevPosition = null    // start position of drag
+	prevPosition = null // start position of drag
 	selectedElement = null // element that is being dragged
-	pickupCount = 1        // every new item picked up will go to the top (z-index)
-	itemSource = null      // to track where the dragged item came from
+	pickupCount = 1 // every new item picked up will go to the top (z-index)
+	itemSource = null // to track where the dragged item came from
 	_assistiveFolderSelectIndex = -1
 	_inAssistiveFolderSelectMode = false
 
@@ -522,7 +525,7 @@ const sortItOutEngineCtrl = ($scope, $rootScope, $timeout) => {
 	$scope.folders = []
 	$scope.enlargedImage = {
 		show: false,
-		url: ""
+		url: ''
 	}
 
 	// set up scope functions
@@ -561,47 +564,5 @@ const sortItOutEngineCtrl = ($scope, $rootScope, $timeout) => {
 	})
 
 	// Tell Materia we're ready to start w/ callback
-	Materia.Engine.start({start: onMateriaStart.bind(null, $scope)})
-}
-
-// Register the controller with Angular
-const SortItOut = angular.module("SortItOutEngine")
-SortItOut.controller("SortItOutEngineCtrl", ["$scope", "$rootScope", "$timeout", sortItOutEngineCtrl])
-
-module.exports = {
-	assistiveAlert,
-	canScroll,
-	desanitize,
-	enlargeImage,
-	generateBounds,
-	generateRandomPosition,
-	handleAssistiveRepeat,
-	handleAssistiveSelection,
-	handleAssistiveSubmit,
-	handleItemFocus,
-	hideFolderPreview,
-	hideTutorial,
-	isOutOfBounds,
-	itemMouseDown,
-	itemMouseDown,
-	makeFoldersFromQset,
-	makeItemsFromQset,
-	mouseUp,
-	mouseUpOverFolder,
-	onMateriaStart,
-	panMove,
-	peekFolder,
-	preventDefault,
-	previewMouseDown,
-	readyToSubmit,
-	removeClassPeek,
-	removeClassShrink,
-	sanitize,
-	scrollDown,
-	scrollUp,
-	setItemPos,
-	shuffleArray,
-	sortItOutEngineCtrl,
-	standardizeEvent,
-	submitClick
+	Materia.Engine.start({ start: onMateriaStart.bind(null, $scope) })
 }

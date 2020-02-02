@@ -1,27 +1,56 @@
 // virtual mocks to prevent actually loading
-let mockCallCount
-jest.mock('./directives/dir-scroll', () => {mockCallCount++}, {virtual: true})
-jest.mock('./directives/dir-keyboard-shortcuts', () => {mockCallCount++}, {virtual: true})
-jest.mock('./controllers/controller-sort-it-out-engine', () => {mockCallCount++}, {virtual: true})
+jest.mock('./directives/dir-scroll')
+jest.mock('./directives/dir-keyboard-shortcuts')
+jest.mock('./controllers/controller-sort-it-out-engine')
 
-describe('Player Controller',  () => {
-	beforeEach(()=>{
+let mockModule
+
+describe('Player Controller', () => {
+	beforeEach(() => {
 		jest.resetModules()
 		global.angular = {
 			module: jest.fn()
 		}
+		mockModule = {
+			directive: jest.fn(),
+			controller: jest.fn()
+		}
+		global.angular.module.mockReturnValue(mockModule)
 	})
 
-	test('Creates angular module', () => {
+	test('Creates Angular module', () => {
 		require('./player')
 		expect(global.angular.module).toHaveBeenCalledTimes(1)
-		expect(global.angular.module).toHaveBeenCalledWith("SortItOutEngine", ["hmTouchEvents", "ngAria"])
+		expect(global.angular.module).toHaveBeenCalledWith('SortItOutEngine', [
+			'hmTouchEvents',
+			'ngAria'
+		])
 	})
 
-	test('Requires expected scripts', () => {
-		mockCallCount = 0
+	test('DirectiveKeyboardShortcuts is registered with Angular', () => {
+		const { DirectiveKeyboardShortcuts } = require('./directives/dir-keyboard-shortcuts')
 		require('./player')
-		expect(mockCallCount).toBe(3)
+		expect(mockModule.directive).toHaveBeenCalledWith('keyboardShortcuts', [
+			'$document',
+			'$rootScope',
+			DirectiveKeyboardShortcuts
+		])
 	})
 
+	test('DirectiveScroll is registered with Angular', () => {
+		const { DirectiveScroll } = require('./directives/dir-scroll')
+		require('./player')
+		expect(mockModule.directive).toHaveBeenCalledWith('scroll', DirectiveScroll)
+	})
+
+	test('ControllerSortItOutPlayer is registered with Angular', () => {
+		const { ControllerSortItOutPlayer } = require('./controllers/controller-sort-it-out-engine')
+		require('./player')
+		expect(mockModule.controller).toHaveBeenCalledWith('SortItOutEngineCtrl', [
+			'$scope',
+			'$rootScope',
+			'$timeout',
+			ControllerSortItOutPlayer
+		])
+	})
 })
