@@ -56,7 +56,8 @@
 				aria-label="Instructions: use tab to traverse the following {{desktopItems.length}} items. Each item must be categorized to complete this widget. Use up or down arrow keys to select a category for each item, and space to confirm your selection."></div>
 
 			<div id="desktop" role="list">
-				<div class="desktop-item" ng-class="{'selected': item.text == selectedItem.text, 'no-image': !item.image, 'sorted': item.sorted}"
+				<div class="desktop-item" 
+					ng-class="{'selected': item.text == selectedItem.text, 'no-image': !item.image, 'sorted': item.sorted, 'font-resize': item.fontResize}"
 					ng-style="item.position"
 					ng-repeat="item in desktopItems"
 					ng-mousedown="itemMouseDown($event, item)"

@@ -1,4 +1,4 @@
-$folder-color: #EFEFAC;
+$folder-color: #efefac;
 
 body {
 	margin: 0;
@@ -6,7 +6,7 @@ body {
 	background-size: cover;
 	background-position: center center;
 	height: 100vh;
-	font-family: "Lato";
+	font-family: 'Lato';
 }
 
 .screenreader-assist {
@@ -25,7 +25,7 @@ button.submit-button {
 	border: none;
 	border-radius: 5px;
 	padding: 5px 15px;
-	font-family: "Lato";
+	font-family: 'Lato';
 
 	cursor: pointer;
 
@@ -82,7 +82,7 @@ button.cancel-submit-button {
 		position: absolute;
 		top: 44px;
 		right: 4px;
-		background-color: #D33;
+		background-color: #d33;
 		color: white;
 		padding: 8px 25px;
 		border-radius: 3px;
@@ -130,8 +130,8 @@ button.cancel-submit-button {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height:100%;
-	background: rgba(0,0,0, 0.33);
+	height: 100%;
+	background: rgba(0, 0, 0, 0.33);
 }
 
 #desktop {
@@ -175,8 +175,9 @@ button.cancel-submit-button {
 			box-shadow: 3px 3px 3px 0px rgba(black, 0.25);
 		}
 
-		&::after { // box shadow done this way for performance
-			content: "";
+		&::after {
+			// box shadow done this way for performance
+			content: '';
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -189,9 +190,14 @@ button.cancel-submit-button {
 			transition: opacity ease 0.3s;
 		}
 
+		&.font-resize {
+			font-size: 14px;
+			text-align: left;
+		}
+
 		&:focus {
 			background-color: rgb(223, 249, 255);
-			border: solid 2px #BBF3FF;
+			border: solid 2px #bbf3ff;
 		}
 
 		&:hover::after {
@@ -200,7 +206,7 @@ button.cancel-submit-button {
 
 		&.selected {
 			transition: transform ease 0.3s;
-			background-color: #BBF3FF;
+			background-color: #bbf3ff;
 			cursor: grabbing;
 			cursor: -webkit-grabbing;
 			cursor: -moz-grabbing;
@@ -211,7 +217,7 @@ button.cancel-submit-button {
 		}
 
 		&.shrink {
-			transform: scale(0.7)
+			transform: scale(0.7);
 		}
 
 		.img-zoom {
@@ -249,9 +255,10 @@ button.cancel-submit-button {
 
 .assistive-hidden-element {
 	position: absolute !important;
-	height: 1px; width: 1px;
+	height: 1px;
+	width: 1px;
 	overflow: hidden;
-  	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
 	clip: rect(1px, 1px, 1px, 1px);
 }
 
@@ -286,7 +293,6 @@ button.cancel-submit-button {
 			perspective: 300px; // for 3D
 			word-wrap: break-word;
 			font-size: 14px;
-
 		}
 	}
 }
@@ -308,7 +314,7 @@ button.cancel-submit-button {
 
 		// :before is the top tab
 		&:before {
-			content: " ";
+			content: ' ';
 			background-color: darken($folder-color, 15%);
 			position: absolute;
 			height: 10px;
@@ -379,7 +385,7 @@ button.cancel-submit-button {
 		}
 
 		.folder-name {
-			content: " ";
+			content: ' ';
 			background-color: $folder-color;
 			position: absolute;
 			height: 100%;
@@ -417,7 +423,7 @@ button.cancel-submit-button {
 	&.hidden {
 		opacity: 0;
 		bottom: 50px;
- 		z-index: -1;
+		z-index: -1;
 	}
 
 	h1 {
@@ -439,12 +445,12 @@ button.cancel-submit-button {
 	}
 
 	#preview-scroll-container {
- 		overflow-y: auto;
- 		position: absolute;
- 		top: 55px;
- 		bottom: 0;
- 		padding: 10px 0;
- 		margin-right: 50px;
+		overflow-y: auto;
+		position: absolute;
+		top: 55px;
+		bottom: 0;
+		padding: 10px 0;
+		margin-right: 50px;
 
 		.preview-item {
 			font-size: 18px;
@@ -463,8 +469,9 @@ button.cancel-submit-button {
 				opacity: 0.3;
 			}
 
-			&::after { // box shadow done this way for performance
-				content: "";
+			&::after {
+				// box shadow done this way for performance
+				content: '';
 				position: absolute;
 				top: 0;
 				left: 0;
@@ -525,7 +532,7 @@ button.cancel-submit-button {
 		display: table;
 		position: fixed;
 		margin: 10px;
-		background-color: #BBF3FF;
+		background-color: #bbf3ff;
 		transition: transform ease 0.3s;
 
 		user-select: none;
@@ -563,12 +570,12 @@ button.cancel-submit-button {
 	background-color: rgba(gray, 0.8);
 	z-index: 3;
 	opacity: 1;
- 	transition: opacity ease 0.3s;
+	transition: opacity ease 0.3s;
 
- 	&.hidden {
- 		opacity: 0;
- 		z-index: -1;
- 	}
+	&.hidden {
+		opacity: 0;
+		z-index: -1;
+	}
 }
 
 #back-to-desktop {
@@ -664,7 +671,7 @@ button.cancel-submit-button {
 
 #donearrow {
 	position: absolute;
-	background: #FFFF82;
+	background: #ffff82;
 	display: block;
 	z-index: 9999;
 
@@ -684,11 +691,12 @@ button.cancel-submit-button {
 	-webkit-animation: bobber 1s infinite;
 	animation: bobber 1s infinite;
 
-	&:after, &:before {
+	&:after,
+	&:before {
 		bottom: 0px;
 		left: 100%;
 		border: solid transparent;
-		content: " ";
+		content: ' ';
 		height: 0;
 		width: 0;
 		position: absolute;
@@ -697,7 +705,7 @@ button.cancel-submit-button {
 
 	&:after {
 		border-color: rgba(136, 183, 213, 0);
-		border-left-color: #FFFF82;
+		border-left-color: #ffff82;
 		border-width: 12px;
 		margin-left: 0px;
 	}
@@ -706,13 +714,13 @@ button.cancel-submit-button {
 //iPad likes transform better
 @-webkit-keyframes bobber {
 	0% {
-		-webkit-transform: translate(10px,0px);
+		-webkit-transform: translate(10px, 0px);
 	}
 	50% {
-		-webkit-transform: translate(0px,0px);
+		-webkit-transform: translate(0px, 0px);
 	}
 	100% {
-		-webkit-transform: translate(10px,0px);
+		-webkit-transform: translate(10px, 0px);
 	}
 }
 @keyframes bobber {
@@ -750,7 +758,7 @@ button.cancel-submit-button {
 		transition: opacity 400ms;
 	}
 
-	&.hidden{
+	&.hidden {
 		display: none;
 	}
 
@@ -771,7 +779,7 @@ button.cancel-submit-button {
 	}
 
 	.tutorial-board {
-		background: #EEE;
+		background: #eee;
 		position: relative;
 		display: inline-block;
 		width: 400px;
@@ -843,8 +851,8 @@ button.cancel-submit-button {
 			}
 
 			span {
-				background: #DDD;
-				color: #DDD;
+				background: #ddd;
+				color: #ddd;
 			}
 		}
 
@@ -859,7 +867,7 @@ button.cancel-submit-button {
 			animation: folderpreview 10s infinite;
 
 			&:after {
-				content: "";
+				content: '';
 				position: absolute;
 				top: 100px;
 				left: 35px;
@@ -870,7 +878,8 @@ button.cancel-submit-button {
 				width: 0;
 			}
 
-			& > span:nth-of-type(1) { // the 'x' for the folder preview
+			& > span:nth-of-type(1) {
+				// the 'x' for the folder preview
 				color: white;
 				background: none;
 				position: absolute;
@@ -879,7 +888,8 @@ button.cancel-submit-button {
 				font-size: 20px;
 			}
 
-			& > span { // folder preview title
+			& > span {
+				// folder preview title
 				background: #777;
 				color: #777;
 				top: 2px;
@@ -900,7 +910,6 @@ button.cancel-submit-button {
 		}
 	}
 
-
 	#tutorial-prev {
 		text-align: left;
 	}
@@ -913,7 +922,7 @@ button.cancel-submit-button {
 		cursor: pointer;
 		margin: 4px 15px;
 		border-radius: 3px;
-		background: #5FAC4B;
+		background: #5fac4b;
 		color: white;
 		border: 1px solid #4f9c3b;
 		font-size: 16px;
@@ -937,7 +946,7 @@ button.cancel-submit-button {
 		width: 130px;
 
 		&:hover {
-			background: #78DD5E;
+			background: #78dd5e;
 			color: black;
 		}
 	}
@@ -961,7 +970,7 @@ button.cancel-submit-button {
 		transition: opacity 400ms;
 	}
 
-	&.hidden{
+	&.hidden {
 		display: none;
 	}
 }

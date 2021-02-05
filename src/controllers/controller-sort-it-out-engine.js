@@ -111,7 +111,8 @@ export const makeItemsFromQset = (qset, placementBounds) => {
 			text: desanitize(item.questions[0].text),
 			image,
 			position: generateRandomPosition(placementBounds, Boolean(item.options.image)),
-			folder: SRC_DESKTOP
+			folder: SRC_DESKTOP,
+			fontResize: item.questions[0].text.length > 158
 		}
 	})
 }
