@@ -1,24 +1,26 @@
 const path = require('path')
 const widgetWebpack = require('materia-widget-development-kit/webpack-widget')
 const outputPath = path.join(__dirname, 'build')
+const srcPath = path.join(__dirname, 'src')
 const rules = widgetWebpack.getDefaultRules()
 const copy = widgetWebpack.getDefaultCopyList()
 
 const entries = {
-	'creator.js': [
-		'./src/creator.js'
+	'player': [
+		path.join(srcPath, 'player.html'),
+		path.join(srcPath, 'player.js'),
+		path.join(srcPath, 'player.scss')
 	],
-	'player.js': [
-		'./src/player.js'
+	'creator': [
+		path.join(srcPath, 'creator.html'),
+		path.join(srcPath, 'creator.js'),
+		path.join(srcPath, 'creator.scss'),
 	],
-	'scoreScreen.js': [
-		'./src/scoreScreen.js'
-	],
-	'creator.css': ['./src/creator.scss', './src/creator.html'],
-	'player.css': ['./src/player.scss', './src/player.html'],
-	'scoreScreen.css': ['./src/scoreScreen.scss', './src/scoreScreen.html'],
-	'guides/player.temp.html': [ './src/_guides/player.md'],
-	'guides/creator.temp.html': [ './src/_guides/creator.md']
+	'scoreScreen': [
+		path.join(srcPath, 'scoreScreen.html'),
+		path.join(srcPath, 'scoreScreen.js'),
+		path.join(srcPath, 'scoreScreen.scss'),
+	]
 }
 
 const customCopy = copy.concat([
@@ -47,11 +49,9 @@ const babelLoaderWithPolyfillRule = {
 
 const customRules = [
 	babelLoaderWithPolyfillRule,
-	rules.loadAndPrefixCSS,
 	rules.loadAndPrefixSASS,
 	rules.loadHTMLAndReplaceMateriaScripts,
-	rules.copyImages,
-	rules.loadAndCompileMarkdown
+	rules.copyImages
 ]
 
 const options = {
