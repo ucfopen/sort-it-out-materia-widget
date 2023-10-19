@@ -550,7 +550,6 @@ export const ControllerSortItOutPlayer = ($scope, $rootScope, $timeout) => {
 	$scope.panMove = panMove.bind(null, $scope)
 	$scope.mouseUp = mouseUp.bind(null, $scope)
 	$scope.mouseUpOverFolder = mouseUpOverFolder.bind(null, $scope, $timeout)
-	// $scope.mouseUpOverFolder = mouseUpOverFolder.bind(null, $scope)
 	$scope.previewMouseDown = previewMouseDown.bind(null, $scope)
 	$scope.enlargeImage = enlargeImage.bind(null, $scope)
 	$scope.canScroll = canScroll.bind(null, $scope)
