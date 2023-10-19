@@ -40,15 +40,9 @@
 				</div>
 			</div>
 
-			<div id="submit-dialog" ng-show="readyToSubmit() && showSubmitDialog">
-				<p>Looking good! You're ready to submit.</p>
-				<button class="cancel-submit-button" ng-click="showSubmitDialog = false">I'm not done yet</button>
-				<button class="submit-button" id="submit-dialog-confirm" ng-click="submitClick()">Submit</button>
-				<button class="submit-button-x" ng-click="showSubmitDialog = false">&times;</button>
-			</div>
 			<!-- ARIA assistive elements -->
-			<span aria-live=”assertive” id="assistive-alert" aria-atomic=”true” class="screenreader-assist"></span>
-			<span id="item-operation" aria-atomic=”true” class="screenreader-assist">Use up and down arrow keys to select a category for this item. Press space to confirm the selection.</span>
+			<span aria-live="assertive" id="assistive-alert" aria-atomic="true" class="screenreader-assist"></span>
+			<span id="item-operation" aria-atomic="true" class="screenreader-assist">Use up and down arrow keys to select a category for this item. Press space to confirm the selection.</span>
 
 			<div class="assistive-hidden-element"
 				tabindex="0"
@@ -234,6 +228,13 @@
 				<button id="gotitbtn" ng-click="hideTutorial()" ng-show="tutorialPage == 2">Got it!</button>
 			</div>
 			<div id="tutorial-background" class="tutorial" ng-click="hideTutorial()"></div>
+
+			<div id="submit-dialog" ng-show="readyToSubmit() && showSubmitDialog" role="dialog" aria-modal="true">
+				<p>Looking good! You're ready to submit.</p>
+				<button class="cancel-submit-button" id="submit-dialog-cancel" ng-click="showSubmitDialog = false">I'm not done yet</button>
+				<button class="submit-button" id="submit-dialog-confirm" ng-click="submitClick()">Submit</button>
+				<button class="submit-button-x" aria-label="Close submit dialog" ng-click="showSubmitDialog = false">&times;</button>
+			</div>
 
 		</div>
 		<div id="submit-shroud" ng-show="readyToSubmit() && showSubmitDialog" ng-click="showSubmitDialog = false"></div>

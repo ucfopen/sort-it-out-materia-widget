@@ -377,7 +377,7 @@ export const mouseUp = ($scope, e) => {
 	itemSource = SRC_DESKTOP
 }
 
-export const mouseUpOverFolder = ($scope, targetFolderIndex) => {
+export const mouseUpOverFolder = ($scope, $timeout, targetFolderIndex) => {
 	// item dropped to where it already is
 	if (targetFolderIndex == itemSource) {
 		return
@@ -428,7 +428,9 @@ export const mouseUpOverFolder = ($scope, targetFolderIndex) => {
 		assistiveAlert(
 			'You are ready to submit this widget. You can press escape or tab to cancel and continue sorting items.'
 		)
-		document.getElementById('submit-dialog-confirm').focus()
+		$timeout(() => {
+			document.getElementById('submit-dialog-cancel').focus()
+		},500)
 	}
 }
 
@@ -547,7 +549,8 @@ export const ControllerSortItOutPlayer = ($scope, $rootScope, $timeout) => {
 	$scope.itemMouseDown = itemMouseDown.bind(null, $scope)
 	$scope.panMove = panMove.bind(null, $scope)
 	$scope.mouseUp = mouseUp.bind(null, $scope)
-	$scope.mouseUpOverFolder = mouseUpOverFolder.bind(null, $scope)
+	$scope.mouseUpOverFolder = mouseUpOverFolder.bind(null, $scope, $timeout)
+	// $scope.mouseUpOverFolder = mouseUpOverFolder.bind(null, $scope)
 	$scope.previewMouseDown = previewMouseDown.bind(null, $scope)
 	$scope.enlargeImage = enlargeImage.bind(null, $scope)
 	$scope.canScroll = canScroll.bind(null, $scope)

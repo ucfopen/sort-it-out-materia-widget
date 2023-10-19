@@ -113,10 +113,11 @@ button.cancel-submit-button {
 
 	button.submit-button-x {
 		position: absolute;
-		top: 2px;
+		top: 0px;
 		right: 0px;
 
 		border: none;
+		border-top-right-radius: 5px;
 		font-weight: bold;
 		font-size: 1.1em;
 
