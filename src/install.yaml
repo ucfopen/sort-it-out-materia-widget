@@ -41,7 +41,7 @@ meta_data:
     computer desktop into their appropriate
     folders.
   accessibility_keyboard: Full
-  accesibility_reader: Full
+  accessibility_reader: Full
   accessibility_description: >
     Screen readers treat unsorted items as a list. Once selected, each item can be categorized using the 
     up and down arrow keys.
