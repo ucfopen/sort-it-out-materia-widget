@@ -29,8 +29,98 @@
 			keyboard-shortcuts
 			role="application">
 
+			<div class="assistive-hidden-element"
+				tabindex="0"
+				role="dialog"
+				aria-label="Instructions: use tab to traverse the following {{desktopItems.length}} items. Each item must be categorized to complete this widget. Use up or down arrow keys to select a category for each item, and space to confirm your selection."></div>
+
+			<dialog id="tutorial" class="dialog" ng-show="showTutorialDialog">
+				<h3>How to play</h3>
+
+				<div id="tutorial-board-container" ng-class="{page2: tutorialPage == 2}">
+					<div id="tutorial-board1" class="tutorial-board" ng-class="{hidden: tutorialPage != 1}">
+						<div class="tutorial-term first">
+							<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span> <span>aaaaaaaaaa</span>
+						</div>
+						<div class="tutorial-term second">
+							<span>aaaaaaaaaaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
+							<span>aaaaaaaaa</span> <span>aaaaa</span> <span>aaaaaaaaaaaaaa</span>
+							<span>aaaaaaaaaaaaaaaaaa</span>
+						</div>
+						<div class="tutorial-term third">
+							<span>aaaaa</span> <span>aaaaaaaa</span>
+						</div>
+						<div>
+							<img src="assets/tutorial.jpg">
+						</div>
+						<div class="cursor">
+							<img src="assets/cursor.svg">
+						</div>
+					</div>
+
+					<div id="tutorial-board2" class="tutorial-board" ng-class="{hidden: tutorialPage != 2}">
+						<div class="tutorial-term fourth">
+							<span>aaaaaaaaa</span> <span>aaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
+						</div>
+						<div class="tutorial-term fifth">
+							<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span>
+						</div>
+
+						<div id="tutorial-folder-preview">
+							<span>&times;</span>
+							<span>aaaaaaaa</span> <span>aaaa</span> <span>aaaaaaaaaaa</span>
+							<div class="tutorial-term sixth">
+								<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
+							</div>
+							<div class="tutorial-term seventh">
+								<span>aaaaaaaaa</span> <span>aaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
+							</div>
+							<div class="tutorial-term eigth">
+								<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span>
+							</div>
+						</div>
+
+						<div>
+							<img src="assets/tutorial.jpg">
+						</div>
+						<div class="cursor page2">
+							<img src="assets/cursor.svg">
+						</div>
+					</div>
+				</div>
+				<p id="instructions-page-1" ng-show="tutorialPage==1">Drag items to group them in their corresponding folders.</p>
+				<p id="instructions-page-2" ng-show="tutorialPage==2">Items can be moved between folders or back onto the desktop.</p>
+
+				<div ng-show="tutorialPage == 2" id="tutorial-prev">
+					<button ng-click="tutorialPage = 1">Back</button>
+				</div>
+				<div ng-show="tutorialPage == 1" id="tutorial-next">
+					<button ng-click="tutorialPage = 2" aria-describedby="instructions-page-1">Next</button>
+				</div>
+
+				<button id="gotitbtn" class="dialog-close-btn" ng-click="hideTutorial()" ng-show="tutorialPage == 2" aria-describedby="instructions-page-2">Got it!</button>
+			</dialog>
+
+			<dialog id="keyboard-instructions" class="dialog" ng-show="showKeyboardDialog">
+				<div id="keyboard-instructions-content" class="dialog-content">
+					<h3>Keyboard Controls</h3>
+					<p>Use <span class="highlight">tab</span> and <span class="highlight">shift + tab</span> to navigate between individual items.</p>
+					<p>Use the <span class="highlight">up</span> and <span class="highlight">down</span> arrows to select a category for the item.</p>
+					<p>Use <span class="highlight">space</span> to categorize the item.</p>
+				</div>
+				<button id="keyboard-instructions-close" class="dialog-close-btn" ng-click="toggleKeyboardDialog()" aria-describedby="keyboard-instructions-content">Got it!</button>
+			</dialog>
+
+			<dialog id="submit-dialog" ng-show="readyToSubmit() && showSubmitDialog" role="dialog" aria-modal="true">
+				<p>Looking good! You're ready to submit.</p>
+				<button class="cancel-submit-button" id="submit-dialog-cancel" ng-click="showSubmitDialog = false">I'm not done yet</button>
+				<button class="submit-button" id="submit-dialog-confirm" ng-click="submitClick()">Submit</button>
+				<button class="submit-button-x" aria-label="Close submit dialog" ng-click="showSubmitDialog = false">&times;</button>
+			</dialog>
+
 			<div id="menu-bar">
 				<h1 id="title">{{title}}</h1>
+				<button id="keyboard-instructions-btn" ng-hide="readyToSubmit()" ng-click="toggleKeyboardDialog()" ng-focus="hideModals()">Keyboard Instructions</button>
 				<div id="donearrow" ng-show="readyToSubmit() && !showSubmitDialog">Click to finish</div>
 				<button ng-click="submitClick()" class="submit-button" ng-show="readyToSubmit() && !showSubmitDialog">
 					Submit Answers
@@ -40,14 +130,9 @@
 				</div>
 			</div>
 
-			<!-- ARIA assistive elements -->
+			<!-- ARIA live regions -->
 			<span aria-live="assertive" id="assistive-alert" aria-atomic="true" class="screenreader-assist"></span>
 			<span id="item-operation" aria-atomic="true" class="screenreader-assist">Use up and down arrow keys to select a category for this item. Press space to confirm the selection.</span>
-
-			<div class="assistive-hidden-element"
-				tabindex="0"
-				role="dialog"
-				aria-label="Instructions: use tab to traverse the following {{desktopItems.length}} items. Each item must be categorized to complete this widget. Use up or down arrow keys to select a category for each item, and space to confirm your selection."></div>
 
 			<div id="desktop" role="list">
 				<div class="desktop-item" ng-class="{'selected': item.text == selectedItem.text, 'no-image': !item.image, 'sorted': item.sorted}"
@@ -161,80 +246,7 @@
 				</div>
 			</div>
 
-			<div id="tutorial" class="tutorial">
-				<h3>How to play</h3>
-
-				<div id="tutorial-board-container" ng-class="{page2: tutorialPage == 2}">
-					<div id="tutorial-board1" class="tutorial-board" ng-class="{hidden: tutorialPage != 1}">
-						<div class="tutorial-term first">
-							<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span> <span>aaaaaaaaaa</span>
-						</div>
-						<div class="tutorial-term second">
-							<span>aaaaaaaaaaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
-							<span>aaaaaaaaa</span> <span>aaaaa</span> <span>aaaaaaaaaaaaaa</span>
-							<span>aaaaaaaaaaaaaaaaaa</span>
-						</div>
-						<div class="tutorial-term third">
-							<span>aaaaa</span> <span>aaaaaaaa</span>
-						</div>
-						<div>
-							<img src="assets/tutorial.jpg">
-						</div>
-						<div class="cursor">
-							<img src="assets/cursor.svg">
-						</div>
-					</div>
-
-					<div id="tutorial-board2" class="tutorial-board" ng-class="{hidden: tutorialPage != 2}">
-						<div class="tutorial-term fourth">
-							<span>aaaaaaaaa</span> <span>aaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
-						</div>
-						<div class="tutorial-term fifth">
-							<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span>
-						</div>
-
-						<div id="tutorial-folder-preview">
-							<span>&times;</span>
-							<span>aaaaaaaa</span> <span>aaaa</span> <span>aaaaaaaaaaa</span>
-							<div class="tutorial-term sixth">
-								<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
-							</div>
-							<div class="tutorial-term seventh">
-								<span>aaaaaaaaa</span> <span>aaaaa</span> <span>aaaaaaaa</span> <span>aaaaaa</span>
-							</div>
-							<div class="tutorial-term eigth">
-								<span>aaaaaaaaa</span> <span>aaa</span> <span>aaaaa</span>
-							</div>
-						</div>
-
-						<div>
-							<img src="assets/tutorial.jpg">
-						</div>
-						<div class="cursor page2">
-							<img src="assets/cursor.svg">
-						</div>
-					</div>
-				</div>
-				<p ng-show="tutorialPage==1">Drag items to group them in their corresponding folders.</p>
-				<p ng-show="tutorialPage==2">Items can be moved between folders or back onto the desktop.</p>
-
-				<div ng-show="tutorialPage == 2" id="tutorial-prev">
-					<button ng-click="tutorialPage = 1">Back</button>
-				</div>
-				<div ng-show="tutorialPage == 1" id="tutorial-next">
-					<button ng-click="tutorialPage = 2">Next</button>
-				</div>
-
-				<button id="gotitbtn" ng-click="hideTutorial()" ng-show="tutorialPage == 2">Got it!</button>
-			</div>
-			<div id="tutorial-background" class="tutorial" ng-click="hideTutorial()"></div>
-
-			<div id="submit-dialog" ng-show="readyToSubmit() && showSubmitDialog" role="dialog" aria-modal="true">
-				<p>Looking good! You're ready to submit.</p>
-				<button class="cancel-submit-button" id="submit-dialog-cancel" ng-click="showSubmitDialog = false">I'm not done yet</button>
-				<button class="submit-button" id="submit-dialog-confirm" ng-click="submitClick()">Submit</button>
-				<button class="submit-button-x" aria-label="Close submit dialog" ng-click="showSubmitDialog = false">&times;</button>
-			</div>
+			<div id="modal-cover" class="tutorial" ng-show="showKeyboardDialog || showTutorialDialog" ng-click="hideModals()"></div>
 
 		</div>
 		<div id="submit-shroud" ng-show="readyToSubmit() && showSubmitDialog" ng-click="showSubmitDialog = false"></div>

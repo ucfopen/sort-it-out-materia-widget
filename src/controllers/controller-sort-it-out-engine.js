@@ -116,17 +116,26 @@ export const makeItemsFromQset = (qset, placementBounds) => {
 	})
 }
 
-export const hideTutorial = $timeout => {
-	const tutorialEl = document.getElementById('tutorial')
-	const tutorialBgEl = document.getElementById('tutorial-background')
-	tutorialEl.classList.add('hide')
-	tutorialEl.classList.remove('show')
-	tutorialBgEl.classList.add('hide')
-	tutorialBgEl.classList.remove('show')
+export const hideTutorial = ($scope, $timeout) => {
+	$scope.showTutorialDialog = false
+}
+
+export const hideModals = ($scope) => {
+	$scope.showKeyboardDialog = false
+	$scope.showTutorialDialog = false
+}
+
+export const toggleKeyboardDialog = ($scope, $timeout) => {
+	$scope.showKeyboardDialog = !$scope.showKeyboardDialog
+
 	$timeout(() => {
-		tutorialEl.classList.add('hidden')
-		tutorialBgEl.classList.add('hidden')
-	}, 400)
+		if ($scope.showKeyboardDialog) {
+			document.getElementById('keyboard-instructions-close').focus()
+		}
+		else {
+			document.getElementById('keyboard-instructions-btn').focus()
+		}
+	})
 }
 
 // aria-live regions don't work well with normal angular data binding with scope variables
@@ -529,6 +538,8 @@ export const ControllerSortItOutPlayer = ($scope, $rootScope, $timeout) => {
 		show: false,
 		url: ''
 	}
+	$scope.showKeyboardDialog = false
+	$scope.showTutorialDialog = true
 
 	// set up scope functions
 	// NOTE: these don't need te be bound because they don't use $scope internally
@@ -540,7 +551,9 @@ export const ControllerSortItOutPlayer = ($scope, $rootScope, $timeout) => {
 
 	// set up scope functions with dependencies
 	// NOTE: if you need to call any of these methods, call them
-	$scope.hideTutorial = hideTutorial.bind(null, $timeout)
+	$scope.hideTutorial = hideTutorial.bind(null, $scope, $timeout)
+	$scope.hideModals = hideModals.bind(null, $scope)
+	$scope.toggleKeyboardDialog = toggleKeyboardDialog.bind(null, $scope, $timeout)
 	$scope.handleItemFocus = handleItemFocus.bind(null, $scope)
 	$scope.handleItemFocus = handleItemFocus.bind(null, $scope)
 	$scope.handleAssistiveSelection = handleAssistiveSelection.bind(null, $scope)
