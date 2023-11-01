@@ -342,6 +342,10 @@ button.cancel-submit-button {
 				box-shadow: 0 2px 5px rgba(black, 0.5);
 				border-radius: 3px;
 				text-align: center;
+
+				&.focused {
+					background-color: rgb(223, 249, 255);
+				}
 			}
 		}
 	}

@@ -179,7 +179,7 @@
 				<div class="folder"
 					ng-class="{opened: folderPreviewIndex == $index}"
 					ng-repeat="folder in folders"
-					ng-click="mouseUpOverFolder($index)"
+					ng-click="mouseUpOverFolder($index, $event)"
 					ng-mouseenter="peekFolder($index)"
 					ng-mouseleave="hidePeek()"
 					data-index="{{$index}}"
@@ -201,7 +201,7 @@
 					tabindex="-1">
 					<div class="folder-icon">
 						<div class="peek-items-container">
-							<div class="peek-item" ng-repeat="item in folder.items.slice().reverse() | limitTo:3">{{item.text}}</div>
+							<div class="peek-item" ng-repeat="item in computePeekDisplay(folder.items) | limitTo:3" ng-class="{focused: selectedItem.id == item.id}">{{item.text}}</div>
 						</div>
 					</div>
 					<div class="folder-arrow" ng-show="folderPreviewIndex == $index"></div>
