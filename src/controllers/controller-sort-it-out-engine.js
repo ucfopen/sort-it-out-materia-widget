@@ -222,9 +222,6 @@ export const handleItemFocus = ($scope, event, item) => {
 
 		removeClassPeek()
 
-		console.log(_assistiveFolderSelectIndex)
-		console.log(_inAssistiveFolderSelectMode)
-
 		// if the item is already placed in a folder, peek the folder so we can see it
 		if (item.folder > -1) {
 			_assistiveFolderSelectIndex = item.folder
