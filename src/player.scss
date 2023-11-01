@@ -754,7 +754,8 @@ button.cancel-submit-button {
 	overflow: hidden;
 
 	&#keyboard-instructions {
-		height: 250px;
+		padding: 0 15px;
+		height: 280px;
 	}
 
 	h3 {
@@ -766,7 +767,7 @@ button.cancel-submit-button {
 		border-radius: 3px;
 		font-weight: bold;
 		color: #fff;
-		padding: 3px 5px;
+		padding: 2px 4px;
 		background: linear-gradient(rgb(102, 175, 250), rgb(10, 128, 255));
 	}
 
