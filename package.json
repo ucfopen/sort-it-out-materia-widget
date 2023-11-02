@@ -3,9 +3,9 @@
   "materia": {
     "cleanName": "sort-it-out"
   },
-  "version": "1.0.6",
+  "version": "1.0.7",
   "scripts": {
-	"start": "mwdk-start",
+    "start": "mwdk-start",
     "build": "mwdk-build-prod",
     "build-dev": "mwdk-build-dev",
     "prettier-write": "prettier --write ./src/**/*.js",
