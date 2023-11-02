@@ -6,7 +6,7 @@ describe('Controller SortItOutEngine', () => {
 
 	test('peekFolder searches for the correct elements', () => {
 		const querySelectorAll = jest.spyOn(document, 'querySelectorAll')
-		const { peekFolder } = require('./controller-sort-it-out-engine')
+		const { peekFolder, tutorialBack, tutorialForward } = require('./controller-sort-it-out-engine')
 		const mockFolderDomEl = { classList: { add: jest.fn() } }
 
 		querySelectorAll.mockReturnValueOnce([mockFolderDomEl])
@@ -281,6 +281,20 @@ describe('Controller SortItOutEngine', () => {
 		toggleKeyboardDialog($scope, $timeout)
 
 		expect($scope.showKeyboardDialog).toBe(false)
+	})
+
+	test('tutorial appropriately paginates forward and back', () => {
+		const { tutorialBack, tutorialForward } = require('./controller-sort-it-out-engine')
+		const $scope = jest.fn()
+		const $timeout = jest.fn()
+
+		$scope.showTutorialDialog = true
+		tutorialForward($scope, $timeout)
+		expect($scope.tutorialPage).toBe(2)
+
+		tutorialBack($scope, $timeout)
+		expect($scope.tutorialPage).toBe(1)
+
 	})
 
 	test('assistiveAlert sets innerhtml', () => {

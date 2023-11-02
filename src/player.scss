@@ -256,10 +256,28 @@ button.cancel-submit-button {
 
 .assistive-hidden-element {
 	position: absolute !important;
-	height: 1px; width: 1px;
+	height: 1px;
+	width: 1px;
 	overflow: hidden;
-  	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(1px 1px 1px 1px);
+
+	&.visible-on-focus:focus {
+		z-index: 100;
+		top: 50px;
+		left: 25px;
+		display:block;
+		overflow: visible;
+		width: auto;
+		max-width: 80%;
+		height: auto;
+		padding: 5px 10px;
+		
+		border-radius: 3px;
+
+		background: #fff;
+		border: dashed 2px rgb(214,214,214);
+		clip-path: none;
+	}
 }
 
 .dock {

@@ -116,6 +116,20 @@ export const makeItemsFromQset = (qset, placementBounds) => {
 	})
 }
 
+export const tutorialForward = ($scope, $timeout) => {
+	$scope.tutorialPage = 2
+	$timeout(() => {
+		document.getElementById('gotitbtn').focus()
+	})
+}
+
+export const tutorialBack = ($scope, $timeout) => {
+	$scope.tutorialPage = 1
+	$timeout(() => {
+		document.getElementById('tutorial-next-btn').focus()
+	})
+}
+
 export const hideTutorial = ($scope, $timeout) => {
 	$scope.showTutorialDialog = false
 }
@@ -234,7 +248,6 @@ export const handleItemFocus = ($scope, event, item) => {
 		}
 		
 		assistiveAlert(item.text + ' is selected.')
-		$scope.hideTutorial()
 	}
 }
 
@@ -588,6 +601,8 @@ export const ControllerSortItOutPlayer = ($scope, $rootScope, $timeout) => {
 
 	// set up scope functions with dependencies
 	// NOTE: if you need to call any of these methods, call them
+	$scope.tutorialForward = tutorialForward.bind(null, $scope, $timeout)
+	$scope.tutorialBack = tutorialBack.bind(null, $scope, $timeout)
 	$scope.hideTutorial = hideTutorial.bind(null, $scope, $timeout)
 	$scope.hideModals = hideModals.bind(null, $scope)
 	$scope.toggleKeyboardDialog = toggleKeyboardDialog.bind(null, $scope, $timeout)
