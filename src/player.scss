@@ -78,6 +78,10 @@ button.cancel-submit-button {
 		max-width: 800px;
 	}
 
+	button {
+		cursor: pointer;
+	}
+
 	#no-submit {
 		position: absolute;
 		top: 44px;
@@ -97,6 +101,7 @@ button.cancel-submit-button {
 }
 
 #submit-dialog {
+	display: block;
 	position: absolute;
 	top: 33%;
 	left: 50%;
@@ -108,15 +113,17 @@ button.cancel-submit-button {
 	z-index: 80;
 
 	background: #fff;
+	border: 0px;
 	border-radius: 5px;
 	text-align: center;
 
 	button.submit-button-x {
 		position: absolute;
-		top: 2px;
+		top: 0px;
 		right: 0px;
 
 		border: none;
+		border-top-right-radius: 5px;
 		font-weight: bold;
 		font-size: 1.1em;
 
@@ -249,10 +256,28 @@ button.cancel-submit-button {
 
 .assistive-hidden-element {
 	position: absolute !important;
-	height: 1px; width: 1px;
+	height: 1px;
+	width: 1px;
 	overflow: hidden;
-  	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(1px 1px 1px 1px);
+
+	&.visible-on-focus:focus {
+		z-index: 100;
+		top: 50px;
+		left: 25px;
+		display:block;
+		overflow: visible;
+		width: auto;
+		max-width: 80%;
+		height: auto;
+		padding: 5px 10px;
+		
+		border-radius: 3px;
+
+		background: #fff;
+		border: dashed 2px rgb(214,214,214);
+		clip-path: none;
+	}
 }
 
 .dock {
@@ -335,6 +360,10 @@ button.cancel-submit-button {
 				box-shadow: 0 2px 5px rgba(black, 0.5);
 				border-radius: 3px;
 				text-align: center;
+
+				&.focused {
+					background-color: rgb(223, 249, 255);
+				}
 			}
 		}
 	}
@@ -727,37 +756,39 @@ button.cancel-submit-button {
 	}
 }
 
-#tutorial {
-	position: fixed;
+.dialog {
+	position: absolute;
+	display: block;
 	width: 450px;
 	height: 450px;
 	top: 80px;
-	left: calc(50% - 225px);
 	background: white;
 	box-shadow: 0 3px 7px rgba(black, 0.3);
+	border: 0;
 	border-radius: 3px;
 	padding: 0 10px;
 	text-align: center;
 	z-index: 90;
 	overflow: hidden;
 
-	&.show {
-		opacity: 1;
-	}
-
-	&.hide {
-		opacity: 0;
-		transition: opacity 400ms;
-	}
-
-	&.hidden{
-		display: none;
+	&#keyboard-instructions {
+		padding: 0 15px;
+		height: 280px;
 	}
 
 	h3 {
 		font-size: 18px;
 		font-weight: normal;
 	}
+
+	span.highlight {
+		border-radius: 3px;
+		font-weight: bold;
+		color: #fff;
+		padding: 2px 4px;
+		background: linear-gradient(rgb(102, 175, 250), rgb(10, 128, 255));
+	}
+
 	#tutorial-board-container {
 		width: 850px;
 		position: relative;
@@ -932,7 +963,7 @@ button.cancel-submit-button {
 		border: 1px solid #777;
 	}
 
-	#gotitbtn {
+	.dialog-close-btn {
 		padding: 7px;
 		width: 130px;
 
@@ -943,7 +974,7 @@ button.cancel-submit-button {
 	}
 }
 
-#tutorial-background {
+#modal-cover {
 	position: fixed;
 	top: 0;
 	bottom: 0;

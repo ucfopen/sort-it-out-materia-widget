@@ -116,17 +116,40 @@ export const makeItemsFromQset = (qset, placementBounds) => {
 	})
 }
 
-export const hideTutorial = $timeout => {
-	const tutorialEl = document.getElementById('tutorial')
-	const tutorialBgEl = document.getElementById('tutorial-background')
-	tutorialEl.classList.add('hide')
-	tutorialEl.classList.remove('show')
-	tutorialBgEl.classList.add('hide')
-	tutorialBgEl.classList.remove('show')
+export const tutorialForward = ($scope, $timeout) => {
+	$scope.tutorialPage = 2
 	$timeout(() => {
-		tutorialEl.classList.add('hidden')
-		tutorialBgEl.classList.add('hidden')
-	}, 400)
+		document.getElementById('gotitbtn').focus()
+	})
+}
+
+export const tutorialBack = ($scope, $timeout) => {
+	$scope.tutorialPage = 1
+	$timeout(() => {
+		document.getElementById('tutorial-next-btn').focus()
+	})
+}
+
+export const hideTutorial = ($scope, $timeout) => {
+	$scope.showTutorialDialog = false
+}
+
+export const hideModals = ($scope) => {
+	$scope.showKeyboardDialog = false
+	$scope.showTutorialDialog = false
+}
+
+export const toggleKeyboardDialog = ($scope, $timeout) => {
+	$scope.showKeyboardDialog = !$scope.showKeyboardDialog
+
+	$timeout(() => {
+		if ($scope.showKeyboardDialog) {
+			document.getElementById('keyboard-instructions-close').focus()
+		}
+		else {
+			document.getElementById('keyboard-instructions-btn').focus()
+		}
+	})
 }
 
 // aria-live regions don't work well with normal angular data binding with scope variables
@@ -210,13 +233,37 @@ export const onMateriaStart = ($scope, instance, qset, version) => {
 export const handleItemFocus = ($scope, event, item) => {
 	if ($scope.selectedItem != item) {
 		$scope.selectedItem = item
-		_assistiveFolderSelectIndex = -1
-		_inAssistiveFolderSelectMode = false
 
 		removeClassPeek()
+
+		// if the item is already placed in a folder, peek the folder so we can see it
+		if (item.folder > -1) {
+			_assistiveFolderSelectIndex = item.folder
+			_inAssistiveFolderSelectMode = true
+			peekFolder(_assistiveFolderSelectIndex)
+		}
+		else {
+			_assistiveFolderSelectIndex = -1
+			_inAssistiveFolderSelectMode = false
+		}
+		
 		assistiveAlert(item.text + ' is selected.')
-		$scope.hideTutorial()
 	}
+}
+
+// computes the sequence of items that "peek" out of a folder
+// by default it's chronological, with the last item placed in the folder at the top of the stack
+// when using tab and shift+tab to navigate the list of items, the currently focused item is moved to the top of the stack
+export const computePeekDisplay = ($scope, items) => {
+	if ($scope.selectedItem) {
+		const selectedItemIndex = items.findIndex(item => item.id === $scope.selectedItem.id)
+		if (selectedItemIndex !== -1) {
+			const sliced = items.slice()
+			const selectedItem = sliced.splice(selectedItemIndex, 1)[0]
+			return [selectedItem, ...sliced.reverse()]
+		}
+	}
+	return items.slice().reverse()
 }
 
 export const handleAssistiveSelection = ($scope, event, item) => {
@@ -377,7 +424,19 @@ export const mouseUp = ($scope, e) => {
 	itemSource = SRC_DESKTOP
 }
 
-export const mouseUpOverFolder = ($scope, targetFolderIndex) => {
+export const mouseUpOverFolder = ($scope, $timeout, targetFolderIndex, event) => {
+
+	// represents a click action on a folder when in assistiveFolderSelectMode
+	// this effectively cancels assistiveFolderSelectMode. Treat the click as a normal click on a folder (to open it)
+	if (event && _inAssistiveFolderSelectMode) {
+		_inAssistiveFolderSelectMode = false
+		$scope.selectedItem = false
+
+		$scope.showFolderPreview = true
+		$scope.folderPreviewIndex = targetFolderIndex
+		return
+	}
+
 	// item dropped to where it already is
 	if (targetFolderIndex == itemSource) {
 		return
@@ -428,7 +487,9 @@ export const mouseUpOverFolder = ($scope, targetFolderIndex) => {
 		assistiveAlert(
 			'You are ready to submit this widget. You can press escape or tab to cancel and continue sorting items.'
 		)
-		document.getElementById('submit-dialog-confirm').focus()
+		$timeout(() => {
+			document.getElementById('submit-dialog-cancel').focus()
+		},500)
 	}
 }
 
@@ -527,6 +588,8 @@ export const ControllerSortItOutPlayer = ($scope, $rootScope, $timeout) => {
 		show: false,
 		url: ''
 	}
+	$scope.showKeyboardDialog = false
+	$scope.showTutorialDialog = true
 
 	// set up scope functions
 	// NOTE: these don't need te be bound because they don't use $scope internally
@@ -538,8 +601,11 @@ export const ControllerSortItOutPlayer = ($scope, $rootScope, $timeout) => {
 
 	// set up scope functions with dependencies
 	// NOTE: if you need to call any of these methods, call them
-	$scope.hideTutorial = hideTutorial.bind(null, $timeout)
-	$scope.handleItemFocus = handleItemFocus.bind(null, $scope)
+	$scope.tutorialForward = tutorialForward.bind(null, $scope, $timeout)
+	$scope.tutorialBack = tutorialBack.bind(null, $scope, $timeout)
+	$scope.hideTutorial = hideTutorial.bind(null, $scope, $timeout)
+	$scope.hideModals = hideModals.bind(null, $scope)
+	$scope.toggleKeyboardDialog = toggleKeyboardDialog.bind(null, $scope, $timeout)
 	$scope.handleItemFocus = handleItemFocus.bind(null, $scope)
 	$scope.handleAssistiveSelection = handleAssistiveSelection.bind(null, $scope)
 	$scope.handleAssistiveSubmit = handleAssistiveSubmit.bind(null, $scope)
@@ -547,7 +613,9 @@ export const ControllerSortItOutPlayer = ($scope, $rootScope, $timeout) => {
 	$scope.itemMouseDown = itemMouseDown.bind(null, $scope)
 	$scope.panMove = panMove.bind(null, $scope)
 	$scope.mouseUp = mouseUp.bind(null, $scope)
-	$scope.mouseUpOverFolder = mouseUpOverFolder.bind(null, $scope)
+	$scope.mouseUpOverFolder = mouseUpOverFolder.bind(null, $scope, $timeout)
+	$scope.hidePeek = removeClassPeek.bind(null)
+	$scope.computePeekDisplay = computePeekDisplay.bind(null, $scope)
 	$scope.previewMouseDown = previewMouseDown.bind(null, $scope)
 	$scope.enlargeImage = enlargeImage.bind(null, $scope)
 	$scope.canScroll = canScroll.bind(null, $scope)
