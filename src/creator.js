@@ -15,7 +15,7 @@ SortItOut.controller('SortItOutController', [
 	'$mdToast',
 	'sanitizeHelper',
 	function($scope, $mdDialog, $mdToast, sanitizeHelper) {
-		$scope.MAX_ITEM_LENGTH = 30
+		$scope.MAX_ITEM_LENGTH = 48
 		$scope.MAX_NUM_FOLDERS = 6
 
 		$scope.folders = [
@@ -357,9 +357,9 @@ SortItOut.controller('SortItOutController', [
 			}
 		}
 
-		$scope.onSaveClicked = () => {
+		$scope.onSaveClicked = (mode) => {
 			const saveError = getSaveError()
-			if (saveError) {
+			if (saveError && mode != 'history') {
 				return Materia.CreatorCore.cancelSave(saveError)
 			}
 
