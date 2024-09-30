@@ -15,7 +15,7 @@ SortItOut.controller('SortItOutController', [
 	'$mdToast',
 	'sanitizeHelper',
 	function($scope, $mdDialog, $mdToast, sanitizeHelper) {
-		$scope.MAX_ITEM_LENGTH = 30
+		$scope.MAX_ITEM_LENGTH = 200
 		$scope.MAX_NUM_FOLDERS = 6
 
 		$scope.folders = [
