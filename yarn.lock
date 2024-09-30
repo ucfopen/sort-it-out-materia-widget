@@ -2345,15 +2345,15 @@ ajv@^8.0.0, ajv@^8.9.0:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
 
-angular-animate@~1.7.9:
-  version "1.7.9"
-  resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.7.9.tgz#a397f82434c1e7ed5b7a298fa70fc3de989a6785"
-  integrity sha512-fV+AISy/HTzurQH2ngsJg+lLIvfu0ahc1h4AYKauaXVw97rZc2k4iUA1bMstiEyClsdayQX568kjQc1NK+oYhw==
+angular-animate@~1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.8.3.tgz#f88db37325de256f9144d1242ce3158134a9d72a"
+  integrity sha512-/LtTKvy5sD6MZbV0v+nHgOIpnFF0mrUp+j5WIxVprVhcrJriYpuCZf4S7Owj1o76De/J0eRzANUozNJ6hVepnQ==
 
-angular-aria@~1.7.9:
-  version "1.7.9"
-  resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.9.tgz#90c61895ffbd876e95915222b32a7bd0070af7e3"
-  integrity sha512-luI3Jemd1AbOQW0krdzfEG3fM0IFtLY0bSSqIDEx3POE0XjKIC1MkrO8Csyq9PPgueLphyAPofzUwZ8YeZ88SA==
+angular-aria@~1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.8.3.tgz#b387ebca9569eb557855abb283a09c2d0457e779"
+  integrity sha512-qTXclmTW/KGw5JNKKQPcCKKq6hCBZ39jYINmLgMsjUHBAoxULaMRRTaRj/L2VTOjKvK5f9enkx+EUqRqzXDSFQ==
 
 angular-hammer@^2.2.0:
   version "2.2.0"
@@ -2363,45 +2363,35 @@ angular-hammer@^2.2.0:
     angular ">=1.2.0"
     hammerjs ">=2.0.0"
 
-angular-loader@~1.7.9:
-  version "1.7.9"
-  resolved "https://registry.yarnpkg.com/angular-loader/-/angular-loader-1.7.9.tgz#525c12a2e914d81345f58289fb705882430d938a"
-  integrity sha512-Hei0AQ96P2qzduWZtAsHvxUnLSLSAxpkjYc7F0JAwNPA14rXYKt20a9crc8CWd/v45Dkz7+SFhb2QMx5nCyNLQ==
+angular-loader@~1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/angular-loader/-/angular-loader-1.8.3.tgz#a4ab0dc6fbd3a59496c634b63d67c59fb15c7bcb"
+  integrity sha512-7Jn0hg811k5QAijcXCVCszySXTtakaNEe11MfGiZP3/eBkmSTkUc9z+DiAJ+VVmDlu+SVSF81Ahj0iXjSBQfwQ==
 
 angular-material@~1.1.10:
   version "1.1.26"
   resolved "https://registry.yarnpkg.com/angular-material/-/angular-material-1.1.26.tgz#b443aad40cdc9f821f0cc6486f5dc9efc9814928"
   integrity sha512-DBLsoOP1D1E14EQsECZYabt3Jh1PpvsG8k1aZgaP/Ml57n4stpClzLhCsuTNbtB/pqq9CL8XtpCfB6fhVRWqIQ==
 
-angular-messages@~1.7.9:
-  version "1.7.9"
-  resolved "https://registry.yarnpkg.com/angular-messages/-/angular-messages-1.7.9.tgz#6403b7f56df4b17b62d88762ac5e6b1702347fd2"
-  integrity sha512-OdJihuO6AW+m1/r9OdW5riCwacn3dL1agQvgu6Cww3a7OARXXN0vxOpsZCNk4yg4CuD7Et3tiz4DymhvZkydvw==
+angular-messages@~1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/angular-messages/-/angular-messages-1.8.3.tgz#56b26807bc81ea5218fe6337979ccb89f5de6825"
+  integrity sha512-f/ywtg32lqzX8FnXkBJOyn13lbCbo333/xy/5TTFcsH/gZdXoiuERj+dLTOs8xHCkOeFQhFx0VD0DgtMgSag7A==
 
-angular-mocks@1.8.3:
+angular-mocks@1.8.3, angular-mocks@~1.8.3:
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/angular-mocks/-/angular-mocks-1.8.3.tgz#c0dd05e5c3fc014e07af6289b23f0e817d7a4724"
   integrity sha512-vqsT6zwu80cZ8RY7qRQBZuy6Fq5X7/N5hkV9LzNT0c8b546rw4ErGK6muW1u2JnDKYa7+jJuaGM702bWir4HGw==
 
-angular-mocks@~1.7.9:
-  version "1.7.9"
-  resolved "https://registry.yarnpkg.com/angular-mocks/-/angular-mocks-1.7.9.tgz#0a3b7e28b9a493b4e3010ed2b0f69a68e9b4f79b"
-  integrity sha512-LQRqqiV3sZ7NTHBnNmLT0bXtE5e81t97+hkJ56oU0k3dqKv1s6F+nBWRlOVzqHWPGFOiPS8ZJVdrS8DFzHyNIA==
+angular-sanitize@~1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/angular-sanitize/-/angular-sanitize-1.8.3.tgz#51378e990e78c7ecc1fb31cd68655aff690a3bf1"
+  integrity sha512-2rxdqzlUVafUeWOwvY/FtyWk1pFTyCtzreeiTytG9m4smpuAEKaIJAjYeVwWsoV+nlTOcgpwV4W1OCmR+BQbUg==
 
-angular-sanitize@~1.7.9:
-  version "1.7.9"
-  resolved "https://registry.yarnpkg.com/angular-sanitize/-/angular-sanitize-1.7.9.tgz#6b4d5e826abdabd352b13a7c65c8c74daf6a7b15"
-  integrity sha512-nB/xe7JQWF9nLvhHommAICQ3eWrfRETo0EVGFESi952CDzDa+GAJ/2BFBNw44QqQPxj1Xua/uYKrbLsOGWZdbQ==
-
-angular@>=1.2.0:
+angular@>=1.2.0, angular@~1.8.3:
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.8.3.tgz#851ad75d5163c105a7e329555ef70c90aa706894"
   integrity sha512-5qjkWIQQVsHj4Sb5TcEs4WZWpFeVFHXwxEBHUhrny41D8UrBAd6T/6nPPAsLngJCReIOqi95W3mxdveveutpZw==
-
-angular@~1.7.9:
-  version "1.7.9"
-  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.9.tgz#e52616e8701c17724c3c238cfe4f9446fd570bc4"
-  integrity sha512-5se7ZpcOtu0MBFlzGv5dsM1quQDoDeUTwZrWjGtTNA7O88cD8TEk5IEKCTDa3uECV9XnvKREVUr7du1ACiWGFQ==
 
 ansi-align@^3.0.1:
   version "3.0.1"
@@ -3970,9 +3960,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.28:
-  version "1.5.29"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.29.tgz#aa592a3caa95d07cc26a66563accf99fa573a1ee"
-  integrity sha512-PF8n2AlIhCKXQ+gTpiJi0VhcHDb69kYX4MtCiivctc2QD3XuNZ/XIOlbGzt7WAjjEev0TtaH6Cu3arZExm5DOw==
+  version "1.5.30"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.30.tgz#5b264b489cfe0c3dd71097c164d795444834e7c7"
+  integrity sha512-sXI35EBN4lYxzc/pIGorlymYNzDBOqkSlVRe6MkgBsW/hW1tpC/HDJ2fjG7XnjakzfLEuvdmux0Mjs6jHq4UOA==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -6399,7 +6389,7 @@ materia-widget-dependencies@0.3.0:
   resolved "https://registry.yarnpkg.com/materia-widget-dependencies/-/materia-widget-dependencies-0.3.0.tgz#b95b8b99f48118f599bc034f6d4ddeb5e75af722"
   integrity sha512-+atVBgczOu3/mcn7pDYaS0AlDkBZ3ttDLi5vXxpAOGi9U6n7RPTxxrZGv5yqkcRJC+b3j+mXlwxPY96hazSIIg==
 
-materia-widget-development-kit@^3.0.1:
+materia-widget-development-kit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/materia-widget-development-kit/-/materia-widget-development-kit-3.0.2.tgz#fb446da09348391f8bd06b68eeb5058597e42ed8"
   integrity sha512-PPAmooObAGX8oWoHVBSJznpW5uroQleRo+YYdnmHFBoGvsSLG9NKJiV3jsvVEyh8VHEfXMLSmWXoBar5bgm4KQ==
@@ -9163,7 +9153,16 @@ string-replace-loader@^3.1.0:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0", "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+"string-width-cjs@npm:string-width@^4.2.0":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
+  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^6.0.1"
+
+"string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -9195,7 +9194,7 @@ string_decoder@~1.1.1:
   dependencies:
     safe-buffer "~5.1.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -9208,6 +9207,13 @@ strip-ansi@^5.2.0:
   integrity sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==
   dependencies:
     ansi-regex "^4.1.0"
+
+strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
+  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
+  dependencies:
+    ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.1, strip-ansi@^7.1.0:
   version "7.1.0"
