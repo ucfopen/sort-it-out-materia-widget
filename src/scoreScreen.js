@@ -58,11 +58,11 @@ SortItOut.controller('SortItOutScoreCtrl', [
 			for (let entry of scoreTable) {
 				let [text, userFolderName, correctFolderName] = entry.data
 
+				// ensure string values are properly decoded
 				text = sanitizeHelper.desanitize(text)
 				userFolderName = sanitizeHelper.desanitize(userFolderName)
 				correctFolderName = sanitizeHelper.desanitize(correctFolderName)
 
-				// ensure string values are properly decoded
 				const correctFolderIndex = folderNames[correctFolderName]
 				const userFolderIndex = folderNames[userFolderName]
 				const correct = userFolderName == correctFolderName
