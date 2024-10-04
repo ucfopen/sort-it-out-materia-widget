@@ -7,6 +7,8 @@ body {
 	background-position: center center;
 	height: 100vh;
 	font-family: "Lato";
+
+	overflow: hidden;
 }
 
 .screenreader-assist {
@@ -283,7 +285,7 @@ button.cancel-submit-button {
 .dock {
 	position: absolute;
 	height: 125px;
-	bottom: 0;
+	bottom: -125px;
 	left: 0;
 	right: 0;
 	display: flex;
@@ -294,6 +296,7 @@ button.cancel-submit-button {
 	}
 
 	.folder {
+		top: -125px;
 		height: 100%;
 		width: 150px;
 		position: relative;

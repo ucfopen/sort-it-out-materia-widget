@@ -21,7 +21,9 @@
 		<!-- MAIN WIDGET SCRIPT -->
 		<script src="player.js"></script>
 	</head>
-	<body ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak ng-style="{'background-image': 'url(' + backgroundImage + ')'}">
+	<body id="app-body" ng-app="SortItOutEngine" ng-controller="SortItOutEngineCtrl" ng-cloak ng-style="{
+			'background-image': 'linear-gradient(rgba(0,0,0,0) 0%, rgba(0,0,0,0) 75%, rgba(0,0,0,0.33) 100%), url('+ backgroundImage + ')'
+		}">
 		<div id="content"
 			hm-panmove="panMove(standardizeEvent($event), false)"
 			hm-panend="mouseUp(standardizeEvent($event), false)"
@@ -175,7 +177,6 @@
 			</div>
 
 			<div id="dock-main" class="dock" tabindex="-1">
-				<div id="dock-main-background" class="dock" ng-click="hideFolderPreview()" tabindex="-1"></div>
 				<div class="folder"
 					ng-class="{opened: folderPreviewIndex == $index}"
 					ng-repeat="folder in folders"
