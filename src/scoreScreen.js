@@ -39,9 +39,9 @@ SortItOut.controller('SortItOutScoreCtrl', [
 			$scope.questionValue = 100 / qset.items.length
 
 			for (let item of qset.items) {
-				const folderName = item.answers[0].text
+				const folderName = sanitizeHelper.desanitize(item.answers[0].text)
 				if (item.options.image) {
-					imageMap[item.questions[0].text] = Materia.ScoreCore.getMediaUrl(item.options.image)
+					imageMap[sanitizeHelper.desanitize(item.questions[0].text)] = Materia.ScoreCore.getMediaUrl(item.options.image)
 				}
 				if (folderNames[folderName] == undefined) {
 					folderNames[folderName] = folders.length
@@ -56,7 +56,12 @@ SortItOut.controller('SortItOutScoreCtrl', [
 			}
 
 			for (let entry of scoreTable) {
-				const [text, userFolderName, correctFolderName] = entry.data
+				let [text, userFolderName, correctFolderName] = entry.data
+
+				// ensure string values are properly decoded
+				text = sanitizeHelper.desanitize(text)
+				userFolderName = sanitizeHelper.desanitize(userFolderName)
+				correctFolderName = sanitizeHelper.desanitize(correctFolderName)
 
 				const correctFolderIndex = folderNames[correctFolderName]
 				const userFolderIndex = folderNames[userFolderName]
@@ -65,7 +70,7 @@ SortItOut.controller('SortItOutScoreCtrl', [
 				folders[userFolderIndex].placeCount++
 
 				const item = {
-					text: sanitizeHelper.desanitize(text),
+					text: text,
 					correct,
 					userFolderName,
 					image: imageMap[text] || false
@@ -78,7 +83,7 @@ SortItOut.controller('SortItOutScoreCtrl', [
 				} else {
 					folders[correctFolderIndex].items.push(item)
 					folders[userFolderIndex].extraItems.push({
-						text: sanitizeHelper.desanitize(text),
+						text: text,
 						image: imageMap[text] || false,
 						correctFolderName
 					})

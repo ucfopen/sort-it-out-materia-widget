@@ -30,7 +30,11 @@ class Score_Modules_SortItOut extends Score_Module
 		$answers = $this->questions[$log->item_id]->answers;
 		foreach($answers as $answer)
 		{
-			if ($log->text == $answer['text'])
+			// ensure string values are in parity. The answer value (coming from the qset) may include html entities.
+			$log_sanitized = html_entity_decode(strtolower(trim($log->text)));
+			$answer_sanitized = html_entity_decode(strtolower(trim($answer['text'])));
+
+			if ($log_sanitized == $answer_sanitized)
 			{
 				return $answer['value'];
 			}
