@@ -3,7 +3,7 @@
 	"materia": {
 		"cleanName": "sort-it-out"
 	},
-	"version": "1.0.9",
+	"version": "1.0.10",
 	"scripts": {
 		"start": "mwdk-start",
 		"build": "mwdk-build-prod",

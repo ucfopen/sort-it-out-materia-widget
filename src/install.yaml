@@ -51,3 +51,5 @@ meta_data:
     identified by the text property of each question's answer property. Category text must be consistent across all items that
     share the same category. Ideally, multiple items share the same category, and are all each contextually related to a single
     category. There should not be more than 6 total categories.
+  update_method: github
+  repo: ucfopen/sort-it-out-materia-widget
