@@ -9,6 +9,7 @@ general:
   is_qset_encrypted: Yes
   is_answer_encrypted: Yes
   is_storage_enabled: No
+  is_generable: Yes
   api_version: 2
 files:
   creator: creator.html
@@ -45,3 +46,8 @@ meta_data:
   accessibility_description: >
     Screen readers treat items as an unsorted list. Once selected, items can be categorized
     using the arrow keys. Keyboard controls are communicated visually and to screen readers.
+  generation_prompt: >
+    Each individual question represents an item that must be placed in its property category. The category for an item is
+    identified by the text property of each question's answer property. Category text must be consistent across all items that
+    share the same category. Ideally, multiple items share the same category, and are all each contextually related to a single
+    category. There should not be more than 6 total categories.

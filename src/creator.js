@@ -357,9 +357,9 @@ SortItOut.controller('SortItOutController', [
 			}
 		}
 
-		$scope.onSaveClicked = () => {
+		$scope.onSaveClicked = (mode) => {
 			const saveError = getSaveError()
-			if (saveError) {
+			if (saveError && mode != 'history') {
 				return Materia.CreatorCore.cancelSave(saveError)
 			}
 

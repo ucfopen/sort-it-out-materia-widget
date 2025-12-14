@@ -6496,7 +6496,7 @@ materia-widget-dependencies@0.4.2:
   resolved "https://registry.yarnpkg.com/materia-widget-dependencies/-/materia-widget-dependencies-0.4.2.tgz#d6664f7c525ae624a0ca87579865b1864c53a2d7"
   integrity sha512-JyyeE9HSRC9tyEPmsEC+UsfC51z+Y6xT8qzn+2PGvj6T/Mda/hFK/Uqw0WA5pE42+SpjYOaJ2B8CK0bT9rZ21A==
 
-materia-widget-development-kit@^3.0.4:
+materia-widget-development-kit@3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/materia-widget-development-kit/-/materia-widget-development-kit-3.0.4.tgz#5fdea73976aa83463ca3c278d5fd8f2ac4830446"
   integrity sha512-iwinME3Kh3WsIr/XMpIuxNadPkLzsWkFxsJAI5JiSr2VpWkgznUvKT/KNisWD1vdwF1QQQrRXaFbE0lMG5FNMQ==
